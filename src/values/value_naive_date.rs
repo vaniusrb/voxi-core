@@ -2,9 +2,9 @@ use super::{
     into_value::IntoValue,
     value::Value,
     value::{ValueToSQL, ValueTyped},
-    value_type::ValueType,
-    IntoValueType, NullableValue,
+    NullableValue,
 };
+use crate::{IntoValueType, ValueType};
 use chrono::NaiveDate;
 
 impl IntoValue for NaiveDate {

@@ -3,8 +3,9 @@ use super::{
     value::Value,
     value::{ValueToSQL, ValueTyped},
     value_type::ValueType,
-    IntoValueType, NullableValue,
+    NullableValue,
 };
+use crate::IntoValueType;
 
 impl IntoValue for String {
     fn into_value(self) -> Value {

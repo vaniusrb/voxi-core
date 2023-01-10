@@ -1,19 +1,21 @@
-use error_stack_derive::ErrorStack;
+use thiserror::Error as ThisError;
 
 // TODO: add comment
-#[derive(ErrorStack, Clone, Debug, PartialEq, Eq)]
+#[derive(ThisError, Debug)]
 pub enum SQLRoxiError {
-    #[error_message(&format!("conversion error: `{unnamed0}`"))]
+    #[error("type error: `{0}`")]
+    RoxiTypeError(#[from] crate::RoxiTypeError),
+    #[error("conversion error: `{0}`")]
     Conversion(String),
-    #[error_message(&format!("parse json error: `{unnamed0}`"))]
+    #[error("parse json error: `{0}`")]
     ParseJson(String),
-    #[error_message(&format!("query builder invalid configuration: `{unnamed0}`"))]
+    #[error("query builder invalid configuration: `{0}`")]
     InvalidQueryBuilderConfiguration(String),
-    #[error_message(&format!("error to resolve SQL: `{unnamed0}`"))]
+    #[error("error to resolve SQL: `{0}`")]
     SQLResolver(String),
-    #[error_message(&format!("field name not found: `{unnamed1}` available fields are: `{unnamed0}`", ))]
+    #[error("field name not found: `{1}` available fields are: `{0}`")]
     FieldNameNotFound(String, String),
-    #[error_message(&format!("bind name not found: `{unnamed0}`"))]
+    #[error("bind name not found: `{0}`")]
     BindNameNotFound(String),
 }
 

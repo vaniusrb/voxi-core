@@ -3,8 +3,9 @@ use super::{
     value::Value,
     value::{ValueToSQL, ValueTyped},
     value_type::ValueType,
-    IntoValueType, NullableValue,
+    NullableValue,
 };
+use crate::IntoValueType;
 use chrono::NaiveDateTime;
 
 impl IntoValue for NaiveDateTime {

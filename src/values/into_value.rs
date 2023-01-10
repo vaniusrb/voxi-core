@@ -130,25 +130,6 @@ impl TryValueFromString for Decimal {
     }
 }
 
-// pub trait TryStringIntoValue2 {
-//     fn try_value_from_string2<T: TryValueFromString>(&self) -> Result<T, String>;
-// }
-
-// impl TryStringIntoValue2 for String {
-//     fn try_value_from_string2<T: TryValueFromString>(&self) -> Result<T, RoxiTypeError> {
-//         let t = T::try_value_from_string(self)? as T ;
-//         Ok(t)
-//     }
-// }
-
-// impl<T: TryValueFromString>  for String {
-//     fn try_value_from_string2(&self) -> Result<T, RoxiTypeError> {
-//         let t = T::try_value_from_string(self)?;
-//         Ok(t)
-//     }
-// }
-
-//-------------------
 pub trait TryStringIntoValue<T: ValueToSQL> {
     fn try_string_into_value(&self) -> Result<T, CoreError>;
 }
@@ -226,11 +207,11 @@ impl TryStringIntoValue<Decimal> for String {
 // }
 
 // impl<T: CustomValueTyped> TryStringIntoValueGen<T> for String {
-//     fn try_into_value_gen(&self) -> Result<T, RoxiTypeError> {
+//     fn try_into_value_gen(&self) -> Result<T, VoxiTypeError> {
 //         match T::v_type() {
 //             ValueType::String => Box::new(self.clone()) as Box<dyn CustomValue>,
 //             ValueType::Uuid => {
-//                 let uuid = Uuid::from_str(self).map_err(|e| RoxiTypeError::Conversion(e.to_string()))?;
+//                 let uuid = Uuid::from_str(self).map_err(|e| VoxiTypeError::Conversion(e.to_string()))?;
 //                 let t: T = uuid as T;
 //                 return Ok(uuid);
 //                 //Box::new(uuid) as Box<dyn CustomValue>

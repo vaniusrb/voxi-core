@@ -15,7 +15,7 @@ impl Alias {
     /// Create a alias for table name, field name or query.
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::Alias;
+    /// # use voxi_core::selections::Alias;
     /// let alias = Alias::new("TAB".to_string());
     /// assert_eq!(alias.alias(), "TAB");
     /// ```
@@ -27,7 +27,7 @@ impl Alias {
     /// Create a alias for table name, field name or query.
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::Alias;
+    /// # use voxi_core::selections::Alias;
     /// let alias = Alias::from("TAB");
     /// assert_eq!(alias.alias(), "TAB");
     /// ```
@@ -48,10 +48,7 @@ impl fmt::Display for Alias {
 }
 
 impl ToSQL for Alias {
-    fn to_sql(
-        &self,
-        _args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, _args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         Ok(format!(r#""{}""#, self.alias))
     }
 }

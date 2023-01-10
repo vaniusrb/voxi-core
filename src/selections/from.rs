@@ -12,9 +12,9 @@ use std::collections::HashSet;
 /// Definition for FROM SQL clause.
 /// Can be defined for a table or a sub-query.
 /// ```
-/// # use crate::roxi_sql::selections::ToSQL;
-/// # use roxi_sql::selections::FromSelect;
-/// # use roxi_sql::builder::args_resolver_string::args_to_str;
+/// # use crate::voxi_core::selections::ToSQL;
+/// # use voxi_core::selections::FromSelect;
+/// # use voxi_core::builder::args_resolver_string::args_to_str;
 /// let from = FromSelect::from_table("TABLE");
 /// assert_eq!(args_to_str(from).unwrap(), r#""TABLE""#);
 /// ```
@@ -55,9 +55,9 @@ impl IntoFromSelect for Select {
 impl FromSelect {
     /// Create a `FromSelect` from a `IntoFromSelect` implementation.
     /// ```
-    /// # use roxi_sql::selections::FromType;
-    /// # use roxi_sql::selections::FromSelect;
-    /// # use roxi_sql::selections::QueryBuilder;
+    /// # use voxi_core::selections::FromType;
+    /// # use voxi_core::selections::FromSelect;
+    /// # use voxi_core::selections::QueryBuilder;
     /// let query = QueryBuilder::new().all().from("TABLE").build().unwrap();
     /// let from = FromSelect::from(query.clone());
     /// assert_eq!(from.from_type(), &FromType::Query(query));
@@ -73,9 +73,9 @@ impl FromSelect {
 
     /// Define FROM informing a table like source of data.
     /// ```
-    /// # use roxi_sql::selections::FromSelect;
-    /// # use crate::roxi_sql::selections::ToSQL;
-    /// # use roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::FromSelect;
+    /// # use crate::voxi_core::selections::ToSQL;
+    /// # use voxi_core::builder::args_resolver_string::args_to_str;
     /// let from = FromSelect::from_table("TABLE");
     /// assert_eq!(args_to_str(from).unwrap(), r#""TABLE""#);
     /// ```
@@ -85,9 +85,9 @@ impl FromSelect {
 
     /// Define FROM informing a sub-query like source of data.
     /// ```
-    /// # use roxi_sql::selections::FromSelect;
-    /// # use roxi_sql::selections::QueryBuilder;
-    /// # use roxi_sql::selections::FromType;
+    /// # use voxi_core::selections::FromSelect;
+    /// # use voxi_core::selections::QueryBuilder;
+    /// # use voxi_core::selections::FromType;
     /// let query = QueryBuilder::new().all().from("TABLE").build().unwrap();
     /// let from = FromSelect::from_query(query);
     /// assert_eq!(
@@ -101,10 +101,10 @@ impl FromSelect {
 
     /// Set the table alias for TABLE or QUERY used in the FROM.
     /// ```
-    /// # use roxi_sql::selections::FromSelect;
-    /// # use crate::roxi_sql::selections::ToSQL;
-    /// # use roxi_sql::builder::args_resolver_string::args_to_str;
-    /// # use roxi_sql::selections::TableName;
+    /// # use voxi_core::selections::FromSelect;
+    /// # use crate::voxi_core::selections::ToSQL;
+    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::TableName;
     /// let table_name = TableName::new("TABLE");
     /// let from = FromSelect::from(table_name).with_alias("TAB");
     /// assert_eq!(args_to_str(from).unwrap(), r#""TABLE" "TAB""#);
@@ -194,10 +194,7 @@ impl IntoFrom for QueryAlias {
 }
 
 impl ToSQL for FromSelect {
-    fn to_sql(
-        &self,
-        args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         let table = match &self.from_type {
             FromType::Table(t) => t.to_sql(args_resolver)?,
             FromType::Query(q) => format!("({})", q.to_sql(args_resolver)?),

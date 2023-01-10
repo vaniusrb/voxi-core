@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 /// `FieldName` represents a definition for field name
 /// ```
-/// # use roxi_sql::selections::FieldName;
+/// # use voxi_core::FieldName;
 /// let field_name = FieldName::new("NAME");
 /// ```
 #[derive(Serialize, Deserialize, Default, Debug, Clone, PartialEq, Eq, Hash)]

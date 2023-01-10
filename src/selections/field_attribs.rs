@@ -131,8 +131,8 @@ mod tests {
         println!("{json}");
         let exp = r#"{
   "name": "name",
-  "type": "String",
   "title": "Title",
+  "type": "String",
   "nullable": true
 }"#;
         assert_eq!(json, exp);

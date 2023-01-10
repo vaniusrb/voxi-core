@@ -36,9 +36,9 @@ use std::{
 /// QueryBuilder allow customize creating of a query SQL (SELECT).
 /// # Example
 /// ```
-/// # use roxi_sql::selections::QueryBuilder;
-/// # use crate::roxi_sql::selections::ToSQL;
-/// # use crate::roxi_sql::builder::args_resolver_string::args_to_str;
+/// # use voxi_core::selections::QueryBuilder;
+/// # use crate::voxi_core::selections::ToSQL;
+/// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
 /// let query = QueryBuilder::new().field("ID").from("TABLE").build().unwrap();
 /// assert_eq!(args_to_str(query).unwrap(), r#"SELECT "ID" FROM "TABLE""#);
 /// ```
@@ -117,9 +117,9 @@ impl QueryBuilder {
     /// If informed string will be considered field name.
     /// If you want select static value use the method `field` instead.
     /// ```
-    /// # use crate::roxi_sql::selections::ToSQL;
-    /// # use roxi_sql::selections::QueryBuilder;
-    /// # use crate::roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use crate::voxi_core::selections::ToSQL;
+    /// # use voxi_core::selections::QueryBuilder;
+    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
     /// let query = QueryBuilder::new().field("ID").from("TABLE").build().unwrap();
     /// assert_eq!(args_to_str(query).unwrap(), r#"SELECT "ID" FROM "TABLE""#);
     /// ```
@@ -135,9 +135,9 @@ impl QueryBuilder {
 
     /// Add value literal to select from query.
     /// ```
-    /// # use roxi_sql::selections::QueryBuilder;
-    /// # use crate::roxi_sql::selections::ToSQL;
-    /// # use crate::roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::QueryBuilder;
+    /// # use crate::voxi_core::selections::ToSQL;
+    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
     /// let query = QueryBuilder::new().literal("TEXT").from("TABLE").build().unwrap();
     /// assert_eq!(args_to_str(query).unwrap(), r#"SELECT 'TEXT' FROM "TABLE""#);
     /// ```
@@ -192,9 +192,9 @@ impl QueryBuilder {
 
     /// Add source (table/sub-query) to from part of select.
     /// ```
-    /// # use roxi_sql::selections::QueryBuilder;
-    /// # use crate::roxi_sql::selections::ToSQL;
-    /// # use crate::roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::QueryBuilder;
+    /// # use crate::voxi_core::selections::ToSQL;
+    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
     /// let query = QueryBuilder::new().field("ID").from("TABLE").build().unwrap();
     /// assert_eq!(args_to_str(query).unwrap(), r#"SELECT "ID" FROM "TABLE""#);
     /// ```
@@ -296,24 +296,22 @@ impl QueryBuilder {
 
     // TODO: must to use Result because table or column maybe are empty
     /// ```
-    /// # use roxi_sql::selections::QueryBuilder;
-    /// # use crate::roxi_sql::selections::ToSQL;
-    /// # use crate::roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::QueryBuilder;
+    /// # use crate::voxi_core::selections::ToSQL;
+    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
     /// let query = QueryBuilder::new().field("ID").from("TABLE").build().unwrap();
     /// assert_eq!(args_to_str(query).unwrap(), r#"SELECT "ID" FROM "TABLE""#);
     /// ```
-    pub fn build(self) -> error_stack::Result<Select, SQLRoxiError> {
+    pub fn build(self) -> Result<Select, SQLRoxiError> {
         if self.columns.is_empty() {
             return Err(SQLRoxiError::InvalidQueryBuilderConfiguration(
                 "no column has been defined".to_string(),
-            )
-            .into());
+            ));
         }
         if self.from.is_empty() {
             return Err(SQLRoxiError::InvalidQueryBuilderConfiguration(
                 "no from source (table/sub-query) has been defined".to_string(),
-            )
-            .into());
+            ));
         }
         let query = Select {
             distinct: self.distinct,
@@ -363,10 +361,7 @@ pub struct Select {
 impl Query for Select {}
 
 impl ToSQL for Select {
-    fn to_sql(
-        &self,
-        args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         let mut hash = HashMap::new();
         for (bind_name, value) in self.binds_values.iter() {
             hash.insert(bind_name.clone(), value.clone());

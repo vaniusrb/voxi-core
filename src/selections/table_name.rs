@@ -20,7 +20,7 @@ impl TableName {
 
     /// Create a `TableName`.
     /// ```
-    /// # use roxi_sql::selections::TableName;
+    /// # use voxi_core::selections::TableName;
     /// let table_name = TableName::new("TABLE");
     /// assert_eq!(table_name.name(), "TABLE");
     /// ```
@@ -30,7 +30,7 @@ impl TableName {
 
     /// Get a reference to the table name's name.
     /// ```
-    /// # use roxi_sql::selections::TableName;
+    /// # use voxi_core::selections::TableName;
     /// let table_name = TableName::new("TABLE");
     /// assert_eq!(table_name.name(), "TABLE");
     /// ```
@@ -51,10 +51,7 @@ impl fmt::Display for TableName {
 }
 
 impl ToSQL for TableName {
-    fn to_sql(
-        &self,
-        _args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, _args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         Ok(format!(r#""{self}""#))
     }
 }

@@ -73,10 +73,7 @@ pub struct CaseCondition {
 }
 
 impl ToSQL for CaseCondition {
-    fn to_sql(
-        &self,
-        args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         let mut sql = "CASE ".to_string();
         let whens = self
             .whens

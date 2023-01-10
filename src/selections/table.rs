@@ -13,7 +13,7 @@ use std::fmt;
 /// `Table` represents a definition for a table, with a table name and alias (optional).
 /// Allow define alias by informing a second word after a space.
 /// ```
-/// # use roxi_sql::selections::Table;
+/// # use voxi_core::selections::Table;
 /// let table = Table::new("TABLE tab");
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
@@ -34,7 +34,7 @@ impl fmt::Display for Table {
 impl Table {
     /// Create a `Table` from a `IntoTable` implementation.
     /// ```
-    /// # use roxi_sql::selections::Table;
+    /// # use voxi_core::selections::Table;
     /// let table = Table::new("TABLE").with_alias("TAB");
     /// assert_eq!(table.name(), "TABLE");
     /// ```
@@ -44,10 +44,10 @@ impl Table {
 
     /// Create a `Table` from a `IntoTable` implementation and an alias.
     /// ```
-    /// # use roxi_sql::selections::Alias;
-    /// # use roxi_sql::selections::Table;
+    /// # use voxi_core::selections::Alias;
+    /// # use voxi_core::selections::Table;
     /// let table = Table::from("TABLE", "TAB");
-    /// assert_eq!(table, "TABLE TAB");
+    /// assert_eq!(table, "TABLE AS TAB");
     /// assert_eq!(table.name(), "TABLE");
     /// assert_eq!(table.alias(), Some(&Alias::from("TAB")));
     /// ```
@@ -57,7 +57,7 @@ impl Table {
 
     /// Create a field from a table definition
     /// ```
-    /// # use roxi_sql::selections::Table;
+    /// # use voxi_core::selections::Table;
     /// let table = Table::new("TABLE TAB");
     /// let field = table.field("ID");
     /// assert_eq!(field.name(), "ID");
@@ -71,8 +71,8 @@ impl Table {
 
     /// Set the table name's alias.
     /// ```
-    /// # use roxi_sql::selections::Table;
-    /// # use roxi_sql::selections::Alias;
+    /// # use voxi_core::selections::Table;
+    /// # use voxi_core::selections::Alias;
     /// let table = Table::new("TABLE").with_alias("TAB");
     /// assert_eq!(table.name(), "TABLE");
     /// assert_eq!(table.alias(), Some(&Alias::from("TAB")));
@@ -87,7 +87,7 @@ impl Table {
 
     /// Get a reference to the table's name.
     /// ```
-    /// # use roxi_sql::selections::Table;
+    /// # use voxi_core::selections::Table;
     /// let table = Table::new("TABLE");
     /// assert_eq!(table.name(), "TABLE");
     /// ```
@@ -97,8 +97,8 @@ impl Table {
 
     /// Get a reference to the table's alias.
     /// ```
-    /// # use roxi_sql::selections::Table;
-    /// # use roxi_sql::selections::Alias;
+    /// # use voxi_core::selections::Table;
+    /// # use voxi_core::selections::Alias;
     /// let table = Table::new("TABLE").with_alias("TAB");
     /// assert_eq!(table.alias(), Some(&Alias::from("TAB")));
     /// ```
@@ -108,10 +108,7 @@ impl Table {
 }
 
 impl ToSQL for Table {
-    fn to_sql(
-        &self,
-        args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         let sql = match self.alias.as_ref() {
             Some(alias) => {
                 format!(
@@ -222,7 +219,7 @@ mod tests {
     #[test]
     fn test_equal_with_alias() {
         let table = Table::from("TABLE", "TAB");
-        assert_eq!(table, "TABLE TAB");
+        assert_eq!(table, "TABLE AS TAB");
         assert_eq!(table.name(), "TABLE");
         assert_eq!(table.alias(), Some(&Alias::from("TAB")));
     }
@@ -255,7 +252,7 @@ mod tests {
         let table = Table::new("TABLE TAB");
         assert_eq!(
             table.to_sql(&mut args_resolver_string).unwrap(),
-            r#""TABLE" "TAB""#
+            r#""TABLE" AS "TAB""#
         );
     }
 }

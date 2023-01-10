@@ -113,10 +113,7 @@ impl LogicalExprWhere {
 }
 
 impl ToSQL for LogicalExprWhere {
-    fn to_sql(
-        &self,
-        args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         let sql = match self {
             LogicalExprWhere::Condition(c) => c.to_sql(args_resolver)?,
             LogicalExprWhere::Not(e) => format!("NOT {}", e.to_sql(args_resolver)?),

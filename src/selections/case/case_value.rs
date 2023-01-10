@@ -20,11 +20,11 @@ use serde::{Deserialize, Serialize};
 /// `CaseValueBuilder` is the object that allows build a `CaseValue` object.
 /// # Example
 /// ```
-/// # use roxi_sql::selections::CaseValueBuilder;
-/// # use roxi_sql::selections::TableField;
-/// # use roxi_sql::selections::WhenValue;
-/// # use crate::roxi_sql::builder::args_resolver_string::args_to_str;
-/// # use roxi_sql::selections::ToSQL;
+/// # use voxi_core::selections::CaseValueBuilder;
+/// # use voxi_core::selections::TableField;
+/// # use voxi_core::selections::WhenValue;
+/// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+/// # use voxi_core::selections::ToSQL;
 /// let case_builder = CaseValueBuilder::new(TableField::new("TABLE.STATUS"));
 /// let when_1 = WhenValue::new(1, "One");
 /// let when_2 = WhenValue::new(2, "Two");
@@ -44,11 +44,11 @@ pub struct CaseValueBuilder {
 impl CaseValueBuilder {
     /// Create `CaseValueBuilder` to allow build a `CaseValue` object.
     /// ```
-    /// # use roxi_sql::selections::WhenValue;
-    /// # use crate::roxi_sql::builder::args_resolver_string::args_to_str;
-    /// # use roxi_sql::selections::TableField;
-    /// # use roxi_sql::selections::CaseValueBuilder;
-    /// # use roxi_sql::selections::ToSQL;
+    /// # use voxi_core::selections::WhenValue;
+    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::TableField;
+    /// # use voxi_core::selections::CaseValueBuilder;
+    /// # use voxi_core::selections::ToSQL;
     /// let case_builder = CaseValueBuilder::new(TableField::new("TABLE.STATUS"));
     /// let when_1 = WhenValue::new(1, "One");
     /// let when_2 = WhenValue::new(2, "Two");
@@ -68,11 +68,11 @@ impl CaseValueBuilder {
 
     /// Add a definition for WHEN condition for a CASE structure.
     /// ```
-    /// # use roxi_sql::selections::WhenValue;
-    /// # use crate::roxi_sql::builder::args_resolver_string::args_to_str;
-    /// # use roxi_sql::selections::TableField;
-    /// # use roxi_sql::selections::CaseValueBuilder;
-    /// # use roxi_sql::selections::ToSQL;
+    /// # use voxi_core::selections::WhenValue;
+    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::TableField;
+    /// # use voxi_core::selections::CaseValueBuilder;
+    /// # use voxi_core::selections::ToSQL;
     /// let case_builder = CaseValueBuilder::new(TableField::new("TABLE.STATUS"));
     /// let when_1 = WhenValue::new(1, "One");
     /// let when_2 = WhenValue::new(2, "Two");
@@ -90,11 +90,11 @@ impl CaseValueBuilder {
 
     /// Define the ELSE condition for a CASE structure.
     /// ```
-    /// # use roxi_sql::selections::WhenValue;
-    /// # use crate::roxi_sql::builder::args_resolver_string::args_to_str;
-    /// # use roxi_sql::selections::TableField;
-    /// # use roxi_sql::selections::CaseValueBuilder;
-    /// # use roxi_sql::selections::ToSQL;
+    /// # use voxi_core::selections::WhenValue;
+    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::TableField;
+    /// # use voxi_core::selections::CaseValueBuilder;
+    /// # use voxi_core::selections::ToSQL;
     /// let case_builder = CaseValueBuilder::new(TableField::new("TABLE.STATUS"));
     /// let when_1 = WhenValue::new(1, "One");
     /// let when_2 = WhenValue::new(2, "Two");
@@ -116,11 +116,11 @@ impl CaseValueBuilder {
 
     /// Create `CaseValue` object
     /// ```
-    /// # use roxi_sql::selections::WhenValue;
-    /// # use crate::roxi_sql::builder::args_resolver_string::args_to_str;
-    /// # use roxi_sql::selections::TableField;
-    /// # use roxi_sql::selections::CaseValueBuilder;
-    /// # use crate::roxi_sql::selections::ToSQL;
+    /// # use voxi_core::selections::WhenValue;
+    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::TableField;
+    /// # use voxi_core::selections::CaseValueBuilder;
+    /// # use crate::voxi_core::selections::ToSQL;
     /// let case_builder = CaseValueBuilder::new(TableField::new("TABLE.STATUS"));
     /// let when_1 = WhenValue::new(1, "One");
     /// let when_2 = WhenValue::new(2, "Two");
@@ -153,11 +153,11 @@ impl CaseValueBuilder {
 /// ```
 /// Example:
 /// ```
-/// # use roxi_sql::selections::CaseValueBuilder;
-/// # use roxi_sql::selections::WhenValue;
-/// # use roxi_sql::builder::args_resolver_string::args_to_str;
-/// # use roxi_sql::selections::TableField;
-/// # use roxi_sql::selections::ToSQL;
+/// # use voxi_core::selections::CaseValueBuilder;
+/// # use voxi_core::selections::WhenValue;
+/// # use voxi_core::builder::args_resolver_string::args_to_str;
+/// # use voxi_core::selections::TableField;
+/// # use voxi_core::selections::ToSQL;
 /// let case_builder = CaseValueBuilder::new(TableField::new("TABLE.STATUS"));
 /// let when_1 = WhenValue::new(1, "One");
 /// let when_2 = WhenValue::new(2, "Two");
@@ -185,10 +185,7 @@ impl CaseValue {
 }
 
 impl ToSQL for CaseValue {
-    fn to_sql(
-        &self,
-        args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         let mut sql = format!("CASE {} ", self.input.to_sql(args_resolver)?);
         let whens = self
             .whens

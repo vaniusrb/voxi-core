@@ -42,9 +42,9 @@ pub struct SingleSelectBuilder {
 impl SingleSelectBuilder {
     /// Create `SingleSelectBuilder` specifying the single column.
     /// ```
-    /// # use roxi_sql::selections::SingleSelectBuilder;
-    /// # use crate::roxi_sql::selections::ToSQL;
-    /// # use crate::roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::SingleSelectBuilder;
+    /// # use crate::voxi_core::selections::ToSQL;
+    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
     /// let query = SingleSelectBuilder::field("ID")
     ///     .distinct()
     ///     .from("TABLE")
@@ -57,9 +57,9 @@ impl SingleSelectBuilder {
 
     /// Create `SingleSelectBuilder` specifying the single column.
     /// ```
-    /// # use roxi_sql::selections::SingleSelectBuilder;
-    /// # use crate::roxi_sql::selections::ToSQL;
-    /// # use roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::SingleSelectBuilder;
+    /// # use crate::voxi_core::selections::ToSQL;
+    /// # use voxi_core::builder::args_resolver_string::args_to_str;
     /// let query = SingleSelectBuilder::field("ID")
     ///     .distinct()
     ///     .from("TABLE")
@@ -89,9 +89,9 @@ impl SingleSelectBuilder {
 
     /// Define that SELECT must use DISTINCT clause, to returns only distinct record, without duplicates.
     /// ```
-    /// # use crate::roxi_sql::selections::ToSQL;
-    /// # use roxi_sql::selections::SingleSelectBuilder;
-    /// # use crate::roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use crate::voxi_core::selections::ToSQL;
+    /// # use voxi_core::selections::SingleSelectBuilder;
+    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
     /// let query = SingleSelectBuilder::field("ID")
     ///     .distinct()
     ///     .from("TABLE")
@@ -131,9 +131,9 @@ impl SingleSelectBuilder {
 
     /// Add table to from part of select.
     /// ```
-    /// # use roxi_sql::selections::SingleSelectBuilder;
-    /// # use crate::roxi_sql::selections::ToSQL;
-    /// # use crate::roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::SingleSelectBuilder;
+    /// # use crate::voxi_core::selections::ToSQL;
+    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
     /// let query = SingleSelectBuilder::field("ID")
     ///     .distinct()
     ///     .from("TABLE")
@@ -194,9 +194,9 @@ impl SingleSelectBuilder {
 
     // TODO: must to use Result because table or column maybe are empty
     /// ```
-    /// # use roxi_sql::selections::QueryBuilder;
-    /// # use crate::roxi_sql::selections::ToSQL;
-    /// # use crate::roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::QueryBuilder;
+    /// # use crate::voxi_core::selections::ToSQL;
+    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
     /// let query = QueryBuilder::new().field("ID").from("TABLE").build().unwrap();
     /// assert_eq!(args_to_str(query).unwrap(), r#"SELECT "ID" FROM "TABLE""#);
     /// ```
@@ -224,10 +224,7 @@ pub struct SingleQuery {
 }
 
 impl ToSQL for SingleQuery {
-    fn to_sql(
-        &self,
-        args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         self.query.to_sql(args_resolver)
     }
 }

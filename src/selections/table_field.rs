@@ -24,9 +24,9 @@ impl TableField {
     /// Create a `TableField`, that can contais a table definition.
     /// It is possible to inform table delimited by a dot.
     /// ```
-    /// # use crate::roxi_sql::selections::ToSQL;
-    /// # use roxi_sql::selections::TableField;
-    /// # use crate::roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::ToSQL;
+    /// # use voxi_core::selections::TableField;
+    /// # use voxi_core::builder::args_resolver_string::args_to_str;
     /// let table_field = TableField::new("TABLE.FIELD");
     /// assert_eq!(args_to_str(table_field).unwrap(), r#""TABLE"."FIELD""#);
     /// ```
@@ -68,10 +68,7 @@ impl fmt::Display for TableField {
 }
 
 impl ToSQL for TableField {
-    fn to_sql(
-        &self,
-        args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         let sql = if let Some(table) = self.table.as_ref() {
             if let Some(alias) = table.alias() {
                 format!(

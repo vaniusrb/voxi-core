@@ -11,11 +11,11 @@ use serde::{Deserialize, Serialize};
 
 /// Definition for SQL join relation between other tables/queries.
 /// ```
-/// # use roxi_sql::selections::Join;
-/// # use roxi_sql::selections::IntoTableField;
-/// # use roxi_sql::selections::ToSQL;
-/// # use roxi_sql::selections::ConditionWhereOperation;
-/// # use roxi_sql::builder::args_resolver_string::args_to_str;
+/// # use voxi_core::selections::Join;
+/// # use voxi_core::selections::IntoTableField;
+/// # use voxi_core::selections::ToSQL;
+/// # use voxi_core::selections::ConditionWhereOperation;
+/// # use voxi_core::builder::args_resolver_string::args_to_str;
 /// let field_detail = "DET.MASTER".into_table_field();
 /// let field_master = "MAS.ID".into_table_field();
 /// let join = Join::inner("DETAIL DET", field_detail.equal(field_master));
@@ -34,10 +34,10 @@ pub struct Join {
 impl Join {
     /// Create a Join from a IntoJoin implementation.
     /// ```
-    /// # use roxi_sql::selections::Join;
-    /// # use roxi_sql::selections::IntoTableField;
-    /// # use roxi_sql::selections::ToSQL;
-    /// # use roxi_sql::selections::ConditionWhereOperation;
+    /// # use voxi_core::selections::Join;
+    /// # use voxi_core::selections::IntoTableField;
+    /// # use voxi_core::selections::ToSQL;
+    /// # use voxi_core::selections::ConditionWhereOperation;
     /// let field_detail = "DET.MASTER".into_table_field();
     /// let field_master = "MAS.ID".into_table_field();
     /// let join = Join::full("DETAIL DET", field_detail.equal(field_master));
@@ -50,11 +50,11 @@ impl Join {
 
     /// Define SQL join for INNER JOIN.
     /// ```
-    /// # use roxi_sql::selections::Join;
-    /// # use roxi_sql::selections::IntoTableField;
-    /// # use roxi_sql::selections::ToSQL;
-    /// # use roxi_sql::selections::ConditionWhereOperation;
-    /// # use roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::Join;
+    /// # use voxi_core::selections::IntoTableField;
+    /// # use voxi_core::selections::ToSQL;
+    /// # use voxi_core::selections::ConditionWhereOperation;
+    /// # use voxi_core::builder::args_resolver_string::args_to_str;
     /// let field_detail = "DET.MASTER".into_table_field();
     /// let field_master = "MAS.ID".into_table_field();
     /// let join = Join::inner("DETAIL DET", field_detail.equal(field_master));
@@ -73,11 +73,11 @@ impl Join {
 
     /// Define SQL join for FULL JOIN.
     /// ```
-    /// # use roxi_sql::selections::Join;
-    /// # use roxi_sql::selections::IntoTableField;
-    /// # use roxi_sql::selections::ToSQL;
-    /// # use roxi_sql::selections::ConditionWhereOperation;
-    /// # use roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::Join;
+    /// # use voxi_core::selections::IntoTableField;
+    /// # use voxi_core::selections::ToSQL;
+    /// # use voxi_core::selections::ConditionWhereOperation;
+    /// # use voxi_core::builder::args_resolver_string::args_to_str;
     /// let field_detail = "DET.MASTER".into_table_field();
     /// let field_master = "MAS.ID".into_table_field();
     /// let join = Join::full("DETAIL DET", field_detail.equal(field_master));
@@ -96,11 +96,11 @@ impl Join {
 
     /// Define SQL join for LEFT JOIN.
     /// ```
-    /// # use roxi_sql::selections::Join;
-    /// # use roxi_sql::selections::IntoTableField;
-    /// # use roxi_sql::selections::ToSQL;
-    /// # use roxi_sql::selections::ConditionWhereOperation;
-    /// # use roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::Join;
+    /// # use voxi_core::selections::IntoTableField;
+    /// # use voxi_core::selections::ToSQL;
+    /// # use voxi_core::selections::ConditionWhereOperation;
+    /// # use voxi_core::builder::args_resolver_string::args_to_str;
     /// let field_detail = "DET.MASTER".into_table_field();
     /// let field_master = "MAS.ID".into_table_field();
     /// let join = Join::left("DETAIL DET", field_detail.equal(field_master));
@@ -119,11 +119,11 @@ impl Join {
 
     /// Define SQL join for RIGHT JOIN.
     /// ```
-    /// # use crate::roxi_sql::selections::ToSQL;
-    /// # use roxi_sql::selections::IntoTableField;
-    /// # use roxi_sql::selections::Join;
-    /// # use roxi_sql::selections::ConditionWhereOperation;
-    /// # use roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use crate::voxi_core::selections::ToSQL;
+    /// # use voxi_core::selections::IntoTableField;
+    /// # use voxi_core::selections::Join;
+    /// # use voxi_core::selections::ConditionWhereOperation;
+    /// # use voxi_core::builder::args_resolver_string::args_to_str;
     /// let field_detail = "DET.MASTER".into_table_field();
     /// let field_master = "MAS.ID".into_table_field();
     /// let join = Join::right("DETAIL DET", field_detail.equal(field_master));
@@ -191,10 +191,7 @@ pub enum JoinType {
 }
 
 impl ToSQL for Join {
-    fn to_sql(
-        &self,
-        args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         let join = match self.join_type {
             JoinType::Full => "FULL JOIN",
             JoinType::Inner => "INNER JOIN",

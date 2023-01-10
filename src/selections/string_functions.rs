@@ -20,7 +20,7 @@ impl StringFunction {
     /// Define SQL function for UPPER(<field>).
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::StringFunction;
+    /// # use voxi_core::selections::StringFunction;
     /// let upper = StringFunction::upper("NAME");
     /// ```
     pub fn upper(value_where: impl IntoValueWhere) -> Self {
@@ -30,7 +30,7 @@ impl StringFunction {
     /// Define SQL function for LOWER(<field>).
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::StringFunction;
+    /// # use voxi_core::selections::StringFunction;
     /// let lower = StringFunction::lower("NAME");
     /// ```
     pub fn lower(value_where: impl IntoValueWhere) -> Self {
@@ -40,7 +40,7 @@ impl StringFunction {
     /// Define SQL function for SUBSTRING(<field> from <start> for <length>).
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::StringFunction;
+    /// # use voxi_core::selections::StringFunction;
     /// let substring = StringFunction::substring("NAME", 1, 4);
     /// ```
     pub fn substring(value_where: impl IntoValueWhere, start: u16, length: u16) -> Self {
@@ -50,7 +50,7 @@ impl StringFunction {
     /// Define SQL function for SUBSTRING(<field> from <start> for <length>).
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::StringFunction;
+    /// # use voxi_core::selections::StringFunction;
     /// let substring = StringFunction::substring("NAME", 1, 4);
     /// ```
     pub fn concat(values_where: impl IntoValuesWhere) -> Self {
@@ -60,7 +60,7 @@ impl StringFunction {
     /// Define SQL function for REPLACE(<field>, <old string>, <new string>).
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::StringFunction;
+    /// # use voxi_core::selections::StringFunction;
     /// let replace = StringFunction::replace("NAME", "OLD", "NEW");
     /// ```
     pub fn replace(
@@ -77,10 +77,7 @@ impl StringFunction {
 }
 
 impl ToSQL for StringFunction {
-    fn to_sql(
-        &self,
-        args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         let sql = match &self {
             StringFunction::Upper(value_where) => {
                 format!("UPPER({})", value_where.to_sql(args_resolver)?)

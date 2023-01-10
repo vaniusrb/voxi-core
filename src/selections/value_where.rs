@@ -35,10 +35,7 @@ impl ValueWhere {
 
 impl ToSQL for ValueWhere {
     // TODO: add comment
-    fn to_sql(
-        &self,
-        args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         match self {
             ValueWhere::LiteralValue(v) => v.to_sql(args_resolver),
             ValueWhere::FieldName(f) => f.to_sql(args_resolver),

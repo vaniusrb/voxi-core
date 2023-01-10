@@ -28,10 +28,7 @@ impl WhenCondition {
 }
 
 impl ToSQL for WhenCondition {
-    fn to_sql(
-        &self,
-        args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         let sql = format!(
             "WHEN {} THEN {}",
             self.when_condition.to_sql(args_resolver)?,

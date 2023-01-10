@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 /// Definition for SQL functions MIN, MAX, AVG, SUM and COUNT.
 /// # Example
 /// ```
-/// # use roxi_sql::selections::AggFunction;
+/// # use voxi_core::selections::AggFunction;
 /// let min = AggFunction::min("PRICE");
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
@@ -18,7 +18,7 @@ impl AggFunction {
     /// Define SQL function for MIN(field).
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::AggFunction;
+    /// # use voxi_core::selections::AggFunction;
     /// let min = AggFunction::min("PRICE");
     /// ```
     pub fn min(table_field: impl IntoTableField) -> Self {
@@ -31,7 +31,7 @@ impl AggFunction {
     /// Define SQL function for MAX(field).
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::AggFunction;
+    /// # use voxi_core::selections::AggFunction;
     /// let max = AggFunction::max("PRICE");
     /// ```
     pub fn max(table_field: impl IntoTableField) -> Self {
@@ -44,7 +44,7 @@ impl AggFunction {
     /// Define SQL function for AVG(field).
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::AggFunction;
+    /// # use voxi_core::selections::AggFunction;
     /// let avg = AggFunction::avg("PRICE");
     /// ```
     pub fn avg(table_field: impl IntoTableField) -> Self {
@@ -57,7 +57,7 @@ impl AggFunction {
     /// Define SQL function for SUM(field).
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::AggFunction;
+    /// # use voxi_core::selections::AggFunction;
     /// let sum = AggFunction::sum("PRICE");
     /// ```
     pub fn sum(table_field: impl IntoTableField) -> Self {
@@ -70,7 +70,7 @@ impl AggFunction {
     /// Define SQL function for COUNT(field).
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::AggFunction;
+    /// # use voxi_core::selections::AggFunction;
     /// let count = AggFunction::count("PRICE");
     /// ```
     pub fn count(table_field: impl IntoTableField) -> Self {
@@ -82,8 +82,8 @@ impl AggFunction {
 
     /// Get a reference to the agg function's agg type.
     /// ```
-    /// # use roxi_sql::selections::AggFunction;
-    /// # use roxi_sql::selections::AggFunctionType;
+    /// # use voxi_core::selections::AggFunction;
+    /// # use voxi_core::selections::AggFunctionType;
     /// let agg_fun = AggFunction::avg("*");
     /// assert_eq!(agg_fun.agg_type(), &AggFunctionType::Avg);
     /// ```
@@ -94,7 +94,7 @@ impl AggFunction {
     /// Get a reference to the agg function's table field.
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::AggFunction;
+    /// # use voxi_core::selections::AggFunction;
     /// let agg_fun = AggFunction::avg("*");
     /// assert_eq!(agg_fun.table_field(), "*");
     /// ```
@@ -113,10 +113,7 @@ pub enum AggFunctionType {
 }
 
 impl ToSQL for AggFunction {
-    fn to_sql(
-        &self,
-        args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         let op = match &self.agg_type {
             AggFunctionType::Min => "MIN",
             AggFunctionType::Max => "MAX",

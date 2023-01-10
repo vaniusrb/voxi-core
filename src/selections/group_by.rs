@@ -15,8 +15,8 @@ pub struct GroupBy {
 impl GroupBy {
     /// Create a `GroupBy` from a `IntoGroupBy` implementation.
     /// ```
-    /// # use roxi_sql::selections::GroupBy;
-    /// # use roxi_sql::selections::TableField;
+    /// # use voxi_core::selections::GroupBy;
+    /// # use voxi_core::selections::TableField;
     /// let group_by = GroupBy::new("TABLE.ID");
     /// assert_eq!(group_by.table_field(), &TableField::new("TABLE.ID"));
     /// ```
@@ -26,8 +26,8 @@ impl GroupBy {
 
     /// Get a reference to the group by's table field.
     /// ```
-    /// # use roxi_sql::selections::TableField;
-    /// # use roxi_sql::selections::GroupBy;
+    /// # use voxi_core::selections::TableField;
+    /// # use voxi_core::selections::GroupBy;
     /// let group_by = GroupBy::new("TABLE.ID");
     /// assert_eq!(group_by.table_field(), &TableField::new("TABLE.ID"));
     /// ```
@@ -55,10 +55,7 @@ impl IntoGroupBy for &str {
 }
 
 impl ToSQL for GroupBy {
-    fn to_sql(
-        &self,
-        args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         self.table_field().to_sql(args_resolver)
     }
 }

@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 /// Definition for SQL `ORDER BY`.
 /// # Example
 /// ```
-/// # use roxi_sql::selections::OrderBy;
+/// # use voxi_core::selections::OrderBy;
 /// let order_by = OrderBy::desc("PRICE");
 /// assert_eq!(order_by.table_field(), "PRICE");
 /// ```
@@ -23,7 +23,7 @@ impl OrderBy {
     /// Define SQL `ORDER BY` field with `ASC` order.
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::OrderBy;
+    /// # use voxi_core::selections::OrderBy;
     /// let order_by = OrderBy::asc("PRICE");
     /// ```
     pub fn asc(table_field: impl IntoTableField) -> Self {
@@ -36,7 +36,7 @@ impl OrderBy {
     /// Define SQL `ORDER BY` field with `DESC` order.
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::OrderBy;
+    /// # use voxi_core::selections::OrderBy;
     /// let order_by = OrderBy::desc("PRICE");
     /// assert_eq!(order_by.table_field(), "PRICE");
     /// ```
@@ -50,8 +50,8 @@ impl OrderBy {
     /// Get a reference to the order by's order by type.
     /// # Example
     /// ```
-    /// # use crate::roxi_sql::selections::OrderBy;
-    /// # use crate::roxi_sql::selections::OrderByType;
+    /// # use crate::voxi_core::selections::OrderBy;
+    /// # use crate::voxi_core::selections::OrderByType;
     /// let sort = OrderBy::desc("ID");
     /// assert_eq!(sort.order_by_type(), &OrderByType::Desc);
     /// ```
@@ -62,7 +62,7 @@ impl OrderBy {
     /// Get a reference to the order by's table field.
     /// # Example
     /// ```
-    /// # use crate::roxi_sql::selections::OrderBy;
+    /// # use crate::voxi_core::selections::OrderBy;
     /// let sort = OrderBy::desc("ID");
     /// assert_eq!(sort.table_field(), "ID");
     /// ```
@@ -78,10 +78,7 @@ pub enum OrderByType {
 }
 
 impl ToSQL for OrderBy {
-    fn to_sql(
-        &self,
-        args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         let sort_t = match self.order_by_type {
             OrderByType::Asc => "ASC",
             OrderByType::Desc => "DESC",

@@ -1,0 +1,477 @@
+{
+    "extension": "linecounter",
+    "version": "0.2.7",
+    "workspace": "/home/vanius/rust/roxi/voxi-core",
+    "linecount": [
+        {
+            "version": "0.2.7",
+            "counttime": "2023-01-09 21:46:57",
+            "filesum": 73,
+            "codesum": 7034,
+            "commentsum": 966,
+            "blanksum": 1031,
+            "statistics": {
+                ".toml": {
+                    "code": 22,
+                    "comment": 0,
+                    "blank": 4
+                },
+                ".md": {
+                    "code": 68,
+                    "comment": 1,
+                    "blank": 29
+                },
+                ".rs": {
+                    "code": 6941,
+                    "comment": 965,
+                    "blank": 998
+                },
+                "": {
+                    "code": 3,
+                    "comment": 0,
+                    "blank": 0
+                }
+            },
+            "filelist": [
+                {
+                    "blank": 0,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": ".gitignore"
+                },
+                {
+                    "blank": 4,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "Cargo.toml"
+                },
+                {
+                    "blank": 29,
+                    "code": 68,
+                    "comment": 1,
+                    "filename": "README.md"
+                },
+                {
+                    "blank": 3,
+                    "code": 10,
+                    "comment": 1,
+                    "filename": "src/builder/args_resolver.rs"
+                },
+                {
+                    "blank": 2,
+                    "code": 7,
+                    "comment": 1,
+                    "filename": "src/builder/args_resolver_binds.rs"
+                },
+                {
+                    "blank": 9,
+                    "code": 44,
+                    "comment": 9,
+                    "filename": "src/builder/args_resolver_string.rs"
+                },
+                {
+                    "blank": 0,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "src/builder/mod.rs"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "src/error/mod.rs"
+                },
+                {
+                    "blank": 2,
+                    "code": 21,
+                    "comment": 1,
+                    "filename": "src/error/sql_error.rs"
+                },
+                {
+                    "blank": 2,
+                    "code": 28,
+                    "comment": 0,
+                    "filename": "src/lib.rs"
+                },
+                {
+                    "blank": 17,
+                    "code": 120,
+                    "comment": 50,
+                    "filename": "src/selections/agg_functions.rs"
+                },
+                {
+                    "blank": 14,
+                    "code": 79,
+                    "comment": 17,
+                    "filename": "src/selections/alias.rs"
+                },
+                {
+                    "blank": 14,
+                    "code": 119,
+                    "comment": 0,
+                    "filename": "src/selections/arithmetic_expr/arithmetic_expr_add.rs"
+                },
+                {
+                    "blank": 13,
+                    "code": 119,
+                    "comment": 0,
+                    "filename": "src/selections/arithmetic_expr/arithmetic_expr_div.rs"
+                },
+                {
+                    "blank": 14,
+                    "code": 119,
+                    "comment": 0,
+                    "filename": "src/selections/arithmetic_expr/arithmetic_expr_mul.rs"
+                },
+                {
+                    "blank": 13,
+                    "code": 119,
+                    "comment": 0,
+                    "filename": "src/selections/arithmetic_expr/arithmetic_expr_sub.rs"
+                },
+                {
+                    "blank": 29,
+                    "code": 259,
+                    "comment": 59,
+                    "filename": "src/selections/arithmetic_expr/arithmetic_expr_where.rs"
+                },
+                {
+                    "blank": 0,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "src/selections/arithmetic_expr/mod.rs"
+                },
+                {
+                    "blank": 5,
+                    "code": 30,
+                    "comment": 0,
+                    "filename": "src/selections/bind_name.rs"
+                },
+                {
+                    "blank": 21,
+                    "code": 119,
+                    "comment": 17,
+                    "filename": "src/selections/case/case_condition.rs"
+                },
+                {
+                    "blank": 12,
+                    "code": 113,
+                    "comment": 121,
+                    "filename": "src/selections/case/case_value.rs"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "src/selections/case/mod.rs"
+                },
+                {
+                    "blank": 8,
+                    "code": 64,
+                    "comment": 0,
+                    "filename": "src/selections/case/when_condition.rs"
+                },
+                {
+                    "blank": 10,
+                    "code": 63,
+                    "comment": 0,
+                    "filename": "src/selections/case/when_value.rs"
+                },
+                {
+                    "blank": 21,
+                    "code": 120,
+                    "comment": 4,
+                    "filename": "src/selections/combination.rs"
+                },
+                {
+                    "blank": 54,
+                    "code": 460,
+                    "comment": 86,
+                    "filename": "src/selections/condition_where.rs"
+                },
+                {
+                    "blank": 18,
+                    "code": 115,
+                    "comment": 2,
+                    "filename": "src/selections/field_attribs.rs"
+                },
+                {
+                    "blank": 33,
+                    "code": 243,
+                    "comment": 18,
+                    "filename": "src/selections/fields_attribs.rs"
+                },
+                {
+                    "blank": 33,
+                    "code": 211,
+                    "comment": 51,
+                    "filename": "src/selections/from.rs"
+                },
+                {
+                    "blank": 14,
+                    "code": 70,
+                    "comment": 15,
+                    "filename": "src/selections/group_by.rs"
+                },
+                {
+                    "blank": 23,
+                    "code": 178,
+                    "comment": 90,
+                    "filename": "src/selections/join.rs"
+                },
+                {
+                    "blank": 10,
+                    "code": 54,
+                    "comment": 8,
+                    "filename": "src/selections/limit_offset.rs"
+                },
+                {
+                    "blank": 36,
+                    "code": 208,
+                    "comment": 3,
+                    "filename": "src/selections/logical_expr_where.rs"
+                },
+                {
+                    "blank": 3,
+                    "code": 0,
+                    "comment": 18,
+                    "filename": "src/selections/macros.rs"
+                },
+                {
+                    "blank": 4,
+                    "code": 64,
+                    "comment": 3,
+                    "filename": "src/selections/mod.rs"
+                },
+                {
+                    "blank": 13,
+                    "code": 88,
+                    "comment": 35,
+                    "filename": "src/selections/order_by.rs"
+                },
+                {
+                    "blank": 11,
+                    "code": 54,
+                    "comment": 1,
+                    "filename": "src/selections/orders.rs"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "src/selections/query.rs"
+                },
+                {
+                    "blank": 70,
+                    "code": 583,
+                    "comment": 68,
+                    "filename": "src/selections/select.rs"
+                },
+                {
+                    "blank": 46,
+                    "code": 290,
+                    "comment": 67,
+                    "filename": "src/selections/single_select.rs"
+                },
+                {
+                    "blank": 15,
+                    "code": 164,
+                    "comment": 31,
+                    "filename": "src/selections/string_functions.rs"
+                },
+                {
+                    "blank": 28,
+                    "code": 184,
+                    "comment": 49,
+                    "filename": "src/selections/table.rs"
+                },
+                {
+                    "blank": 34,
+                    "code": 221,
+                    "comment": 23,
+                    "filename": "src/selections/table_field.rs"
+                },
+                {
+                    "blank": 20,
+                    "code": 104,
+                    "comment": 14,
+                    "filename": "src/selections/table_name.rs"
+                },
+                {
+                    "blank": 6,
+                    "code": 80,
+                    "comment": 4,
+                    "filename": "src/selections/tables_names.rs"
+                },
+                {
+                    "blank": 5,
+                    "code": 49,
+                    "comment": 4,
+                    "filename": "src/selections/to_sql.rs"
+                },
+                {
+                    "blank": 24,
+                    "code": 168,
+                    "comment": 5,
+                    "filename": "src/selections/value_select.rs"
+                },
+                {
+                    "blank": 23,
+                    "code": 164,
+                    "comment": 4,
+                    "filename": "src/selections/value_select_attrib.rs"
+                },
+                {
+                    "blank": 46,
+                    "code": 302,
+                    "comment": 2,
+                    "filename": "src/selections/value_where.rs"
+                },
+                {
+                    "blank": 16,
+                    "code": 94,
+                    "comment": 3,
+                    "filename": "src/selections/values_select.rs"
+                },
+                {
+                    "blank": 12,
+                    "code": 84,
+                    "comment": 7,
+                    "filename": "src/selections/values_where.rs"
+                },
+                {
+                    "blank": 1,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "src/values/error.rs"
+                },
+                {
+                    "blank": 15,
+                    "code": 76,
+                    "comment": 7,
+                    "filename": "src/values/field_name.rs"
+                },
+                {
+                    "blank": 8,
+                    "code": 51,
+                    "comment": 0,
+                    "filename": "src/values/field_name_type.rs"
+                },
+                {
+                    "blank": 12,
+                    "code": 61,
+                    "comment": 0,
+                    "filename": "src/values/formats.rs"
+                },
+                {
+                    "blank": 43,
+                    "code": 202,
+                    "comment": 49,
+                    "filename": "src/values/into_value.rs"
+                },
+                {
+                    "blank": 1,
+                    "code": 39,
+                    "comment": 0,
+                    "filename": "src/values/mod.rs"
+                },
+                {
+                    "blank": 6,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "src/values/null_value.rs"
+                },
+                {
+                    "blank": 10,
+                    "code": 56,
+                    "comment": 0,
+                    "filename": "src/values/nullable_value.rs"
+                },
+                {
+                    "blank": 30,
+                    "code": 180,
+                    "comment": 11,
+                    "filename": "src/values/sub_set_values.rs"
+                },
+                {
+                    "blank": 3,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "src/values/typed_option_value.rs"
+                },
+                {
+                    "blank": 3,
+                    "code": 17,
+                    "comment": 1,
+                    "filename": "src/values/util.rs"
+                },
+                {
+                    "blank": 6,
+                    "code": 37,
+                    "comment": 2,
+                    "filename": "src/values/value.rs"
+                },
+                {
+                    "blank": 4,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "src/values/value_boolean.rs"
+                },
+                {
+                    "blank": 3,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "src/values/value_decimal.rs"
+                },
+                {
+                    "blank": 3,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "src/values/value_int32.rs"
+                },
+                {
+                    "blank": 3,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "src/values/value_int64.rs"
+                },
+                {
+                    "blank": 14,
+                    "code": 140,
+                    "comment": 1,
+                    "filename": "src/values/value_json.rs"
+                },
+                {
+                    "blank": 3,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "src/values/value_naive_date.rs"
+                },
+                {
+                    "blank": 3,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "src/values/value_naive_date_time.rs"
+                },
+                {
+                    "blank": 4,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "src/values/value_string.rs"
+                },
+                {
+                    "blank": 12,
+                    "code": 68,
+                    "comment": 3,
+                    "filename": "src/values/value_type.rs"
+                },
+                {
+                    "blank": 3,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "src/values/value_uuid.rs"
+                }
+            ]
+        }
+    ]
+}

@@ -155,7 +155,7 @@ impl FieldsAttribs {
     pub fn field_attribs_by_name(
         &self,
         name: impl IntoFieldName,
-    ) -> error_stack::Result<FieldAttribs, SQLRoxiError> {
+    ) -> Result<FieldAttribs, SQLRoxiError> {
         let name = name.into_field_name();
         self.fields_attribs
             .iter()
@@ -168,7 +168,7 @@ impl FieldsAttribs {
                     .map(|k| k.clone().into_field_name().to_string())
                     .collect::<Vec<_>>()
                     .join(",");
-                SQLRoxiError::FieldNameNotFound(name.to_string(), fields).into()
+                SQLRoxiError::FieldNameNotFound(name.to_string(), fields)
             })
     }
 
@@ -185,10 +185,7 @@ impl FieldsAttribs {
 }
 
 impl ToSQL for FieldsAttribs {
-    fn to_sql(
-        &self,
-        _args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, _args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         let sql = self
             .to_vec()
             .iter()

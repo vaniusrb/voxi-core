@@ -90,10 +90,7 @@ pub enum ConditionWhere {
 }
 
 impl ToSQL for ConditionWhere {
-    fn to_sql(
-        &self,
-        args_resolver: &mut dyn ArgsResolver,
-    ) -> error_stack::Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
         let sql = match self {
             ConditionWhere::Expression(f) => format!("{} IS NULL", f.to_sql(args_resolver)?),
             ConditionWhere::ConditionNull(f) => format!("{} IS NULL", f.to_sql(args_resolver)?),
@@ -176,8 +173,8 @@ impl ConditionWhere {
     /// Define condition "equal to", like format `<ValueWhere> = <ValueWhere>`.
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::ConditionWhere;
-    /// # use roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::ConditionWhere;
+    /// # use voxi_core::builder::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::eq("TEXT_1", "TEXT_2");
     /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' = 'TEXT_2'"#);
     /// ```
@@ -194,8 +191,8 @@ impl ConditionWhere {
     /// Define condition "different from", like format `<ValueWhere> <> <ValueWhere>`.
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::ConditionWhere;
-    /// # use roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::ConditionWhere;
+    /// # use voxi_core::builder::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::df("TEXT_1", "TEXT_2");
     /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' <> 'TEXT_2'"#);
     /// ```
@@ -212,8 +209,8 @@ impl ConditionWhere {
     /// Define condition "greater than", like format `<ValueWhere> > <ValueWhere>`.
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::ConditionWhere;
-    /// # use roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::ConditionWhere;
+    /// # use voxi_core::builder::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::gt("TEXT_1", "TEXT_2");
     /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' > 'TEXT_2'"#);
     /// ```
@@ -230,8 +227,8 @@ impl ConditionWhere {
     /// Define condition "greater or equal than", like format `<ValueWhere> >= <ValueWhere>`.
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::ConditionWhere;
-    /// # use roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::ConditionWhere;
+    /// # use voxi_core::builder::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::ge("TEXT_1", "TEXT_2");
     /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' >= 'TEXT_2'"#);
     /// ```
@@ -249,8 +246,8 @@ impl ConditionWhere {
     /// Define condition "less than", like format `<ValueWhere> > <ValueWhere>`.
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::ConditionWhere;
-    /// # use roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::ConditionWhere;
+    /// # use voxi_core::builder::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::ge("TEXT_1", "TEXT_2");
     /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' >= 'TEXT_2'"#);
     /// ```
@@ -267,8 +264,8 @@ impl ConditionWhere {
     /// Define condition "less or equal than", like format `<ValueWhere> <= <ValueWhere>`.
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::ConditionWhere;
-    /// # use roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::ConditionWhere;
+    /// # use voxi_core::builder::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::le("TEXT_1", "TEXT_2");
     /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' <= 'TEXT_2'"#);
     /// ```
@@ -285,8 +282,8 @@ impl ConditionWhere {
     /// Define "include in", like format `<ValueWhere> IN (<ValueWhere>,...)`.
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::ConditionWhere;
-    /// # use roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::ConditionWhere;
+    /// # use voxi_core::builder::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::inc("TEXT_1", vec!["TEXT_2", "TEXT_3"]);
     /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' IN ('TEXT_2','TEXT_3')"#);
     /// ```
@@ -301,8 +298,8 @@ impl ConditionWhere {
     /// Define text condition `LIKE`.
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::ConditionWhere;
-    /// # use roxi_sql::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::selections::ConditionWhere;
+    /// # use voxi_core::builder::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::like("TEXT_1", "TEXT%");
     /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' LIKE 'TEXT%'"#);
     /// ```
@@ -320,8 +317,8 @@ impl ConditionWhere {
     /// Define "exist in sub-query", like format `EXISTS (<query>)`.
     /// # Example
     /// ```
-    /// # use roxi_sql::selections::QueryBuilder;
-    /// # use roxi_sql::selections::ConditionWhere;
+    /// # use voxi_core::selections::QueryBuilder;
+    /// # use voxi_core::selections::ConditionWhere;
     /// let query = QueryBuilder::new().field("FIELD").from("TABLE").build().unwrap();
     /// let c1 = ConditionWhere::exists(query);
     /// ```

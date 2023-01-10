@@ -2,7 +2,7 @@ use super::{
     table::{IntoTable, Table},
     to_sql::ToSQL,
 };
-use crate::{builder::args_resolver::ArgsResolver, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 use crate::{FieldName, IntoFieldName};
 use serde::{Deserialize, Serialize};
 use std::fmt;
@@ -68,7 +68,7 @@ impl fmt::Display for TableField {
 }
 
 impl ToSQL for TableField {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let sql = if let Some(table) = self.table.as_ref() {
             if let Some(alias) = table.alias() {
                 format!(
@@ -186,7 +186,7 @@ impl IntoTableField for FieldName {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::builder::args_resolver_string::ArgsResolverString;
+    use crate::resolvers::args_resolver_string::ArgsResolverString;
 
     macro_rules! t_field {
         ($a:expr) => {{

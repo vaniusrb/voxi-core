@@ -1,7 +1,7 @@
 use thiserror::Error as ThisError;
 
 #[derive(ThisError, Debug)]
-pub enum RoxiTypeError {
+pub enum CoreError {
     #[error("conversion error: `{0}`")]
     Conversion(String),
     #[error("conversion error: `{0}`")]

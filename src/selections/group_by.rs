@@ -1,4 +1,4 @@
-use crate::{builder::args_resolver::ArgsResolver, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 
 use super::{
     table_field::{IntoTableField, TableField},
@@ -55,14 +55,14 @@ impl IntoGroupBy for &str {
 }
 
 impl ToSQL for GroupBy {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         self.table_field().to_sql(args_resolver)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::builder::args_resolver_string::ArgsResolverString;
+    use crate::resolvers::args_resolver_string::ArgsResolverString;
 
     use super::*;
 

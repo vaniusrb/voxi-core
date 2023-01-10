@@ -1,6 +1,6 @@
 use crate::{
-    builder::{args_resolver::ArgsResolver, args_resolver_string::ArgsResolverString},
-    SQLRoxiError,
+    resolvers::{args_resolver::ArgsResolver, args_resolver_string::ArgsResolverString},
+    SQLError,
 };
 
 use super::{
@@ -224,7 +224,7 @@ pub struct SingleQuery {
 }
 
 impl ToSQL for SingleQuery {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         self.query.to_sql(args_resolver)
     }
 }
@@ -267,7 +267,7 @@ impl SingleQuery {
 mod tests {
     use super::*;
     use crate::{
-        builder::args_resolver_string::ArgsResolverString,
+        resolvers::args_resolver_string::ArgsResolverString,
         selections::{
             condition_where::{ConditionWhere, ConditionWhereOperation},
             from::QueryAlias,
@@ -390,7 +390,7 @@ mod tests {
 
     #[test]
     fn test_avg() {
-        use crate::builder::args_resolver_string::args_to_str;
+        use crate::resolvers::args_resolver_string::args_to_str;
         let query = SingleSelectBuilder::avg("ID").from("TABLE").build();
         assert_eq!(
             args_to_str(query).unwrap(),

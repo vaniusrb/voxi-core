@@ -1,5 +1,5 @@
 use super::ToSQL;
-use crate::{builder::args_resolver::ArgsResolver, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 use serde::{Deserialize, Serialize};
 
 /// Definition for SQL `LIMIT` and `OFFSET`.
@@ -35,7 +35,7 @@ impl LimitOffset {
 }
 
 impl ToSQL for LimitOffset {
-    fn to_sql(&self, _args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, _args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         Ok(format!("LIMIT {} OFFSET {}", self.limit, self.offset))
     }
 }

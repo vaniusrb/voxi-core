@@ -4,7 +4,7 @@ use super::{
     condition_where::{ConditionWhere, IntoConditionWhere},
     to_sql::ToSQL,
 };
-use crate::{builder::args_resolver::ArgsResolver, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 use serde::{Deserialize, Serialize};
 
 // TODO: add comment
@@ -113,7 +113,7 @@ impl LogicalExprWhere {
 }
 
 impl ToSQL for LogicalExprWhere {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let sql = match self {
             LogicalExprWhere::Condition(c) => c.to_sql(args_resolver)?,
             LogicalExprWhere::Not(e) => format!("NOT {}", e.to_sql(args_resolver)?),
@@ -175,7 +175,7 @@ mod tests {
 
     use super::LogicalExprWhereOps;
     use crate::{
-        builder::args_resolver_string::args_to_str,
+        resolvers::args_resolver_string::args_to_str,
         selections::{ConditionWhereOperation, LogicalExprWhere},
     };
 

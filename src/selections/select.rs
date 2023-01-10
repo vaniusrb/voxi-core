@@ -20,11 +20,11 @@ use super::{
     LimitOffset, LogicalExprWhereOps, ValueWhere,
 };
 use crate::{
-    builder::{
+    resolvers::{
         args_resolver::ArgsResolver, args_resolver_binds::ArgsResolverBindsDecorator,
         args_resolver_string::ArgsResolverString,
     },
-    SQLRoxiError,
+    SQLError,
 };
 use crate::{FieldName, IntoNullableValue, NullableValue};
 use serde::{Deserialize, Serialize};
@@ -302,14 +302,14 @@ impl QueryBuilder {
     /// let query = QueryBuilder::new().field("ID").from("TABLE").build().unwrap();
     /// assert_eq!(args_to_str(query).unwrap(), r#"SELECT "ID" FROM "TABLE""#);
     /// ```
-    pub fn build(self) -> Result<Select, SQLRoxiError> {
+    pub fn build(self) -> Result<Select, SQLError> {
         if self.columns.is_empty() {
-            return Err(SQLRoxiError::InvalidQueryBuilderConfiguration(
+            return Err(SQLError::InvalidQueryBuilderConfiguration(
                 "no column has been defined".to_string(),
             ));
         }
         if self.from.is_empty() {
-            return Err(SQLRoxiError::InvalidQueryBuilderConfiguration(
+            return Err(SQLError::InvalidQueryBuilderConfiguration(
                 "no from source (table/sub-query) has been defined".to_string(),
             ));
         }
@@ -361,7 +361,7 @@ pub struct Select {
 impl Query for Select {}
 
 impl ToSQL for Select {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let mut hash = HashMap::new();
         for (bind_name, value) in self.binds_values.iter() {
             hash.insert(bind_name.clone(), value.clone());
@@ -546,7 +546,7 @@ impl IntoSelect for SingleQuery {
 mod tests {
     use super::*;
     use crate::{
-        builder::args_resolver_string::ArgsResolverString,
+        resolvers::args_resolver_string::ArgsResolverString,
         selections::{agg_functions::AggFunction, ConditionWhereOperation},
         IntoFieldName,
     };

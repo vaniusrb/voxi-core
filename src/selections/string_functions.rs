@@ -3,7 +3,7 @@ use super::{
     value_where::{IntoValueWhere, ValueWhere},
     values_where::{IntoValuesWhere, ValuesWhere},
 };
-use crate::{builder::args_resolver::ArgsResolver, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 use serde::{Deserialize, Serialize};
 
 // TODO: add comment
@@ -77,7 +77,7 @@ impl StringFunction {
 }
 
 impl ToSQL for StringFunction {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let sql = match &self {
             StringFunction::Upper(value_where) => {
                 format!("UPPER({})", value_where.to_sql(args_resolver)?)
@@ -111,7 +111,7 @@ impl ToSQL for StringFunction {
 mod tests {
     use super::*;
     use crate::{
-        builder::args_resolver_string::ArgsResolverString, selections::table_field::IntoTableField,
+        resolvers::args_resolver_string::ArgsResolverString, selections::table_field::IntoTableField,
     };
 
     #[test]

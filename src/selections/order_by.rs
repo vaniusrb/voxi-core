@@ -2,7 +2,7 @@ use super::{
     table_field::{IntoTableField, TableField},
     to_sql::ToSQL,
 };
-use crate::{builder::args_resolver::ArgsResolver, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 use serde::{Deserialize, Serialize};
 
 /// Definition for SQL `ORDER BY`.
@@ -78,7 +78,7 @@ pub enum OrderByType {
 }
 
 impl ToSQL for OrderBy {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let sort_t = match self.order_by_type {
             OrderByType::Asc => "ASC",
             OrderByType::Desc => "DESC",
@@ -103,7 +103,7 @@ impl IntoOrderBy for OrderBy {
 
 #[cfg(test)]
 mod tests {
-    use crate::builder::args_resolver_string::ArgsResolverString;
+    use crate::resolvers::args_resolver_string::ArgsResolverString;
 
     use super::*;
 

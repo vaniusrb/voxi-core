@@ -1,4 +1,3 @@
-pub mod error;
 pub mod field_name;
 pub mod field_name_type;
 pub mod formats;
@@ -18,7 +17,6 @@ pub mod value_string;
 pub mod value_type;
 pub mod value_uuid;
 
-pub use error::RoxiTypeError;
 pub use field_name::{FieldName, IntoFieldName};
 pub use field_name_type::FieldNameType;
 pub use field_name_type::IntoFieldNameType;

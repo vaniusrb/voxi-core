@@ -2,9 +2,9 @@ use thiserror::Error as ThisError;
 
 // TODO: add comment
 #[derive(ThisError, Debug)]
-pub enum SQLRoxiError {
+pub enum SQLError {
     #[error("type error: `{0}`")]
-    RoxiTypeError(#[from] crate::RoxiTypeError),
+    RoxiTypeError(#[from] crate::CoreError),
     #[error("conversion error: `{0}`")]
     Conversion(String),
     #[error("parse json error: `{0}`")]
@@ -19,7 +19,7 @@ pub enum SQLRoxiError {
     BindNameNotFound(String),
 }
 
-impl From<serde_json::error::Error> for SQLRoxiError {
+impl From<serde_json::error::Error> for SQLError {
     fn from(e: serde_json::error::Error) -> Self {
         Self::ParseJson(e.to_string())
     }

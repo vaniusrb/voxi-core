@@ -1,11 +1,11 @@
 use super::from::{FromSelect, IntoFrom};
 use crate::{
-    builder::args_resolver::ArgsResolver,
+    resolvers::args_resolver::ArgsResolver,
     selections::{
         condition_where::{ConditionWhere, IntoConditionWhere},
         to_sql::ToSQL,
     },
-    SQLRoxiError,
+    SQLError,
 };
 use serde::{Deserialize, Serialize};
 
@@ -191,7 +191,7 @@ pub enum JoinType {
 }
 
 impl ToSQL for Join {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let join = match self.join_type {
             JoinType::Full => "FULL JOIN",
             JoinType::Inner => "INNER JOIN",
@@ -212,7 +212,7 @@ impl ToSQL for Join {
 mod tests {
     use super::*;
     use crate::{
-        builder::args_resolver_string::ArgsResolverString,
+        resolvers::args_resolver_string::ArgsResolverString,
         selections::{condition_where::ConditionWhereOperation, table_field::IntoTableField},
     };
     use pretty_assertions::assert_eq;

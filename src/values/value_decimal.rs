@@ -4,7 +4,7 @@ use super::{
     value::{ValueToSQL, ValueTyped},
     value_type::ValueType,
 };
-use crate::RoxiTypeError;
+use crate::CoreError;
 use rust_decimal::Decimal;
 
 impl IntoValue for Decimal {
@@ -26,23 +26,23 @@ impl ValueTyped for Decimal {
 }
 
 impl TryFrom<Value> for Decimal {
-    type Error = RoxiTypeError;
+    type Error = CoreError;
 
     fn try_from(value: Value) -> Result<Self, Self::Error> {
         match value {
             Value::Decimal(v) => Ok(v),
-            _ => Err(RoxiTypeError::Conversion("not decimal value".to_string())),
+            _ => Err(CoreError::Conversion("not decimal value".to_string())),
         }
     }
 }
 
 impl TryFrom<&Value> for Decimal {
-    type Error = RoxiTypeError;
+    type Error = CoreError;
 
     fn try_from(value: &Value) -> Result<Self, Self::Error> {
         match value {
             Value::Decimal(v) => Ok(*v),
-            _ => Err(RoxiTypeError::Conversion("not decimal value".to_string())),
+            _ => Err(CoreError::Conversion("not decimal value".to_string())),
         }
     }
 }

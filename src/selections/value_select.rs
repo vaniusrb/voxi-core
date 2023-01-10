@@ -10,7 +10,7 @@ use super::{
     value_where::ValueWhere,
     ArithmeticExprWhere, IntoValueWhere,
 };
-use crate::{builder::args_resolver::ArgsResolver, IntoFieldName, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, IntoFieldName, SQLError};
 use crate::{FieldName, NullableValue};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
@@ -117,7 +117,7 @@ where
 }
 
 impl ToSQL for ValueSelect {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let column = self.value_select_type().to_sql(args_resolver)?;
         let sql = match &self.alias {
             Some(alias) => format!(r#"{column} AS "{alias}""#),
@@ -137,7 +137,7 @@ impl TablesNames for ValueSelect {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::builder::args_resolver_string::ArgsResolverString;
+    use crate::resolvers::args_resolver_string::ArgsResolverString;
     use crate::{IntoNullableValue, Value};
 
     #[test]

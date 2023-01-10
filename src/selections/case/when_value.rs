@@ -1,10 +1,10 @@
 use crate::{
-    builder::args_resolver::ArgsResolver,
+    resolvers::args_resolver::ArgsResolver,
     selections::{
         to_sql::ToSQL,
         value_where::{IntoValueWhere, ValueWhere},
     },
-    SQLRoxiError,
+    SQLError,
 };
 use serde::{Deserialize, Serialize};
 
@@ -27,7 +27,7 @@ impl WhenValue {
 }
 
 impl ToSQL for WhenValue {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let sql = format!(
             "WHEN {} THEN {}",
             self.when_value_where.to_sql(args_resolver)?,
@@ -50,7 +50,7 @@ impl IntoWhenValue for WhenValue {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::builder::args_resolver_string::ArgsResolverString;
+    use crate::resolvers::args_resolver_string::ArgsResolverString;
 
     #[test]
     fn test_case_to_sql() {

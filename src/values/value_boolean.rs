@@ -1,4 +1,4 @@
-use crate::RoxiTypeError;
+use crate::CoreError;
 
 use super::{
     into_value::IntoValue,
@@ -26,23 +26,23 @@ impl ValueTyped for bool {
 }
 
 impl TryFrom<Value> for bool {
-    type Error = RoxiTypeError;
+    type Error = CoreError;
 
     fn try_from(value: Value) -> Result<Self, Self::Error> {
         match value {
             Value::Boolean(v) => Ok(v),
-            _ => Err(RoxiTypeError::Conversion("not boolean value".to_string())),
+            _ => Err(CoreError::Conversion("not boolean value".to_string())),
         }
     }
 }
 
 impl TryFrom<&Value> for bool {
-    type Error = RoxiTypeError;
+    type Error = CoreError;
 
     fn try_from(value: &Value) -> Result<Self, Self::Error> {
         match value {
             Value::Boolean(v) => Ok(*v),
-            _ => Err(RoxiTypeError::Conversion("not boolean value".to_string())),
+            _ => Err(CoreError::Conversion("not boolean value".to_string())),
         }
     }
 }

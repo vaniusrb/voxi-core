@@ -1,5 +1,5 @@
 use super::{IntoValueSelect, TableName, TablesNames, ToSQL, ValueSelect};
-use crate::{builder::args_resolver::ArgsResolver, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
@@ -76,7 +76,7 @@ where
 }
 
 impl ToSQL for Vec<ValueSelect> {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let sql = self
             .iter()
             .map(|v| v.to_sql(args_resolver))
@@ -101,7 +101,7 @@ impl TablesNames for ValuesSelect {
 }
 
 impl ToSQL for ValuesSelect {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         self.values_select.to_sql(args_resolver)
     }
 }

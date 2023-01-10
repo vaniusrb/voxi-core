@@ -2,9 +2,9 @@ use crate::FieldName;
 use crate::IntoNullableValue;
 use crate::Value;
 use crate::{
-    builder::args_resolver::ArgsResolver,
+    resolvers::args_resolver::ArgsResolver,
     selections::{TableField, ToSQL, ValueWhere},
-    SQLRoxiError,
+    SQLError,
 };
 use serde::{Deserialize, Serialize};
 
@@ -133,7 +133,7 @@ pub trait IntoArithmeticExprWhere {
 }
 
 impl ToSQL for ArithmeticExprWhere {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let sql = match self {
             ArithmeticExprWhere::ValueWhere(c) => c.to_sql(args_resolver)?,
             ArithmeticExprWhere::Expression(e) => format!("({})", e.to_sql(args_resolver)?),
@@ -210,7 +210,7 @@ impl IntoArithmeticExprWhere for TableField {
 mod tests {
     use super::ArithmeticExprWhere;
     use crate::{
-        builder::args_resolver_string::args_to_str,
+        resolvers::args_resolver_string::args_to_str,
         selections::{
             condition_where::ConditionWhereOperation, logical_expr_where::LogicalExprWhereOps,
             table_field::TableField, IntoArithmeticExprWhere,
@@ -297,7 +297,7 @@ mod tests {
 #[cfg(test)]
 mod test_sql {
     use super::ArithmeticExprWhere;
-    use crate::{builder::args_resolver_string::args_to_str, selections::table_field::TableField};
+    use crate::{resolvers::args_resolver_string::args_to_str, selections::table_field::TableField};
 
     #[test]
     fn test_arithmetic_add() {

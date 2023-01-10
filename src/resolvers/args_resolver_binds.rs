@@ -1,7 +1,6 @@
-use crate::NullableValue;
-
 use super::args_resolver::ArgsResolver;
 use crate::selections::bind_name::BindName;
+use crate::NullableValue;
 use std::collections::HashMap;
 
 // This struct is used by `BindingQuery` and works like a decorator.

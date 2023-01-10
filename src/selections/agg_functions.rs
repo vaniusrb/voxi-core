@@ -1,5 +1,5 @@
 use super::table_field::{IntoTableField, TableField};
-use crate::{builder::args_resolver::ArgsResolver, selections::to_sql::ToSQL, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, selections::to_sql::ToSQL, SQLError};
 use serde::{Deserialize, Serialize};
 
 /// Definition for SQL functions MIN, MAX, AVG, SUM and COUNT.
@@ -113,7 +113,7 @@ pub enum AggFunctionType {
 }
 
 impl ToSQL for AggFunction {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let op = match &self.agg_type {
             AggFunctionType::Min => "MIN",
             AggFunctionType::Max => "MAX",
@@ -132,7 +132,7 @@ impl ToSQL for AggFunction {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::builder::args_resolver_string::ArgsResolverString;
+    use crate::resolvers::args_resolver_string::ArgsResolverString;
 
     #[test]
     fn test_count_function() {

@@ -1,11 +1,11 @@
 use super::when_value::{IntoWhenValue, WhenValue};
 use crate::{
-    builder::args_resolver::ArgsResolver,
+    resolvers::args_resolver::ArgsResolver,
     selections::{
         to_sql::ToSQL,
         value_where::{IntoValueWhere, ValueWhere},
     },
-    SQLRoxiError,
+    SQLError,
 };
 use serde::{Deserialize, Serialize};
 
@@ -185,7 +185,7 @@ impl CaseValue {
 }
 
 impl ToSQL for CaseValue {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let mut sql = format!("CASE {} ", self.input.to_sql(args_resolver)?);
         let whens = self
             .whens
@@ -207,7 +207,7 @@ impl ToSQL for CaseValue {
 mod tests {
     use super::*;
     use crate::{
-        builder::args_resolver_string::ArgsResolverString, selections::table_field::TableField,
+        resolvers::args_resolver_string::ArgsResolverString, selections::table_field::TableField,
     };
 
     #[test]

@@ -1,11 +1,11 @@
 use super::when_condition::WhenCondition;
 use crate::{
-    builder::args_resolver::ArgsResolver,
+    resolvers::args_resolver::ArgsResolver,
     selections::{
         to_sql::ToSQL,
         value_where::{IntoValueWhere, ValueWhere},
     },
-    SQLRoxiError,
+    SQLError,
 };
 use serde::{Deserialize, Serialize};
 
@@ -73,7 +73,7 @@ pub struct CaseCondition {
 }
 
 impl ToSQL for CaseCondition {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let mut sql = "CASE ".to_string();
         let whens = self
             .whens
@@ -104,7 +104,7 @@ impl IntoWhenCondition for WhenCondition {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::builder::args_resolver_string::ArgsResolverString;
+    use crate::resolvers::args_resolver_string::ArgsResolverString;
     use crate::selections::condition_where::ConditionWhereOperation;
     use crate::selections::table_field::IntoTableField;
 

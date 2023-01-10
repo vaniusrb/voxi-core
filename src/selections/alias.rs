@@ -1,6 +1,6 @@
 use super::to_sql::ToSQL;
 use crate::validate_double_quotes;
-use crate::{builder::args_resolver::ArgsResolver, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 use core::fmt;
 use serde::{Deserialize, Serialize};
 
@@ -48,7 +48,7 @@ impl fmt::Display for Alias {
 }
 
 impl ToSQL for Alias {
-    fn to_sql(&self, _args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, _args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         Ok(format!(r#""{}""#, self.alias))
     }
 }
@@ -78,7 +78,7 @@ impl IntoAlias for &str {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::builder::args_resolver_string::ArgsResolverString;
+    use crate::resolvers::args_resolver_string::ArgsResolverString;
 
     #[test]
     fn test_alias_new() {

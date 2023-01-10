@@ -1,7 +1,7 @@
 use super::{table_field::TableField, to_sql::ToSQL};
 use crate::validate_double_quotes;
 use crate::IntoFieldName;
-use crate::{builder::args_resolver::ArgsResolver, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
@@ -51,7 +51,7 @@ impl fmt::Display for TableName {
 }
 
 impl ToSQL for TableName {
-    fn to_sql(&self, _args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, _args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         Ok(format!(r#""{self}""#))
     }
 }
@@ -93,7 +93,7 @@ impl IntoTableName for TableName {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::builder::args_resolver_string::ArgsResolverString;
+    use crate::resolvers::args_resolver_string::ArgsResolverString;
 
     #[test]
     fn test_into_table_name() {

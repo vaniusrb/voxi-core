@@ -1,4 +1,4 @@
-use crate::{RoxiTypeError, ValueType};
+use crate::{CoreError, ValueType};
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -39,14 +39,14 @@ impl SubsetValues {
     pub fn from_json(
         object_j: &serde_json::Value,
         fields: Vec<&FieldNameType>,
-    ) -> Result<SubsetValues, RoxiTypeError> {
+    ) -> Result<SubsetValues, CoreError> {
         object_j_to_subset_values(object_j, fields)
     }
 
     pub fn from_object<T: Serialize + DeserializeOwned>(
         object: &T,
         fields: Vec<&FieldNameType>,
-    ) -> Result<SubsetValues, RoxiTypeError> {
+    ) -> Result<SubsetValues, CoreError> {
         let object_j = serde_json::to_value(object).unwrap();
         object_j_to_subset_values(&object_j, fields)
     }
@@ -66,7 +66,7 @@ impl SubsetValues {
         field_name: &str,
         v_type: ValueType,
         object: &impl Serialize,
-    ) -> Result<(), RoxiTypeError> {
+    ) -> Result<(), CoreError> {
         let value = serde_json::to_value(object).unwrap();
         let object_j = value.as_object().unwrap();
         let value_j = match object_j.get(field_name) {
@@ -77,7 +77,7 @@ impl SubsetValues {
                     .map(|(k, _)| k.clone())
                     .collect::<Vec<_>>()
                     .join(",");
-                return Err(RoxiTypeError::FieldNameNotFound(field_name.into(), fields));
+                return Err(CoreError::FieldNameNotFound(field_name.into(), fields));
             }
         };
         let value = json_to_value(value_j, &v_type)?;
@@ -110,7 +110,7 @@ impl Default for SubsetValues {
 pub fn object_to_subset_values<T: Serialize>(
     object: &T,
     fields: Vec<&FieldNameType>,
-) -> Result<SubsetValues, RoxiTypeError> {
+) -> Result<SubsetValues, CoreError> {
     let object_j = serde_json::to_value(object)?;
     object_j_to_subset_values(&object_j, fields)
 }
@@ -126,7 +126,7 @@ pub fn object_to_subset_values<T: Serialize>(
 pub fn object_j_to_subset_values(
     object_j: &serde_json::Value,
     fields: Vec<&FieldNameType>,
-) -> Result<SubsetValues, RoxiTypeError> {
+) -> Result<SubsetValues, CoreError> {
     let mut subset_values = SubsetValues::new();
     let map_j = object_j.as_object().unwrap();
     for field in fields {

@@ -5,7 +5,7 @@ use super::{
     table_name::{IntoTableName, TableName},
     to_sql::ToSQL,
 };
-use crate::{builder::args_resolver::ArgsResolver, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
@@ -194,7 +194,7 @@ impl IntoFrom for QueryAlias {
 }
 
 impl ToSQL for FromSelect {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let table = match &self.from_type {
             FromType::Table(t) => t.to_sql(args_resolver)?,
             FromType::Query(q) => format!("({})", q.to_sql(args_resolver)?),
@@ -210,7 +210,7 @@ impl ToSQL for FromSelect {
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::args_resolver_string::ArgsResolverString, selections::select::QueryBuilder,
+        resolvers::args_resolver_string::ArgsResolverString, selections::select::QueryBuilder,
     };
 
     use super::*;

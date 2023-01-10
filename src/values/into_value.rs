@@ -1,4 +1,4 @@
-use crate::RoxiTypeError;
+use crate::CoreError;
 use crate::{Value, ValueToSQL, ValueType};
 use chrono::{DateTime, Local, NaiveDate, NaiveDateTime};
 use rust_decimal::Decimal;
@@ -26,13 +26,13 @@ impl IntoValue for &Value {
 
 pub trait TryValueFromString: ValueToSQL {
     type Return: ValueToSQL;
-    fn try_value_from_string(value: &str) -> Result<Self::Return, RoxiTypeError>;
+    fn try_value_from_string(value: &str) -> Result<Self::Return, CoreError>;
 }
 
 impl TryValueFromString for String {
     type Return = String;
 
-    fn try_value_from_string(value: &str) -> Result<Self::Return, RoxiTypeError> {
+    fn try_value_from_string(value: &str) -> Result<Self::Return, CoreError> {
         Ok(value.to_string())
     }
 }
@@ -40,9 +40,9 @@ impl TryValueFromString for String {
 impl TryValueFromString for Uuid {
     type Return = Uuid;
 
-    fn try_value_from_string(value: &str) -> Result<Self::Return, RoxiTypeError> {
-        let v: Uuid = Uuid::from_slice(value.as_bytes())
-            .map_err(|e| RoxiTypeError::Conversion(e.to_string()))?;
+    fn try_value_from_string(value: &str) -> Result<Self::Return, CoreError> {
+        let v: Uuid =
+            Uuid::from_slice(value.as_bytes()).map_err(|e| CoreError::Conversion(e.to_string()))?;
         Ok(v)
     }
 }
@@ -50,16 +50,16 @@ impl TryValueFromString for Uuid {
 impl TryValueFromString for i32 {
     type Return = i32;
 
-    fn try_value_from_string(value: &str) -> Result<Self::Return, RoxiTypeError> {
+    fn try_value_from_string(value: &str) -> Result<Self::Return, CoreError> {
         let v: i32 = value
             .to_string()
             .parse()
-            .map_err(|e: ParseIntError| RoxiTypeError::Conversion(e.to_string()))?;
+            .map_err(|e: ParseIntError| CoreError::Conversion(e.to_string()))?;
         Ok(v)
     }
 }
 
-pub fn try_value_from_string(value: &str, value_type: &ValueType) -> Result<Value, RoxiTypeError> {
+pub fn try_value_from_string(value: &str, value_type: &ValueType) -> Result<Value, CoreError> {
     let value = match value_type {
         ValueType::String => String::try_value_from_string(value)?.into_value(),
         ValueType::Uuid => Uuid::try_value_from_string(value)?.into_value(),
@@ -76,11 +76,11 @@ pub fn try_value_from_string(value: &str, value_type: &ValueType) -> Result<Valu
 impl TryValueFromString for i64 {
     type Return = i64;
 
-    fn try_value_from_string(value: &str) -> Result<Self::Return, RoxiTypeError> {
+    fn try_value_from_string(value: &str) -> Result<Self::Return, CoreError> {
         let v: i64 = value
             .to_string()
             .parse()
-            .map_err(|e: ParseIntError| RoxiTypeError::Conversion(e.to_string()))?;
+            .map_err(|e: ParseIntError| CoreError::Conversion(e.to_string()))?;
         Ok(v)
     }
 }
@@ -88,11 +88,11 @@ impl TryValueFromString for i64 {
 impl TryValueFromString for bool {
     type Return = bool;
 
-    fn try_value_from_string(value: &str) -> Result<Self::Return, RoxiTypeError> {
+    fn try_value_from_string(value: &str) -> Result<Self::Return, CoreError> {
         let v: bool = value
             .to_string()
             .parse()
-            .map_err(|e: ParseBoolError| RoxiTypeError::Conversion(e.to_string()))?;
+            .map_err(|e: ParseBoolError| CoreError::Conversion(e.to_string()))?;
         Ok(v)
     }
 }
@@ -100,11 +100,11 @@ impl TryValueFromString for bool {
 impl TryValueFromString for NaiveDateTime {
     type Return = NaiveDateTime;
 
-    fn try_value_from_string(value: &str) -> Result<Self::Return, RoxiTypeError> {
+    fn try_value_from_string(value: &str) -> Result<Self::Return, CoreError> {
         let d = value
             .to_string()
             .parse::<DateTime<Local>>()
-            .map_err(|e| RoxiTypeError::Conversion(e.to_string()))?
+            .map_err(|e| CoreError::Conversion(e.to_string()))?
             .naive_local();
         Ok(d)
     }
@@ -113,9 +113,9 @@ impl TryValueFromString for NaiveDateTime {
 impl TryValueFromString for NaiveDate {
     type Return = NaiveDate;
 
-    fn try_value_from_string(value: &str) -> Result<Self::Return, RoxiTypeError> {
+    fn try_value_from_string(value: &str) -> Result<Self::Return, CoreError> {
         let d = NaiveDate::parse_from_str(value, "%Y-%m-%d")
-            .map_err(|e| RoxiTypeError::Conversion(e.to_string()))?;
+            .map_err(|e| CoreError::Conversion(e.to_string()))?;
         Ok(d)
     }
 }
@@ -123,9 +123,9 @@ impl TryValueFromString for NaiveDate {
 impl TryValueFromString for Decimal {
     type Return = Decimal;
 
-    fn try_value_from_string(value: &str) -> Result<Self::Return, RoxiTypeError> {
+    fn try_value_from_string(value: &str) -> Result<Self::Return, CoreError> {
         let v: Decimal =
-            Decimal::from_str(value).map_err(|e| RoxiTypeError::Conversion(e.to_string()))?;
+            Decimal::from_str(value).map_err(|e| CoreError::Conversion(e.to_string()))?;
         Ok(v)
     }
 }
@@ -150,68 +150,68 @@ impl TryValueFromString for Decimal {
 
 //-------------------
 pub trait TryStringIntoValue<T: ValueToSQL> {
-    fn try_string_into_value(&self) -> Result<T, RoxiTypeError>;
+    fn try_string_into_value(&self) -> Result<T, CoreError>;
 }
 
 impl TryStringIntoValue<String> for String {
-    fn try_string_into_value(&self) -> Result<String, RoxiTypeError> {
+    fn try_string_into_value(&self) -> Result<String, CoreError> {
         Ok(self.to_string())
     }
 }
 
 impl TryStringIntoValue<NaiveDate> for String {
-    fn try_string_into_value(&self) -> Result<NaiveDate, RoxiTypeError> {
+    fn try_string_into_value(&self) -> Result<NaiveDate, CoreError> {
         let d = NaiveDate::parse_from_str(self, "%Y-%m-%d")
-            .map_err(|e| RoxiTypeError::Conversion(e.to_string()))?;
+            .map_err(|e| CoreError::Conversion(e.to_string()))?;
         Ok(d)
     }
 }
 
 impl TryStringIntoValue<NaiveDateTime> for String {
-    fn try_string_into_value(&self) -> Result<NaiveDateTime, RoxiTypeError> {
+    fn try_string_into_value(&self) -> Result<NaiveDateTime, CoreError> {
         let d = self
             .to_string()
             .parse::<DateTime<Local>>()
-            .map_err(|e| RoxiTypeError::Conversion(e.to_string()))?
+            .map_err(|e| CoreError::Conversion(e.to_string()))?
             .naive_local();
         Ok(d)
     }
 }
 
 impl TryStringIntoValue<i32> for String {
-    fn try_string_into_value(&self) -> Result<i32, RoxiTypeError> {
+    fn try_string_into_value(&self) -> Result<i32, CoreError> {
         let v: i32 = self
             .to_string()
             .parse()
-            .map_err(|e: ParseIntError| RoxiTypeError::Conversion(e.to_string()))?;
+            .map_err(|e: ParseIntError| CoreError::Conversion(e.to_string()))?;
         Ok(v)
     }
 }
 
 impl TryStringIntoValue<i64> for String {
-    fn try_string_into_value(&self) -> Result<i64, RoxiTypeError> {
+    fn try_string_into_value(&self) -> Result<i64, CoreError> {
         let v: i64 = self
             .to_string()
             .parse()
-            .map_err(|e: ParseIntError| RoxiTypeError::Conversion(e.to_string()))?;
+            .map_err(|e: ParseIntError| CoreError::Conversion(e.to_string()))?;
         Ok(v)
     }
 }
 
 impl TryStringIntoValue<bool> for String {
-    fn try_string_into_value(&self) -> Result<bool, RoxiTypeError> {
+    fn try_string_into_value(&self) -> Result<bool, CoreError> {
         let v: bool = self
             .to_string()
             .parse()
-            .map_err(|e: ParseBoolError| RoxiTypeError::Conversion(e.to_string()))?;
+            .map_err(|e: ParseBoolError| CoreError::Conversion(e.to_string()))?;
         Ok(v)
     }
 }
 
 impl TryStringIntoValue<Decimal> for String {
-    fn try_string_into_value(&self) -> Result<Decimal, RoxiTypeError> {
+    fn try_string_into_value(&self) -> Result<Decimal, CoreError> {
         let v: Decimal =
-            Decimal::from_str(self).map_err(|e| RoxiTypeError::Conversion(e.to_string()))?;
+            Decimal::from_str(self).map_err(|e| CoreError::Conversion(e.to_string()))?;
         Ok(v)
     }
 }

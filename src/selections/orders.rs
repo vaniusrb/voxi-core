@@ -1,5 +1,5 @@
 use super::{IntoOrderBy, OrderBy, ToSQL};
-use crate::{builder::args_resolver::ArgsResolver, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 use serde::{Deserialize, Serialize};
 
 // TODO: add comment
@@ -35,7 +35,7 @@ impl OrdersBy {
 }
 
 impl ToSQL for OrdersBy {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let sql = self
             .orders_by
             .iter()

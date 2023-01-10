@@ -3,7 +3,7 @@ use super::{
     to_sql::ToSQL,
     value_where::{IntoValueWhere, ValueWhere},
 };
-use crate::{builder::args_resolver::ArgsResolver, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 use serde::{Deserialize, Serialize};
 
 /// Represents a list of `ValueWhere`, to be used to represent a list `IN (n1, n2..)`.
@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 pub struct ValuesWhere(Vec<ValueWhere>);
 
 impl ToSQL for ValuesWhere {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let sql: String = self
             .0
             .iter()
@@ -49,7 +49,7 @@ pub enum ValuesListWhere {
 }
 
 impl ToSQL for ValuesListWhere {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         match self {
             ValuesListWhere::List(values) => values.to_sql(args_resolver),
             ValuesListWhere::SingleSelect(single_select) => single_select.to_sql(args_resolver),

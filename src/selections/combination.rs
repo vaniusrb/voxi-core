@@ -1,4 +1,4 @@
-use crate::{builder::args_resolver::ArgsResolver, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 
 use super::{
     select::{IntoSelect, Select},
@@ -50,7 +50,7 @@ impl Combination {
 }
 
 impl ToSQL for Combination {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let lit = match self.combination_type {
             CombinationType::Union => "UNION",
             CombinationType::UnionAll => "UNION ALL",
@@ -73,7 +73,7 @@ pub enum CombinationType {
 mod tests {
     use super::*;
     use crate::{
-        builder::args_resolver_string::ArgsResolverString, selections::select::QueryBuilder,
+        resolvers::args_resolver_string::ArgsResolverString, selections::select::QueryBuilder,
     };
 
     #[test]

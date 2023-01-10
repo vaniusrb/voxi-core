@@ -5,7 +5,7 @@ use super::{
     values_where::{IntoValuesListWhere, ValuesListWhere},
     ArithmeticExprWhere,
 };
-use crate::{builder::args_resolver::ArgsResolver, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 use serde::{Deserialize, Serialize};
 
 // TODO: add comments
@@ -90,7 +90,7 @@ pub enum ConditionWhere {
 }
 
 impl ToSQL for ConditionWhere {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let sql = match self {
             ConditionWhere::Expression(f) => format!("{} IS NULL", f.to_sql(args_resolver)?),
             ConditionWhere::ConditionNull(f) => format!("{} IS NULL", f.to_sql(args_resolver)?),
@@ -333,7 +333,7 @@ mod tests {
 
     use super::*;
     use crate::{
-        builder::args_resolver_string::{args_to_str, ArgsResolverString},
+        resolvers::args_resolver_string::{args_to_str, ArgsResolverString},
         selections::{
             logical_expr_where::LogicalExprWhere, select::QueryBuilder,
             single_select::SingleSelectBuilder, LogicalExprWhereOps, TableField,

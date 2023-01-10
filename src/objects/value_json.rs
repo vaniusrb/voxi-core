@@ -1,4 +1,4 @@
-use crate::RoxiTypeError;
+use crate::CoreError;
 use crate::{IntoValue, NullableValue, Value, ValueType};
 use chrono::{NaiveDate, NaiveDateTime};
 use rust_decimal::Decimal;
@@ -9,7 +9,7 @@ use uuid::Uuid;
 pub fn json_to_value(
     value_j: serde_json::Value,
     value_type: &ValueType,
-) -> Result<Option<Value>, RoxiTypeError> {
+) -> Result<Option<Value>, CoreError> {
     if value_j.is_null() {
         return Ok(None);
     }

@@ -6,7 +6,7 @@ use super::{
     to_sql::ToSQL,
 };
 use crate::IntoFieldName;
-use crate::{builder::args_resolver::ArgsResolver, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
@@ -108,7 +108,7 @@ impl Table {
 }
 
 impl ToSQL for Table {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let sql = match self.alias.as_ref() {
             Some(alias) => {
                 format!(
@@ -184,7 +184,7 @@ impl IntoFrom for Table {
 
 #[cfg(test)]
 mod tests {
-    use crate::builder::args_resolver_string::ArgsResolverString;
+    use crate::resolvers::args_resolver_string::ArgsResolverString;
 
     use super::*;
 

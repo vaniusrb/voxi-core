@@ -9,7 +9,7 @@ use super::{
     ArithmeticExprWhere,
 };
 use crate::IntoNullableValue;
-use crate::{builder::args_resolver::ArgsResolver, SQLRoxiError};
+use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 use crate::{FieldName, NullableValue};
 use serde::{Deserialize, Serialize};
 
@@ -35,7 +35,7 @@ impl ValueWhere {
 
 impl ToSQL for ValueWhere {
     // TODO: add comment
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLRoxiError> {
+    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         match self {
             ValueWhere::LiteralValue(v) => v.to_sql(args_resolver),
             ValueWhere::FieldName(f) => f.to_sql(args_resolver),
@@ -47,7 +47,7 @@ impl ToSQL for ValueWhere {
             ValueWhere::SingleQuery(sq) => sq.to_sql(args_resolver).map(|s| format!("({s})")),
             ValueWhere::BindParameter(bn) => args_resolver
                 .add_bind(bn.clone())
-                .ok_or_else(|| SQLRoxiError::BindNameNotFound(bn.name().to_string()))?
+                .ok_or_else(|| SQLError::BindNameNotFound(bn.name().to_string()))?
                 .to_sql(args_resolver),
         }
     }
@@ -233,7 +233,7 @@ mod test_sql {
     use crate::{FieldName, IntoFieldName, IntoNullableValue};
 
     use crate::{
-        builder::args_resolver_string::ArgsResolverString,
+        resolvers::args_resolver_string::ArgsResolverString,
         selections::{
             agg_functions::AggFunction, single_select::SingleSelectBuilder,
             string_functions::StringFunction, table_field::TableField, to_sql::ToSQL,

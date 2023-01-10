@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 /// # Example
 /// ```
 /// # use voxi_core::selections::TableField;
-/// # use voxi_core::builder::args_resolver_string::args_to_str;
+/// # use voxi_core::resolvers::args_resolver_string::args_to_str;
 /// # use voxi_core::selections::ArithmeticExprWhere;
 /// let op = ArithmeticExprWhere::add(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
 /// assert_eq!(args_to_str(op).unwrap(), r#""FIELD_A" + "FIELD_B""#)
@@ -32,7 +32,7 @@ impl ArithmeticExprWhere {
     /// # Example
     /// ```
     /// # use voxi_core::selections::TableField;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// # use voxi_core::selections::ArithmeticExprWhere;
     /// let op = ArithmeticExprWhere::add(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
     /// assert_eq!(args_to_str(op).unwrap(), r#""FIELD_A" + "FIELD_B""#)
@@ -50,7 +50,7 @@ impl ArithmeticExprWhere {
     /// # Example
     /// ```
     /// # use voxi_core::selections::TableField;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// # use voxi_core::selections::ArithmeticExprWhere;
     /// let op = ArithmeticExprWhere::subtract(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
     /// assert_eq!(args_to_str(op).unwrap(), r#""FIELD_A" - "FIELD_B""#)
@@ -68,7 +68,7 @@ impl ArithmeticExprWhere {
     /// # Example
     /// ```
     /// # use voxi_core::selections::TableField;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// # use voxi_core::selections::ArithmeticExprWhere;
     /// let op = ArithmeticExprWhere::multiply(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
     /// assert_eq!(args_to_str(op).unwrap(), r#""FIELD_A" * "FIELD_B""#)
@@ -86,7 +86,7 @@ impl ArithmeticExprWhere {
     /// # Example
     /// ```
     /// # use voxi_core::selections::TableField;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// # use voxi_core::selections::ArithmeticExprWhere;
     /// let op = ArithmeticExprWhere::divide(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
     /// assert_eq!(args_to_str(op).unwrap(), r#""FIELD_A" / "FIELD_B""#)
@@ -104,13 +104,13 @@ impl ArithmeticExprWhere {
     /// # Example
     /// ```
     /// # use voxi_core::selections::TableField;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// # use voxi_core::selections::ArithmeticExprWhere;
     /// let add = ArithmeticExprWhere::add(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
     /// let exp = ArithmeticExprWhere::expression(add);
-    /// assert_eq!(args_to_str(exp.clone()), Ok(String::from(r#"("FIELD_A" + "FIELD_B")"#)));
+    /// assert_eq!(args_to_str(exp.clone()).unwrap(),String::from(r#"("FIELD_A" + "FIELD_B")"#));
     /// let div = ArithmeticExprWhere::divide(exp, TableField::new("FIELD_C"));
-    /// assert_eq!(args_to_str(div), Ok(String::from(r#"("FIELD_A" + "FIELD_B") / "FIELD_C""#)));
+    /// assert_eq!(args_to_str(div).unwrap(), String::from(r#"("FIELD_A" + "FIELD_B") / "FIELD_C""#));
     /// ```
     pub fn expression(a: impl IntoArithmeticExprWhere) -> ArithmeticExprWhere {
         ArithmeticExprWhere::Expression(a.into_arithmetic_expr_where().boxed())
@@ -297,7 +297,9 @@ mod tests {
 #[cfg(test)]
 mod test_sql {
     use super::ArithmeticExprWhere;
-    use crate::{resolvers::args_resolver_string::args_to_str, selections::table_field::TableField};
+    use crate::{
+        resolvers::args_resolver_string::args_to_str, selections::table_field::TableField,
+    };
 
     #[test]
     fn test_arithmetic_add() {

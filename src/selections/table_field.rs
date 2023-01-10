@@ -26,7 +26,7 @@ impl TableField {
     /// ```
     /// # use voxi_core::selections::ToSQL;
     /// # use voxi_core::selections::TableField;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let table_field = TableField::new("TABLE.FIELD");
     /// assert_eq!(args_to_str(table_field).unwrap(), r#""TABLE"."FIELD""#);
     /// ```

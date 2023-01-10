@@ -174,7 +174,7 @@ impl ConditionWhere {
     /// # Example
     /// ```
     /// # use voxi_core::selections::ConditionWhere;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::eq("TEXT_1", "TEXT_2");
     /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' = 'TEXT_2'"#);
     /// ```
@@ -192,7 +192,7 @@ impl ConditionWhere {
     /// # Example
     /// ```
     /// # use voxi_core::selections::ConditionWhere;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::df("TEXT_1", "TEXT_2");
     /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' <> 'TEXT_2'"#);
     /// ```
@@ -210,7 +210,7 @@ impl ConditionWhere {
     /// # Example
     /// ```
     /// # use voxi_core::selections::ConditionWhere;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::gt("TEXT_1", "TEXT_2");
     /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' > 'TEXT_2'"#);
     /// ```
@@ -228,7 +228,7 @@ impl ConditionWhere {
     /// # Example
     /// ```
     /// # use voxi_core::selections::ConditionWhere;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::ge("TEXT_1", "TEXT_2");
     /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' >= 'TEXT_2'"#);
     /// ```
@@ -247,7 +247,7 @@ impl ConditionWhere {
     /// # Example
     /// ```
     /// # use voxi_core::selections::ConditionWhere;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::ge("TEXT_1", "TEXT_2");
     /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' >= 'TEXT_2'"#);
     /// ```
@@ -265,7 +265,7 @@ impl ConditionWhere {
     /// # Example
     /// ```
     /// # use voxi_core::selections::ConditionWhere;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::le("TEXT_1", "TEXT_2");
     /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' <= 'TEXT_2'"#);
     /// ```
@@ -283,7 +283,7 @@ impl ConditionWhere {
     /// # Example
     /// ```
     /// # use voxi_core::selections::ConditionWhere;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::inc("TEXT_1", vec!["TEXT_2", "TEXT_3"]);
     /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' IN ('TEXT_2','TEXT_3')"#);
     /// ```
@@ -299,7 +299,7 @@ impl ConditionWhere {
     /// # Example
     /// ```
     /// # use voxi_core::selections::ConditionWhere;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::like("TEXT_1", "TEXT%");
     /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' LIKE 'TEXT%'"#);
     /// ```

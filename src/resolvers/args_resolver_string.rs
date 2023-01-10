@@ -35,7 +35,7 @@ impl ArgsResolver for ArgsResolverString {
 /// # Example
 /// ```
 /// # use voxi_core::selections::ConditionWhere;
-/// # use voxi_core::builder::args_resolver_string::args_to_str;
+/// # use voxi_core::resolvers::args_resolver_string::args_to_str;
 /// let c1 = ConditionWhere::eq("TEXT_1", "TEXT_2");
 /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' = 'TEXT_2'"#);
 /// ```

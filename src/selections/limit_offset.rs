@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 /// # Example
 /// ```
 /// # use voxi_core::selections::LimitOffset;
-/// # use voxi_core::builder::args_resolver_string::args_to_str;
+/// # use voxi_core::resolvers::args_resolver_string::args_to_str;
 /// let limit_offset = LimitOffset::new(0, 30);
 /// assert_eq!(args_to_str(limit_offset).unwrap(), "LIMIT 0 OFFSET 30");
 /// ```

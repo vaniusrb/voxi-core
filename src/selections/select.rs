@@ -38,7 +38,7 @@ use std::{
 /// ```
 /// # use voxi_core::selections::QueryBuilder;
 /// # use crate::voxi_core::selections::ToSQL;
-/// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+/// # use crate::voxi_core::resolvers::args_resolver_string::args_to_str;
 /// let query = QueryBuilder::new().field("ID").from("TABLE").build().unwrap();
 /// assert_eq!(args_to_str(query).unwrap(), r#"SELECT "ID" FROM "TABLE""#);
 /// ```
@@ -119,7 +119,7 @@ impl QueryBuilder {
     /// ```
     /// # use crate::voxi_core::selections::ToSQL;
     /// # use voxi_core::selections::QueryBuilder;
-    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use crate::voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let query = QueryBuilder::new().field("ID").from("TABLE").build().unwrap();
     /// assert_eq!(args_to_str(query).unwrap(), r#"SELECT "ID" FROM "TABLE""#);
     /// ```
@@ -137,7 +137,7 @@ impl QueryBuilder {
     /// ```
     /// # use voxi_core::selections::QueryBuilder;
     /// # use crate::voxi_core::selections::ToSQL;
-    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use crate::voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let query = QueryBuilder::new().literal("TEXT").from("TABLE").build().unwrap();
     /// assert_eq!(args_to_str(query).unwrap(), r#"SELECT 'TEXT' FROM "TABLE""#);
     /// ```
@@ -194,7 +194,7 @@ impl QueryBuilder {
     /// ```
     /// # use voxi_core::selections::QueryBuilder;
     /// # use crate::voxi_core::selections::ToSQL;
-    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use crate::voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let query = QueryBuilder::new().field("ID").from("TABLE").build().unwrap();
     /// assert_eq!(args_to_str(query).unwrap(), r#"SELECT "ID" FROM "TABLE""#);
     /// ```
@@ -298,7 +298,7 @@ impl QueryBuilder {
     /// ```
     /// # use voxi_core::selections::QueryBuilder;
     /// # use crate::voxi_core::selections::ToSQL;
-    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use crate::voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let query = QueryBuilder::new().field("ID").from("TABLE").build().unwrap();
     /// assert_eq!(args_to_str(query).unwrap(), r#"SELECT "ID" FROM "TABLE""#);
     /// ```

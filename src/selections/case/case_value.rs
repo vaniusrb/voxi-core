@@ -23,7 +23,7 @@ use serde::{Deserialize, Serialize};
 /// # use voxi_core::selections::CaseValueBuilder;
 /// # use voxi_core::selections::TableField;
 /// # use voxi_core::selections::WhenValue;
-/// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+/// # use crate::voxi_core::resolvers::args_resolver_string::args_to_str;
 /// # use voxi_core::selections::ToSQL;
 /// let case_builder = CaseValueBuilder::new(TableField::new("TABLE.STATUS"));
 /// let when_1 = WhenValue::new(1, "One");
@@ -45,7 +45,7 @@ impl CaseValueBuilder {
     /// Create `CaseValueBuilder` to allow build a `CaseValue` object.
     /// ```
     /// # use voxi_core::selections::WhenValue;
-    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use crate::voxi_core::resolvers::args_resolver_string::args_to_str;
     /// # use voxi_core::selections::TableField;
     /// # use voxi_core::selections::CaseValueBuilder;
     /// # use voxi_core::selections::ToSQL;
@@ -69,7 +69,7 @@ impl CaseValueBuilder {
     /// Add a definition for WHEN condition for a CASE structure.
     /// ```
     /// # use voxi_core::selections::WhenValue;
-    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use crate::voxi_core::resolvers::args_resolver_string::args_to_str;
     /// # use voxi_core::selections::TableField;
     /// # use voxi_core::selections::CaseValueBuilder;
     /// # use voxi_core::selections::ToSQL;
@@ -91,7 +91,7 @@ impl CaseValueBuilder {
     /// Define the ELSE condition for a CASE structure.
     /// ```
     /// # use voxi_core::selections::WhenValue;
-    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use crate::voxi_core::resolvers::args_resolver_string::args_to_str;
     /// # use voxi_core::selections::TableField;
     /// # use voxi_core::selections::CaseValueBuilder;
     /// # use voxi_core::selections::ToSQL;
@@ -117,7 +117,7 @@ impl CaseValueBuilder {
     /// Create `CaseValue` object
     /// ```
     /// # use voxi_core::selections::WhenValue;
-    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use crate::voxi_core::resolvers::args_resolver_string::args_to_str;
     /// # use voxi_core::selections::TableField;
     /// # use voxi_core::selections::CaseValueBuilder;
     /// # use crate::voxi_core::selections::ToSQL;
@@ -155,7 +155,7 @@ impl CaseValueBuilder {
 /// ```
 /// # use voxi_core::selections::CaseValueBuilder;
 /// # use voxi_core::selections::WhenValue;
-/// # use voxi_core::builder::args_resolver_string::args_to_str;
+/// # use voxi_core::resolvers::args_resolver_string::args_to_str;
 /// # use voxi_core::selections::TableField;
 /// # use voxi_core::selections::ToSQL;
 /// let case_builder = CaseValueBuilder::new(TableField::new("TABLE.STATUS"));

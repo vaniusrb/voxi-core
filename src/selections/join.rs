@@ -15,7 +15,7 @@ use serde::{Deserialize, Serialize};
 /// # use voxi_core::selections::IntoTableField;
 /// # use voxi_core::selections::ToSQL;
 /// # use voxi_core::selections::ConditionWhereOperation;
-/// # use voxi_core::builder::args_resolver_string::args_to_str;
+/// # use voxi_core::resolvers::args_resolver_string::args_to_str;
 /// let field_detail = "DET.MASTER".into_table_field();
 /// let field_master = "MAS.ID".into_table_field();
 /// let join = Join::inner("DETAIL DET", field_detail.equal(field_master));
@@ -54,7 +54,7 @@ impl Join {
     /// # use voxi_core::selections::IntoTableField;
     /// # use voxi_core::selections::ToSQL;
     /// # use voxi_core::selections::ConditionWhereOperation;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let field_detail = "DET.MASTER".into_table_field();
     /// let field_master = "MAS.ID".into_table_field();
     /// let join = Join::inner("DETAIL DET", field_detail.equal(field_master));
@@ -77,7 +77,7 @@ impl Join {
     /// # use voxi_core::selections::IntoTableField;
     /// # use voxi_core::selections::ToSQL;
     /// # use voxi_core::selections::ConditionWhereOperation;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let field_detail = "DET.MASTER".into_table_field();
     /// let field_master = "MAS.ID".into_table_field();
     /// let join = Join::full("DETAIL DET", field_detail.equal(field_master));
@@ -100,7 +100,7 @@ impl Join {
     /// # use voxi_core::selections::IntoTableField;
     /// # use voxi_core::selections::ToSQL;
     /// # use voxi_core::selections::ConditionWhereOperation;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let field_detail = "DET.MASTER".into_table_field();
     /// let field_master = "MAS.ID".into_table_field();
     /// let join = Join::left("DETAIL DET", field_detail.equal(field_master));
@@ -123,7 +123,7 @@ impl Join {
     /// # use voxi_core::selections::IntoTableField;
     /// # use voxi_core::selections::Join;
     /// # use voxi_core::selections::ConditionWhereOperation;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let field_detail = "DET.MASTER".into_table_field();
     /// let field_master = "MAS.ID".into_table_field();
     /// let join = Join::right("DETAIL DET", field_detail.equal(field_master));

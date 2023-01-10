@@ -44,7 +44,7 @@ impl SingleSelectBuilder {
     /// ```
     /// # use voxi_core::selections::SingleSelectBuilder;
     /// # use crate::voxi_core::selections::ToSQL;
-    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use crate::voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let query = SingleSelectBuilder::field("ID")
     ///     .distinct()
     ///     .from("TABLE")
@@ -59,7 +59,7 @@ impl SingleSelectBuilder {
     /// ```
     /// # use voxi_core::selections::SingleSelectBuilder;
     /// # use crate::voxi_core::selections::ToSQL;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let query = SingleSelectBuilder::field("ID")
     ///     .distinct()
     ///     .from("TABLE")
@@ -91,7 +91,7 @@ impl SingleSelectBuilder {
     /// ```
     /// # use crate::voxi_core::selections::ToSQL;
     /// # use voxi_core::selections::SingleSelectBuilder;
-    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use crate::voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let query = SingleSelectBuilder::field("ID")
     ///     .distinct()
     ///     .from("TABLE")
@@ -133,7 +133,7 @@ impl SingleSelectBuilder {
     /// ```
     /// # use voxi_core::selections::SingleSelectBuilder;
     /// # use crate::voxi_core::selections::ToSQL;
-    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use crate::voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let query = SingleSelectBuilder::field("ID")
     ///     .distinct()
     ///     .from("TABLE")
@@ -196,7 +196,7 @@ impl SingleSelectBuilder {
     /// ```
     /// # use voxi_core::selections::QueryBuilder;
     /// # use crate::voxi_core::selections::ToSQL;
-    /// # use crate::voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use crate::voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let query = QueryBuilder::new().field("ID").from("TABLE").build().unwrap();
     /// assert_eq!(args_to_str(query).unwrap(), r#"SELECT "ID" FROM "TABLE""#);
     /// ```

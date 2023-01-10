@@ -14,7 +14,7 @@ use std::collections::HashSet;
 /// ```
 /// # use crate::voxi_core::selections::ToSQL;
 /// # use voxi_core::selections::FromSelect;
-/// # use voxi_core::builder::args_resolver_string::args_to_str;
+/// # use voxi_core::resolvers::args_resolver_string::args_to_str;
 /// let from = FromSelect::from_table("TABLE");
 /// assert_eq!(args_to_str(from).unwrap(), r#""TABLE""#);
 /// ```
@@ -75,7 +75,7 @@ impl FromSelect {
     /// ```
     /// # use voxi_core::selections::FromSelect;
     /// # use crate::voxi_core::selections::ToSQL;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let from = FromSelect::from_table("TABLE");
     /// assert_eq!(args_to_str(from).unwrap(), r#""TABLE""#);
     /// ```
@@ -103,7 +103,7 @@ impl FromSelect {
     /// ```
     /// # use voxi_core::selections::FromSelect;
     /// # use crate::voxi_core::selections::ToSQL;
-    /// # use voxi_core::builder::args_resolver_string::args_to_str;
+    /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// # use voxi_core::selections::TableName;
     /// let table_name = TableName::new("TABLE");
     /// let from = FromSelect::from(table_name).with_alias("TAB");

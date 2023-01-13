@@ -1,4 +1,4 @@
-use super::{value_type::ValueType, IntoValue, IntoValueType};
+use crate::{IntoValue, IntoValueType, ValueType};
 use chrono::{NaiveDate, NaiveDateTime};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};

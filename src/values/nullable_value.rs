@@ -28,6 +28,10 @@ impl NullableValue {
             None => "NULL".to_string(),
         }
     }
+
+    pub fn into_opt(self) -> Option<Value> {
+        self.value
+    }
 }
 
 pub trait IntoNullableValue {

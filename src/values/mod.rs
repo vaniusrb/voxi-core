@@ -31,3 +31,4 @@ pub use value::Value;
 pub use value::ValueToSQL;
 pub use value::ValueTyped;
 pub use value_type::IntoValueType;
+pub use value_type::ValueType;

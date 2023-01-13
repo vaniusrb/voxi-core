@@ -2,8 +2,6 @@ pub mod errors;
 pub mod values;
 
 pub use errors::CoreError;
-pub use objects::json_to_value;
-pub use objects::v_to_json;
 pub use values::field_name::{FieldName, IntoFieldName};
 pub use values::into_value::IntoValue;
 pub use values::into_value::TryValueFromString;
@@ -14,12 +12,17 @@ pub use values::value::Value;
 pub use values::value::ValueToSQL;
 pub use values::value_type;
 pub use values::value_type::IntoValueType;
-pub use values::value_type::ValueType;
 pub use values::FieldNameType;
 pub use values::IntoFieldNameType;
 pub use values::IntoNullableValue;
 pub use values::TypedOptionValue;
+pub use values::ValueType;
 pub use values::ValueTyped;
+
+#[cfg(feature = "objects")]
+pub use objects::json_to_value;
+#[cfg(feature = "objects")]
+pub use objects::v_to_json;
 
 #[cfg(feature = "sql")]
 pub mod resolvers;

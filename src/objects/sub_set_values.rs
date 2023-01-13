@@ -134,7 +134,7 @@ pub fn object_j_to_subset_values(
         let v_type = field.v_type;
         let opt_value = map_j
             .get(&field_name)
-            .map(|v| json_to_value(v.clone(), &v_type))
+            .map(|v| json_to_value(v.clone(), &v_type).map(|nv| nv.into_opt()))
             .transpose()?
             .flatten();
         subset_values.add(&field_name, v_type, opt_value);

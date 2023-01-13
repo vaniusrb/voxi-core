@@ -1,7 +1,6 @@
+use super::value::ValueTyped;
 use crate::{FieldName, IntoFieldName, IntoValueType, ValueType};
 use serde::{Deserialize, Serialize};
-
-use super::value::ValueTyped;
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub struct FieldNameType {

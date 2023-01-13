@@ -32,9 +32,3 @@ impl fmt::Display for NullValue {
         write!(f, "NULL")
     }
 }
-
-// impl IntoValueWhere for NullValue {
-//     fn into_value_where(self) -> ValueWhere {
-//         ValueWhere::LiteralValue(self.into_nullable_value())
-//     }
-// }

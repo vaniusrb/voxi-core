@@ -1,17 +1,20 @@
-use crate::CoreError;
+use crate::values::into_value::try_value_from_string;
+use crate::{CoreError, IntoNullableValue};
 use crate::{IntoValue, NullableValue, Value, ValueType};
 use chrono::{NaiveDate, NaiveDateTime};
+use log::error;
 use rust_decimal::Decimal;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_json::json;
 use uuid::Uuid;
 
+/// Try convert a single json value field to `NullableValue`
 pub fn json_to_value(
     value_j: serde_json::Value,
     value_type: &ValueType,
-) -> Result<Option<Value>, CoreError> {
+) -> Result<NullableValue, CoreError> {
     if value_j.is_null() {
-        return Ok(None);
+        return Ok(NullableValue::null());
     }
     let result = match value_type {
         ValueType::String => serde_json::from_value::<String>(value_j)?.into_value(),
@@ -23,9 +26,10 @@ pub fn json_to_value(
         ValueType::Date => serde_json::from_value::<NaiveDate>(value_j)?.into_value(),
         ValueType::DateTime => serde_json::from_value::<NaiveDateTime>(value_j)?.into_value(),
     };
-    Ok(Some(result))
+    Ok(result.into_nullable_value())
 }
 
+/// Convert a `NullableValue` to a single json value
 pub fn value_to_json(value: &NullableValue) -> serde_json::Value {
     match value.value() {
         Some(v) => v_to_json(v),
@@ -33,6 +37,7 @@ pub fn value_to_json(value: &NullableValue) -> serde_json::Value {
     }
 }
 
+/// Convert a `Value` to a single json value
 pub fn v_to_json(value: &Value) -> serde_json::Value {
     match value {
         Value::String(v) => serde_json::to_value(v).unwrap(),
@@ -88,6 +93,60 @@ pub fn diff_json<T: DeserializeOwned + Serialize + Clone>(old: T, new: T) -> Dif
         old: diff_old,
         new: diff_new,
     }
+}
+
+/// Given an object `T` update its field value from `String`
+pub fn set_field_from_str<T: Serialize + DeserializeOwned>(
+    object: &T,
+    field_name: String,
+    value_s: Option<String>,
+    value_type: ValueType,
+) -> T {
+    let mut object_j = serde_json::to_value(object).unwrap();
+    let map_j = object_j.as_object_mut().unwrap();
+    let value_s = match value_s {
+        Some(value_s) => value_s,
+        None => {
+            map_j.remove(&field_name);
+            let new_object: T = serde_json::from_value(object_j).unwrap();
+            return new_object;
+        }
+    };
+    let value_j = {
+        if value_s.is_empty() {
+            json!(Option::<String>::None)
+        } else {
+            let value = try_value_from_string(&value_s, value_type).unwrap();
+            v_to_json(&value)
+        }
+    };
+    map_j.insert(field_name, value_j);
+    let new_object: T = serde_json::from_value(object_j).unwrap();
+    new_object
+}
+
+/// Given an object `T` returns its field value to `String`
+pub fn get_field_to_str<T: Serialize + DeserializeOwned>(
+    object: &T,
+    field_name: &str,
+    value_type: &ValueType,
+) -> Option<String> {
+    let object_j = serde_json::to_value(object).unwrap();
+    let value_j = match object_j.get(field_name) {
+        Some(value_j) => value_j.clone(),
+        None => return None,
+    };
+    let value = match json_to_value(value_j.clone(), value_type) {
+        Ok(value) => value,
+        Err(e) => {
+            error!(
+                "error to get json value of {value_j:?} field {field_name}: {}",
+                e.to_string()
+            );
+            return None;
+        }
+    };
+    value.into_opt().map(|v| v.to_string())
 }
 
 #[cfg(test)]

@@ -80,7 +80,7 @@ impl SubsetValues {
                 return Err(CoreError::FieldNameNotFound(field_name.into(), fields));
             }
         };
-        let value = json_to_value(value_j, &v_type)?;
+        let value = json_to_value(value_j, v_type)?;
 
         self.add(field_name, v_type, value);
         Ok(())
@@ -134,7 +134,7 @@ pub fn object_j_to_subset_values(
         let v_type = field.v_type;
         let opt_value = map_j
             .get(&field_name)
-            .map(|v| json_to_value(v.clone(), &v_type).map(|nv| nv.into_opt()))
+            .map(|v| json_to_value(v.clone(), v_type).map(|nv| nv.into_opt()))
             .transpose()?
             .flatten();
         subset_values.add(&field_name, v_type, opt_value);

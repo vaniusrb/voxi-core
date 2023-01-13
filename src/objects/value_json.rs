@@ -11,7 +11,7 @@ use uuid::Uuid;
 /// Try convert a single json value field to `NullableValue`
 pub fn json_to_value(
     value_j: serde_json::Value,
-    value_type: &ValueType,
+    value_type: ValueType,
 ) -> Result<NullableValue, CoreError> {
     if value_j.is_null() {
         return Ok(NullableValue::null());
@@ -98,7 +98,7 @@ pub fn diff_json<T: DeserializeOwned + Serialize + Clone>(old: T, new: T) -> Dif
 /// Given an object `T` update its field value from `String`
 pub fn set_field_from_str<T: Serialize + DeserializeOwned>(
     object: &T,
-    field_name: String,
+    field_name: &str,
     value_s: Option<String>,
     value_type: ValueType,
 ) -> T {
@@ -107,7 +107,7 @@ pub fn set_field_from_str<T: Serialize + DeserializeOwned>(
     let value_s = match value_s {
         Some(value_s) => value_s,
         None => {
-            map_j.remove(&field_name);
+            map_j.remove(field_name);
             let new_object: T = serde_json::from_value(object_j).unwrap();
             return new_object;
         }
@@ -120,16 +120,17 @@ pub fn set_field_from_str<T: Serialize + DeserializeOwned>(
             v_to_json(&value)
         }
     };
-    map_j.insert(field_name, value_j);
+    map_j.insert(field_name.to_string(), value_j);
     let new_object: T = serde_json::from_value(object_j).unwrap();
     new_object
 }
 
 /// Given an object `T` returns its field value to `String`
+// TODO: returns serde_json::Error
 pub fn get_field_to_str<T: Serialize + DeserializeOwned>(
     object: &T,
     field_name: &str,
-    value_type: &ValueType,
+    value_type: ValueType,
 ) -> Option<String> {
     let object_j = serde_json::to_value(object).unwrap();
     let value_j = match object_j.get(field_name) {

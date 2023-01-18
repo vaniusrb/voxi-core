@@ -29,6 +29,14 @@ pub fn json_to_value(
     Ok(result.into_nullable_value())
 }
 
+pub fn json_to_str(value_j: serde_json::Value, value_type: ValueType) -> String {
+    let nullable = json_to_value(value_j, value_type).unwrap();
+    nullable
+        .into_opt()
+        .map(|v| v.to_string())
+        .unwrap_or_default()
+}
+
 /// Convert a `NullableValue` to a single json value
 pub fn value_to_json(value: &NullableValue) -> serde_json::Value {
     match value.value() {

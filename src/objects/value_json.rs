@@ -57,11 +57,36 @@ pub struct DiffValues {
     pub new: serde_json::Value,
 }
 
-/// Given two objects return a pair with old and new values, only the modified values.
-pub fn diff_json<T: DeserializeOwned + Serialize + Clone>(old: T, new: T) -> DiffValues {
+pub fn fields_names_from_object<T: Serialize>(value: &T) -> Vec<String> {
+    let object = serde_json::to_value(value).unwrap();
+    object
+        .as_object()
+        .unwrap()
+        .keys()
+        .cloned()
+        .collect::<Vec<_>>()
+}
+
+pub fn modified_fields_name<A: Serialize, B: Serialize>(old: A, new: B) -> Vec<String> {
+    let mut fields_name = vec![];
     let old = serde_json::to_value(old).unwrap();
     let new = serde_json::to_value(new).unwrap();
 
+    let old_fields = old.as_object().unwrap();
+    let new_fields = new.as_object().unwrap();
+
+    for (key, value) in old_fields {
+        if new_fields.get(key) != Some(value) {
+            fields_name.push(key.clone());
+        }
+    }
+    fields_name
+}
+
+/// Given two objects return a pair with old and new values, only the modified values.
+pub fn diff_object<T: Serialize>(old: T, new: T) -> DiffValues {
+    let old = serde_json::to_value(old).unwrap();
+    let new = serde_json::to_value(new).unwrap();
     let mut diff_old = json!({});
     let mut diff_new = json!({});
     let map_old = diff_old.as_object_mut().unwrap();
@@ -178,7 +203,7 @@ mod tests {
             old: json!({ "c": null }),
             new: json!({ "c": "c"}),
         };
-        assert_eq!(diff_json(old, new), r);
+        assert_eq!(diff_object(old, new), r);
 
         let old = Test {
             a: String::from("a"),
@@ -194,7 +219,7 @@ mod tests {
             old: json!({ "b": "a", "c": null }),
             new: json!({ "b": "b", "c": "c"}),
         };
-        assert_eq!(diff_json(old, new), r);
+        assert_eq!(diff_object(old, new), r);
 
         let old = Test {
             a: String::from("a"),
@@ -210,6 +235,6 @@ mod tests {
             old: json!({ "c": "c"}),
             new: json!({ "c": null }),
         };
-        assert_eq!(diff_json(old, new), r);
+        assert_eq!(diff_object(old, new), r);
     }
 }

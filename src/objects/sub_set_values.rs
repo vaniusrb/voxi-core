@@ -1,4 +1,5 @@
 use crate::{CoreError, ValueType};
+use log::info;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -99,6 +100,10 @@ impl SubsetValues {
         let object_j = self.object_j();
         serde_json::from_value(object_j).unwrap()
     }
+
+    pub fn merge_to_j(&self, value: serde_json::Value) -> serde_json::Value {
+        subset_values_to_object_j(self, value)
+    }
 }
 
 impl Default for SubsetValues {
@@ -123,11 +128,12 @@ pub fn object_to_subset_values<T: Serialize>(
 //         .collect()
 // }
 
-pub fn object_j_to_subset_values(
-    object_j: &serde_json::Value,
+pub fn object_j_to_subset_values<T: Serialize>(
+    object_j: &T,
     fields: Vec<&FieldNameType>,
 ) -> Result<SubsetValues, CoreError> {
     let mut subset_values = SubsetValues::new();
+    let object_j = serde_json::to_value(object_j).unwrap();
     let map_j = object_j.as_object().unwrap();
     for field in fields {
         let field_name = field.name.to_string();
@@ -140,6 +146,17 @@ pub fn object_j_to_subset_values(
         subset_values.add(&field_name, v_type, opt_value);
     }
     Ok(subset_values)
+}
+
+pub fn merge_values_to(
+    source: serde_json::Value,
+    destin: &mut serde_json::Map<String, serde_json::Value>,
+) {
+    let source = source.as_object().unwrap();
+    //    let destin = destin.as_object_mut().unwrap();
+    for (key, value) in source {
+        destin.insert(key.clone(), value.clone());
+    }
 }
 
 // TODO: create unit test

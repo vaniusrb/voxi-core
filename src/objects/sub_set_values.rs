@@ -1,15 +1,14 @@
+use crate::json_to_value;
+use crate::v_to_json;
+use crate::FieldNameType;
+use crate::IntoNullableValue;
+use crate::TypedOptionValue;
 use crate::{CoreError, ValueType};
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
-
-use crate::json_to_value;
-use crate::v_to_json;
-use crate::FieldNameType;
-use crate::IntoNullableValue;
-use crate::TypedOptionValue;
 
 /// TODO: this is very similar to Record
 #[derive(Clone, Debug, Serialize, Deserialize, Eq)]

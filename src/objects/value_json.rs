@@ -5,7 +5,7 @@ use chrono::{NaiveDate, NaiveDateTime};
 use log::error;
 use rust_decimal::Decimal;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
-use serde_json::json;
+use serde_json::{json, Map};
 use uuid::Uuid;
 
 /// Try convert a single json value field to `NullableValue`
@@ -27,6 +27,15 @@ pub fn json_to_value(
         ValueType::DateTime => serde_json::from_value::<NaiveDateTime>(value_j)?.into_value(),
     };
     Ok(result.into_nullable_value())
+}
+
+pub fn value_from_object<T: Serialize>(object: &T, field_name: &str) -> serde_json::Value {
+    json_to_map(object).get(field_name).cloned().unwrap()
+}
+
+pub fn json_to_map<T: Serialize>(object: &T) -> Map<String, serde_json::Value> {
+    let value_j = serde_json::to_value(object).unwrap();
+    value_j.as_object().cloned().unwrap()
 }
 
 pub fn json_to_str(value_j: serde_json::Value, value_type: ValueType) -> String {
@@ -83,8 +92,8 @@ pub fn modified_fields_name<A: Serialize, B: Serialize>(old: A, new: B) -> Vec<S
     let old_fields = old.as_object().unwrap();
     let new_fields = new.as_object().unwrap();
 
-    for (key, value) in old_fields {
-        if new_fields.get(key) != Some(value) {
+    for (key, new_value) in new_fields {
+        if old_fields.get(key) != Some(new_value) {
             fields_name.push(key.clone());
         }
     }
@@ -187,6 +196,28 @@ pub fn get_field_to_str<T: Serialize + DeserializeOwned>(
 mod tests {
     use super::*;
     use serde::Deserialize;
+
+    #[test]
+    pub fn modified_fields_name_test() {
+        let a = json!({ "a": "1", "b": "2" });
+        let b = json!({ "a": "1", "b": "2" });
+        assert_eq!(modified_fields_name(a, b), Vec::<String>::new());
+
+        let a = json!({ "a": "1" });
+        let b = json!({ "a": "1", "b": "2" });
+        assert_eq!(modified_fields_name(a, b), vec![String::from("b")]);
+
+        let a = json!({ "a": "1", "b": "1" });
+        let b = json!({ "a": "1", "b": "2" });
+        assert_eq!(modified_fields_name(a, b), vec![String::from("b")]);
+
+        let a = json!({ "a": "1", "b": "1" });
+        let b = json!({ "a": "2", "b": "2" });
+        assert_eq!(
+            modified_fields_name(a, b),
+            vec![String::from("a"), String::from("b")]
+        );
+    }
 
     #[derive(Serialize, Deserialize, Clone)]
     struct Test {

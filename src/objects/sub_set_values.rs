@@ -91,7 +91,7 @@ impl SubsetValues {
 
     pub fn object_j(&self) -> serde_json::Value {
         let object_j = json!({});
-        subset_values_to_object_j(self, object_j)
+        subset_values_to_object_j(self, object_j).unwrap()
     }
 
     pub fn object<T: Serialize + DeserializeOwned>(&self) -> T {
@@ -100,7 +100,7 @@ impl SubsetValues {
     }
 
     pub fn merge_to_j(&self, value: serde_json::Value) -> serde_json::Value {
-        subset_values_to_object_j(self, value)
+        subset_values_to_object_j(self, value).unwrap()
     }
 }
 
@@ -161,12 +161,12 @@ pub fn merge_values_to(
 pub fn subset_values_to_object_j(
     subset_values: &SubsetValues,
     mut object_j: serde_json::Value,
-) -> serde_json::Value {
+) -> Result<serde_json::Value, CoreError> {
     let map_j = object_j.as_object_mut().unwrap();
     for (name, opt_value) in subset_values.values() {
         match opt_value.opt_value.value() {
             Some(value) => {
-                let value_j = v_to_json(value);
+                let value_j = v_to_json(value)?;
                 map_j.insert(name.to_string(), value_j);
             }
             None => {
@@ -174,7 +174,7 @@ pub fn subset_values_to_object_j(
             }
         }
     }
-    object_j
+    Ok(object_j)
 }
 
 #[cfg(test)]

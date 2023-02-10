@@ -47,25 +47,28 @@ pub fn json_to_str(value_j: serde_json::Value, value_type: ValueType) -> String 
 }
 
 /// Convert a `NullableValue` to a single json value
-pub fn value_to_json(value: &NullableValue) -> serde_json::Value {
-    match value.value() {
-        Some(v) => v_to_json(v),
-        None => serde_json::to_value(Option::<String>::None).unwrap(),
-    }
+pub fn value_to_json(value: &NullableValue) -> Result<serde_json::Value, CoreError> {
+    let v = match value.value() {
+        Some(v) => v_to_json(v)?,
+        None => serde_json::to_value(Option::<String>::None)?,
+    };
+    Ok(v)
 }
 
 /// Convert a `Value` to a single json value
-pub fn v_to_json(value: &Value) -> serde_json::Value {
-    match value {
-        Value::String(v) => serde_json::to_value(v).unwrap(),
-        Value::Uuid(v) => serde_json::to_value(v).unwrap(),
-        Value::Int32(v) => serde_json::to_value(v).unwrap(),
-        Value::Int64(v) => serde_json::to_value(v).unwrap(),
-        Value::Decimal(v) => serde_json::to_value(v).unwrap(),
-        Value::Boolean(v) => serde_json::to_value(v).unwrap(),
-        Value::Date(v) => serde_json::to_value(v).unwrap(),
-        Value::DateTime(v) => serde_json::to_value(v).unwrap(),
+pub fn v_to_json(value: &Value) -> Result<serde_json::Value, CoreError> {
+    let v = match value {
+        Value::String(v) => serde_json::to_value(v),
+        Value::Uuid(v) => serde_json::to_value(v),
+        Value::Int32(v) => serde_json::to_value(v),
+        Value::Int64(v) => serde_json::to_value(v),
+        Value::Decimal(v) => serde_json::to_value(v),
+        Value::Boolean(v) => serde_json::to_value(v),
+        Value::Date(v) => serde_json::to_value(v),
+        Value::DateTime(v) => serde_json::to_value(v),
     }
+    .map_err(|e| CoreError::Conversion(e.to_string(), value.to_string()))?;
+    Ok(v)
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
@@ -143,30 +146,33 @@ pub fn set_field_from_str<T: Serialize + DeserializeOwned>(
     field_name: &str,
     value_s: Option<String>,
     value_type: ValueType,
-) -> T {
-    let mut object_j = serde_json::to_value(object).unwrap();
-    let map_j = object_j.as_object_mut().unwrap();
+) -> Result<T, CoreError> {
+    let mut object_j = serde_json::to_value(object)?;
+    let map_j = object_j.as_object_mut().ok_or(CoreError::Conversion(
+        String::from("field is not object"),
+        serde_json::to_value(object).unwrap().to_string(),
+    ))?;
     let value_s = match value_s {
         Some(value_s) => value_s,
         None => {
             map_j.remove(field_name);
-            let new_object: T = serde_json::from_value(object_j).unwrap();
-            return new_object;
+            let new_object: T = serde_json::from_value(object_j)?;
+            return Ok(new_object);
         }
     };
     let value_j = {
         if value_s.is_empty() {
             json!(Option::<String>::None)
         } else {
-            let value = try_value_from_string(&value_s, value_type)
-                .map_err(|e| format!("error extracting value from field name `{field_name}` type `{value_type}`: {e}"))
-                .unwrap();
-            v_to_json(&value)
+            try_value_from_string(&value_s, value_type).and_then(|value| v_to_json(&value))
+                .map_err(|e|
+                    CoreError::Conversion(e.to_string(), format!("error extracting value from field name `{field_name}` type `{value_type}`: {e}"))
+                    )?
         }
     };
     map_j.insert(field_name.to_string(), value_j);
-    let new_object: T = serde_json::from_value(object_j).unwrap();
-    new_object
+    let new_object: T = serde_json::from_value(object_j)?;
+    Ok(new_object)
 }
 
 /// Given an object `T` returns its field value to `String`

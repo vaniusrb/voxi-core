@@ -41,8 +41,8 @@ impl TryValueFromString for Uuid {
     type Return = Uuid;
 
     fn try_value_from_string(value: &str) -> Result<Self::Return, CoreError> {
-        let v: Uuid =
-            Uuid::from_slice(value.as_bytes()).map_err(|e| CoreError::Conversion(e.to_string()))?;
+        let v: Uuid = Uuid::from_slice(value.as_bytes())
+            .map_err(|e| CoreError::Conversion(e.to_string(), value.to_string()))?;
         Ok(v)
     }
 }
@@ -54,7 +54,7 @@ impl TryValueFromString for i32 {
         let v: i32 = value
             .to_string()
             .parse()
-            .map_err(|e: ParseIntError| CoreError::Conversion(e.to_string()))?;
+            .map_err(|e: ParseIntError| CoreError::Conversion(e.to_string(), value.to_string()))?;
         Ok(v)
     }
 }
@@ -80,7 +80,7 @@ impl TryValueFromString for i64 {
         let v: i64 = value
             .to_string()
             .parse()
-            .map_err(|e: ParseIntError| CoreError::Conversion(e.to_string()))?;
+            .map_err(|e: ParseIntError| CoreError::Conversion(e.to_string(), value.to_string()))?;
         Ok(v)
     }
 }
@@ -92,7 +92,7 @@ impl TryValueFromString for bool {
         let v: bool = value
             .to_string()
             .parse()
-            .map_err(|e: ParseBoolError| CoreError::Conversion(e.to_string()))?;
+            .map_err(|e: ParseBoolError| CoreError::Conversion(e.to_string(), value.to_string()))?;
         Ok(v)
     }
 }
@@ -104,7 +104,7 @@ impl TryValueFromString for NaiveDateTime {
         let d = value
             .to_string()
             .parse::<DateTime<Local>>()
-            .map_err(|e| CoreError::Conversion(e.to_string()))?
+            .map_err(|e| CoreError::Conversion(e.to_string(), value.to_string()))?
             .naive_local();
         Ok(d)
     }
@@ -115,7 +115,7 @@ impl TryValueFromString for NaiveDate {
 
     fn try_value_from_string(value: &str) -> Result<Self::Return, CoreError> {
         let d = NaiveDate::parse_from_str(value, "%Y-%m-%d")
-            .map_err(|e| CoreError::Conversion(e.to_string()))?;
+            .map_err(|e| CoreError::Conversion(e.to_string(), value.to_string()))?;
         Ok(d)
     }
 }
@@ -124,8 +124,8 @@ impl TryValueFromString for Decimal {
     type Return = Decimal;
 
     fn try_value_from_string(value: &str) -> Result<Self::Return, CoreError> {
-        let v: Decimal =
-            Decimal::from_str(value).map_err(|e| CoreError::Conversion(e.to_string()))?;
+        let v: Decimal = Decimal::from_str(value)
+            .map_err(|e| CoreError::Conversion(e.to_string(), value.to_string()))?;
         Ok(v)
     }
 }
@@ -143,7 +143,7 @@ impl TryStringIntoValue<String> for String {
 impl TryStringIntoValue<NaiveDate> for String {
     fn try_string_into_value(&self) -> Result<NaiveDate, CoreError> {
         let d = NaiveDate::parse_from_str(self, "%Y-%m-%d")
-            .map_err(|e| CoreError::Conversion(e.to_string()))?;
+            .map_err(|e| CoreError::Conversion(e.to_string(), self.clone()))?;
         Ok(d)
     }
 }
@@ -153,7 +153,7 @@ impl TryStringIntoValue<NaiveDateTime> for String {
         let d = self
             .to_string()
             .parse::<DateTime<Local>>()
-            .map_err(|e| CoreError::Conversion(e.to_string()))?
+            .map_err(|e| CoreError::Conversion(e.to_string(), self.clone()))?
             .naive_local();
         Ok(d)
     }
@@ -164,7 +164,7 @@ impl TryStringIntoValue<i32> for String {
         let v: i32 = self
             .to_string()
             .parse()
-            .map_err(|e: ParseIntError| CoreError::Conversion(e.to_string()))?;
+            .map_err(|e: ParseIntError| CoreError::Conversion(e.to_string(), self.clone()))?;
         Ok(v)
     }
 }
@@ -174,7 +174,7 @@ impl TryStringIntoValue<i64> for String {
         let v: i64 = self
             .to_string()
             .parse()
-            .map_err(|e: ParseIntError| CoreError::Conversion(e.to_string()))?;
+            .map_err(|e: ParseIntError| CoreError::Conversion(e.to_string(), self.clone()))?;
         Ok(v)
     }
 }
@@ -184,15 +184,15 @@ impl TryStringIntoValue<bool> for String {
         let v: bool = self
             .to_string()
             .parse()
-            .map_err(|e: ParseBoolError| CoreError::Conversion(e.to_string()))?;
+            .map_err(|e: ParseBoolError| CoreError::Conversion(e.to_string(), self.clone()))?;
         Ok(v)
     }
 }
 
 impl TryStringIntoValue<Decimal> for String {
     fn try_string_into_value(&self) -> Result<Decimal, CoreError> {
-        let v: Decimal =
-            Decimal::from_str(self).map_err(|e| CoreError::Conversion(e.to_string()))?;
+        let v: Decimal = Decimal::from_str(self)
+            .map_err(|e| CoreError::Conversion(e.to_string(), self.clone()))?;
         Ok(v)
     }
 }

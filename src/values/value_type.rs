@@ -1,6 +1,7 @@
 use chrono::{NaiveDate, NaiveDateTime};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
+use std::fmt;
 use uuid::Uuid;
 
 /// Enum to represents field type, can be used in ListView.
@@ -16,6 +17,12 @@ pub enum ValueType {
     Boolean,
     Date,
     DateTime,
+}
+
+impl fmt::Display for ValueType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }
 
 pub trait IntoValueType {

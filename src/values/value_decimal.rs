@@ -31,7 +31,10 @@ impl TryFrom<Value> for Decimal {
     fn try_from(value: Value) -> Result<Self, Self::Error> {
         match value {
             Value::Decimal(v) => Ok(v),
-            _ => Err(CoreError::Conversion("not decimal value".to_string())),
+            _ => Err(CoreError::Conversion(
+                "not decimal value".to_string(),
+                value.to_string(),
+            )),
         }
     }
 }
@@ -42,7 +45,10 @@ impl TryFrom<&Value> for Decimal {
     fn try_from(value: &Value) -> Result<Self, Self::Error> {
         match value {
             Value::Decimal(v) => Ok(*v),
-            _ => Err(CoreError::Conversion("not decimal value".to_string())),
+            _ => Err(CoreError::Conversion(
+                "not decimal value".to_string(),
+                value.to_string(),
+            )),
         }
     }
 }

@@ -158,7 +158,9 @@ pub fn set_field_from_str<T: Serialize + DeserializeOwned>(
         if value_s.is_empty() {
             json!(Option::<String>::None)
         } else {
-            let value = try_value_from_string(&value_s, value_type).unwrap();
+            let value = try_value_from_string(&value_s, value_type)
+                .map_err(|e| format!("error extracting value from field name `{field_name}` type `{value_type}`: {e}"))
+                .unwrap();
             v_to_json(&value)
         }
     };

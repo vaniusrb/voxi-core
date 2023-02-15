@@ -77,11 +77,11 @@ impl From<&Uuid> for Value {
     }
 }
 
-// impl From<Uuid> for Value {
-//     fn from(other: Uuid) -> Self {
-//         Value::Uuid(other)
-//     }
-// }
+impl From<Uuid> for Value {
+    fn from(other: Uuid) -> Self {
+        Value::Uuid(other)
+    }
+}
 
 impl PartialEq<Uuid> for Value {
     fn eq(&self, other: &Uuid) -> bool {

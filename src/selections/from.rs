@@ -20,6 +20,8 @@ use std::collections::HashSet;
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct FromSelect {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default)]
     alias: Option<Alias>,
     from_type: FromType,
 }

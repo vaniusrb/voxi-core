@@ -50,9 +50,15 @@ pub struct QueryBuilder {
     joins: Vec<Join>,
     where_expr: Option<LogicalExprWhere>,
     groups: Vec<GroupBy>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default)]
     having_expr: Option<LogicalExprWhere>,
     orders_by: OrdersBy,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default)]
     combination: Option<Box<Combination>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default)]
     limit_offset: Option<LimitOffset>,
     binds_values: Vec<(BindName, NullableValue)>,
 }

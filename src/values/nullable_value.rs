@@ -4,6 +4,9 @@ use std::fmt;
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, Hash)]
 pub struct NullableValue {
+    #[serde(flatten)]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default)]
     value: Option<Value>,
 }
 

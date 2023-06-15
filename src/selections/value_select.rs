@@ -19,6 +19,8 @@ use std::collections::HashSet;
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ValueSelect {
     pub value_where: ValueWhere,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default)]
     pub alias: Option<Alias>,
 }
 

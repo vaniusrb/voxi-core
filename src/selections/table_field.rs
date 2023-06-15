@@ -10,6 +10,8 @@ use std::fmt;
 /// `TableField` represents a field that can contains a table definition, mainly to be used in `SELECT` or `WHERE` clause
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TableField {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default)]
     pub table: Option<Table>,
     pub field_name: FieldName,
 }

@@ -1,7 +1,7 @@
 use crate::json_to_value;
 use crate::v_to_json;
+use crate::values::nullable_value::IntoNullableValueType;
 use crate::FieldNameType;
-use crate::IntoNullableValue;
 use crate::TypedOptionValue;
 use crate::{CoreError, ValueType};
 use serde::de::DeserializeOwned;
@@ -50,8 +50,13 @@ impl SubsetValues {
         object_j_to_subset_values(&object_j, fields)
     }
 
-    pub fn add(&mut self, field_name: &str, v_type: ValueType, opt_value: impl IntoNullableValue) {
-        let opt_value = opt_value.into_nullable_value();
+    pub fn add(
+        &mut self,
+        field_name: &str,
+        v_type: ValueType,
+        opt_value: impl IntoNullableValueType,
+    ) {
+        let opt_value = opt_value.into_nullable_value(v_type);
         let typed_option_value = TypedOptionValue { v_type, opt_value };
         self.values.insert(field_name.into(), typed_option_value);
     }
@@ -141,7 +146,7 @@ pub fn object_j_to_subset_values<T: Serialize>(
             .map(|v| json_to_value(v.clone(), v_type).map(|nv| nv.into_opt()))
             .transpose()?
             .flatten();
-        subset_values.add(&field_name, v_type, opt_value);
+        subset_values.add(&field_name, v_type, opt_value.into_nullable_value(v_type));
     }
     Ok(subset_values)
 }
@@ -166,7 +171,7 @@ pub fn subset_values_to_object_j(
     for (name, opt_value) in subset_values.values() {
         match opt_value.opt_value.value() {
             Some(value) => {
-                let value_j = v_to_json(value)?;
+                let value_j = v_to_json(&value)?;
                 map_j.insert(name.to_string(), value_j);
             }
             None => {
@@ -179,6 +184,8 @@ pub fn subset_values_to_object_j(
 
 #[cfg(test)]
 mod test {
+
+    use crate::IntoNullableValue;
 
     use super::*;
 

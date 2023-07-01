@@ -57,7 +57,7 @@ impl TryFrom<NullableValue> for NaiveDate {
     type Error = String;
 
     fn try_from(value: NullableValue) -> Result<Self, Self::Error> {
-        match value.value().cloned() {
+        match value.value() {
             Some(Value::Date(v)) => Ok(v),
             Some(v) => Err(format!("not date value! type is {:?}", v.value_type())),
             None => Err("value is null".into()),
@@ -69,7 +69,7 @@ impl TryFrom<&NullableValue> for NaiveDate {
     type Error = String;
 
     fn try_from(value: &NullableValue) -> Result<Self, Self::Error> {
-        match value.value().cloned() {
+        match value.value() {
             Some(Value::Date(v)) => Ok(v),
             Some(v) => Err(format!("not date value! type is {:?}", v.value_type())),
             None => Err("value is null".into()),

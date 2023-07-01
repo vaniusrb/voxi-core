@@ -51,7 +51,7 @@ impl TryFrom<NullableValue> for Uuid {
     type Error = String;
 
     fn try_from(value: NullableValue) -> Result<Self, Self::Error> {
-        match value.value().cloned() {
+        match value.value() {
             Some(Value::Uuid(v)) => Ok(v),
             Some(v) => Err(format!("not uuid value! type is {:?}", v.value_type())),
             None => Err("value is null".into()),
@@ -63,7 +63,7 @@ impl TryFrom<&NullableValue> for Uuid {
     type Error = String;
 
     fn try_from(value: &NullableValue) -> Result<Self, Self::Error> {
-        match value.value().cloned() {
+        match value.value() {
             Some(Value::Uuid(v)) => Ok(v),
             Some(v) => Err(format!("not uuid value! type is {:?}", v.value_type())),
             None => Err("value is null".into()),

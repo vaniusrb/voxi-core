@@ -1,13 +1,16 @@
 use super::nullable_value::{IntoNullableValue, NullableValue};
+use crate::ValueType;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, Hash)]
-pub struct NullValue {}
+pub struct NullValue {
+    value_type: ValueType,
+}
 
 impl NullValue {
-    pub fn new() -> Self {
-        Self {}
+    pub fn new(value_type: ValueType) -> Self {
+        Self { value_type }
     }
 
     pub fn sql(&self) -> String {
@@ -15,15 +18,9 @@ impl NullValue {
     }
 }
 
-impl Default for NullValue {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 impl IntoNullableValue for NullValue {
     fn into_nullable_value(self) -> NullableValue {
-        NullableValue::null()
+        NullableValue::null(self.value_type)
     }
 }
 

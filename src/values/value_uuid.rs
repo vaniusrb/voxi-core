@@ -11,6 +11,10 @@ impl IntoValue for Uuid {
     fn into_value(self) -> Value {
         Value::Uuid(self)
     }
+
+    fn value_type() -> Option<ValueType> {
+        Some(ValueType::Uuid)
+    }
 }
 
 impl ValueToSQL for Uuid {
@@ -52,7 +56,7 @@ impl TryFrom<NullableValue> for Uuid {
 
     fn try_from(value: NullableValue) -> Result<Self, Self::Error> {
         match value.value() {
-            Some(Value::Uuid(v)) => Ok(v),
+            Some(Value::Uuid(v)) => Ok(*v),
             Some(v) => Err(format!("not uuid value! type is {:?}", v.value_type())),
             None => Err("value is null".into()),
         }
@@ -64,7 +68,7 @@ impl TryFrom<&NullableValue> for Uuid {
 
     fn try_from(value: &NullableValue) -> Result<Self, Self::Error> {
         match value.value() {
-            Some(Value::Uuid(v)) => Ok(v),
+            Some(Value::Uuid(v)) => Ok(*v),
             Some(v) => Err(format!("not uuid value! type is {:?}", v.value_type())),
             None => Err("value is null".into()),
         }

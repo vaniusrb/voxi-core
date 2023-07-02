@@ -11,6 +11,10 @@ impl IntoValue for i64 {
     fn into_value(self) -> Value {
         Value::Int64(self)
     }
+
+    fn value_type() -> Option<ValueType> {
+        Some(ValueType::Int64)
+    }
 }
 
 impl ValueToSQL for i64 {
@@ -54,7 +58,7 @@ impl TryFrom<NullableValue> for i64 {
 
     fn try_from(value: NullableValue) -> Result<Self, Self::Error> {
         match value.value() {
-            Some(Value::Int64(v)) => Ok(v),
+            Some(Value::Int64(v)) => Ok(*v),
             Some(v) => Err(format!("not i64 value! type is {:?}", v.value_type())),
             _ => Err("value is null".into()),
         }
@@ -66,7 +70,7 @@ impl TryFrom<&NullableValue> for i64 {
 
     fn try_from(value: &NullableValue) -> Result<Self, Self::Error> {
         match value.value() {
-            Some(Value::Int64(v)) => Ok(v),
+            Some(Value::Int64(v)) => Ok(*v),
             Some(v) => Err(format!("not i64 value! type is {:?}", v.value_type())),
             _ => Err("value is null".into()),
         }

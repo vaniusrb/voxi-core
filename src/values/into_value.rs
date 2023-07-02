@@ -10,17 +10,27 @@ use uuid::Uuid;
 
 pub trait IntoValue {
     fn into_value(self) -> Value;
+
+    fn value_type() -> Option<ValueType>;
 }
 
 impl IntoValue for Value {
     fn into_value(self) -> Value {
         self
     }
+
+    fn value_type() -> Option<ValueType> {
+        None
+    }
 }
 
 impl IntoValue for &Value {
     fn into_value(self) -> Value {
         self.clone()
+    }
+
+    fn value_type() -> Option<ValueType> {
+        None
     }
 }
 

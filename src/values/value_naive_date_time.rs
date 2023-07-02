@@ -12,6 +12,10 @@ impl IntoValue for NaiveDateTime {
     fn into_value(self) -> Value {
         Value::DateTime(self)
     }
+
+    fn value_type() -> Option<ValueType> {
+        Some(ValueType::DateTime)
+    }
 }
 
 impl ValueToSQL for NaiveDateTime {
@@ -53,7 +57,7 @@ impl TryFrom<NullableValue> for NaiveDateTime {
 
     fn try_from(value: NullableValue) -> Result<Self, Self::Error> {
         match value.value() {
-            Some(Value::DateTime(v)) => Ok(v),
+            Some(Value::DateTime(v)) => Ok(*v),
             Some(v) => Err(format!("not datetime value! type is {:?}", v.value_type())),
             None => Err("value is null".into()),
         }
@@ -65,7 +69,7 @@ impl TryFrom<&NullableValue> for NaiveDateTime {
 
     fn try_from(value: &NullableValue) -> Result<Self, Self::Error> {
         match value.value() {
-            Some(Value::DateTime(v)) => Ok(v),
+            Some(Value::DateTime(v)) => Ok(*v),
             Some(v) => Err(format!("not datetime value! type is {:?}", v.value_type())),
             None => Err("value is null".into()),
         }

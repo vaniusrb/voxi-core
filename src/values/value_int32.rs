@@ -9,6 +9,10 @@ impl IntoValue for i32 {
     fn into_value(self) -> Value {
         Value::Int32(self)
     }
+
+    fn value_type() -> Option<ValueType> {
+        Some(ValueType::Int32)
+    }
 }
 
 impl ValueToSQL for i32 {

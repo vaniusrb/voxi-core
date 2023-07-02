@@ -11,6 +11,10 @@ impl IntoValue for Decimal {
     fn into_value(self) -> Value {
         Value::Decimal(self)
     }
+
+    fn value_type() -> Option<ValueType> {
+        Some(ValueType::Decimal)
+    }
 }
 
 impl ValueToSQL for Decimal {

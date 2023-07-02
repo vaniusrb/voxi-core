@@ -11,6 +11,10 @@ impl IntoValue for bool {
     fn into_value(self) -> Value {
         Value::Boolean(self)
     }
+
+    fn value_type() -> Option<ValueType> {
+        Some(ValueType::Boolean)
+    }
 }
 
 impl ValueToSQL for bool {

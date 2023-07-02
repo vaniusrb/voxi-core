@@ -11,11 +11,19 @@ impl IntoValue for String {
     fn into_value(self) -> Value {
         Value::String(self)
     }
+
+    fn value_type() -> Option<ValueType> {
+        Some(ValueType::String)
+    }
 }
 
 impl IntoValue for &str {
     fn into_value(self) -> Value {
         Value::String(self.to_owned())
+    }
+
+    fn value_type() -> Option<ValueType> {
+        Some(ValueType::String)
     }
 }
 
@@ -61,7 +69,7 @@ impl TryFrom<NullableValue> for String {
 
     fn try_from(value: NullableValue) -> Result<Self, Self::Error> {
         match value.value() {
-            Some(Value::String(v)) => Ok(v),
+            Some(Value::String(v)) => Ok(v.clone()),
             Some(v) => Err(format!("not string value! type is {:?}", v.value_type())),
             None => Err("value is null".into()),
         }
@@ -73,7 +81,7 @@ impl TryFrom<&NullableValue> for String {
 
     fn try_from(value: &NullableValue) -> Result<Self, Self::Error> {
         match value.value() {
-            Some(Value::String(v)) => Ok(v),
+            Some(Value::String(v)) => Ok(v.clone()),
             Some(v) => Err(format!("not string value! type is {:?}", v.value_type())),
             None => Err("value is null".into()),
         }

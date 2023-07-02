@@ -11,6 +11,10 @@ impl IntoValue for NaiveDate {
     fn into_value(self) -> Value {
         Value::Date(self)
     }
+
+    fn value_type() -> Option<ValueType> {
+        Some(ValueType::Date)
+    }
 }
 
 impl ValueToSQL for NaiveDate {
@@ -58,7 +62,7 @@ impl TryFrom<NullableValue> for NaiveDate {
 
     fn try_from(value: NullableValue) -> Result<Self, Self::Error> {
         match value.value() {
-            Some(Value::Date(v)) => Ok(v),
+            Some(Value::Date(v)) => Ok(*v),
             Some(v) => Err(format!("not date value! type is {:?}", v.value_type())),
             None => Err("value is null".into()),
         }
@@ -70,7 +74,7 @@ impl TryFrom<&NullableValue> for NaiveDate {
 
     fn try_from(value: &NullableValue) -> Result<Self, Self::Error> {
         match value.value() {
-            Some(Value::Date(v)) => Ok(v),
+            Some(Value::Date(v)) => Ok(*v),
             Some(v) => Err(format!("not date value! type is {:?}", v.value_type())),
             None => Err("value is null".into()),
         }

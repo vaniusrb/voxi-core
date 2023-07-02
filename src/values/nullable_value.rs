@@ -1,44 +1,48 @@
-use crate::ValueType;
-
 use super::{IntoValue, Value};
-use chrono::{NaiveDate, NaiveDateTime};
-use rust_decimal::Decimal;
+use crate::{CoreError, IntoValueType, ValueType};
 use serde::{Deserialize, Serialize};
 use std::fmt;
-use uuid::Uuid;
-
-// #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, Hash)]
-// pub struct NullableValue {
-//     #[serde(flatten)]
-//     // #[serde(skip_serializing_if = "Option::is_none")]
-//     #[serde(default)]
-//     value: Option<Value>,
-// }
 
 // TODO: add comment
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, Hash)]
 pub enum NullableValue {
-    String(Option<String>),
-    Uuid(Option<Uuid>),
-    Int32(Option<i32>),
-    Int64(Option<i64>),
-    Decimal(Option<Decimal>),
-    Boolean(Option<bool>),
-    Date(Option<NaiveDate>),
-    DateTime(Option<NaiveDateTime>),
+    String(Option<Value>),
+    Uuid(Option<Value>),
+    Int32(Option<Value>),
+    Int64(Option<Value>),
+    Decimal(Option<Value>),
+    Boolean(Option<Value>),
+    Date(Option<Value>),
+    DateTime(Option<Value>),
+}
+
+impl IntoValueType for NullableValue {
+    fn value_type(&self) -> ValueType {
+        match self {
+            NullableValue::String(_) => ValueType::String,
+            NullableValue::Uuid(_) => ValueType::Uuid,
+            NullableValue::Int32(_) => ValueType::Int32,
+            NullableValue::Int64(_) => ValueType::Int64,
+            NullableValue::Decimal(_) => ValueType::Decimal,
+            NullableValue::Boolean(_) => ValueType::Boolean,
+            NullableValue::Date(_) => ValueType::Date,
+            NullableValue::DateTime(_) => ValueType::DateTime,
+        }
+    }
 }
 
 impl NullableValue {
     pub fn from(value: impl IntoValue) -> Self {
-        match value.into_value() {
-            Value::String(value) => Self::String(Some(value)),
-            Value::Uuid(value) => Self::Uuid(Some(value)),
-            Value::Int32(value) => Self::Int32(Some(value)),
-            Value::Int64(value) => Self::Int64(Some(value)),
-            Value::Decimal(value) => Self::Decimal(Some(value)),
-            Value::Boolean(value) => Self::Boolean(Some(value)),
-            Value::Date(value) => Self::Date(Some(value)),
-            Value::DateTime(value) => Self::DateTime(Some(value)),
+        let value = value.into_value();
+        match value.value_type() {
+            ValueType::String => Self::String(Some(value)),
+            ValueType::Uuid => Self::Uuid(Some(value)),
+            ValueType::Int32 => Self::Int32(Some(value)),
+            ValueType::Int64 => Self::Int64(Some(value)),
+            ValueType::Decimal => Self::Decimal(Some(value)),
+            ValueType::Boolean => Self::Boolean(Some(value)),
+            ValueType::Date => Self::Date(Some(value)),
+            ValueType::DateTime => Self::DateTime(Some(value)),
         }
     }
 
@@ -55,16 +59,16 @@ impl NullableValue {
         }
     }
 
-    pub fn value(&self) -> Option<Value> {
+    pub fn value(&self) -> Option<&Value> {
         match self {
-            NullableValue::String(value) => value.as_ref().map(|v| v.clone().into_value()),
-            NullableValue::Uuid(value) => value.as_ref().map(|v| (*v).into_value()),
-            NullableValue::Int32(value) => value.as_ref().map(|v| (*v).into_value()),
-            NullableValue::Int64(value) => value.as_ref().map(|v| (*v).into_value()),
-            NullableValue::Decimal(value) => value.as_ref().map(|v| (*v).into_value()),
-            NullableValue::Boolean(value) => value.as_ref().map(|v| (*v).into_value()),
-            NullableValue::Date(value) => value.as_ref().map(|v| (*v).into_value()),
-            NullableValue::DateTime(value) => value.as_ref().map(|v| (*v).into_value()),
+            NullableValue::String(value) => value.as_ref(),
+            NullableValue::Uuid(value) => value.as_ref(),
+            NullableValue::Int32(value) => value.as_ref(),
+            NullableValue::Int64(value) => value.as_ref(),
+            NullableValue::Decimal(value) => value.as_ref(),
+            NullableValue::Boolean(value) => value.as_ref(),
+            NullableValue::Date(value) => value.as_ref(),
+            NullableValue::DateTime(value) => value.as_ref(),
         }
     }
 
@@ -76,7 +80,31 @@ impl NullableValue {
     }
 
     pub fn into_opt(self) -> Option<Value> {
-        self.value()
+        match self {
+            NullableValue::String(value) => value,
+            NullableValue::Uuid(value) => value,
+            NullableValue::Int32(value) => value,
+            NullableValue::Int64(value) => value,
+            NullableValue::Decimal(value) => value,
+            NullableValue::Boolean(value) => value,
+            NullableValue::Date(value) => value,
+            NullableValue::DateTime(value) => value,
+        }
+    }
+
+    pub fn into_opt_val<T>(self) -> Result<Option<T>, CoreError>
+    where
+        T: TryFrom<Value>,
+        <T as TryFrom<Value>>::Error: std::fmt::Debug,
+    {
+        let value = match self.into_opt() {
+            Some(value) => value,
+            None => return Ok(None),
+        };
+        let ret: T = value
+            .try_into()
+            .map_err(|_| CoreError::Conversion("conversion error".to_string(), "".to_string()))?;
+        Ok(Some(ret))
     }
 
     pub fn is_null(&self) -> bool {
@@ -137,44 +165,32 @@ where
             (None, ValueType::Boolean) => NullableValue::Boolean(None),
             (None, ValueType::Date) => NullableValue::Date(None),
             (None, ValueType::DateTime) => NullableValue::DateTime(None),
-            (Some(value), ValueType::String) => {
-                NullableValue::String(Some(value.into_value().try_into().unwrap()))
-            }
-            (Some(value), ValueType::Uuid) => {
-                NullableValue::Uuid(Some(value.into_value().try_into().unwrap()))
-            }
-            (Some(value), ValueType::Int32) => {
-                NullableValue::Int32(Some(value.into_value().try_into().unwrap()))
-            }
-            (Some(value), ValueType::Int64) => {
-                NullableValue::Int64(Some(value.into_value().try_into().unwrap()))
-            }
-            (Some(value), ValueType::Decimal) => {
-                NullableValue::Decimal(Some(value.into_value().try_into().unwrap()))
-            }
-            (Some(value), ValueType::Boolean) => {
-                NullableValue::Boolean(Some(value.into_value().try_into().unwrap()))
-            }
-            (Some(value), ValueType::Date) => {
-                NullableValue::Date(Some(value.into_value().try_into().unwrap()))
-            }
-            (Some(value), ValueType::DateTime) => {
-                NullableValue::DateTime(Some(value.into_value().try_into().unwrap()))
-            }
+            (Some(value), ValueType::String) => NullableValue::String(Some(value.into_value())),
+            (Some(value), ValueType::Uuid) => NullableValue::Uuid(Some(value.into_value())),
+            (Some(value), ValueType::Int32) => NullableValue::Int32(Some(value.into_value())),
+            (Some(value), ValueType::Int64) => NullableValue::Int64(Some(value.into_value())),
+            (Some(value), ValueType::Decimal) => NullableValue::Decimal(Some(value.into_value())),
+            (Some(value), ValueType::Boolean) => NullableValue::Boolean(Some(value.into_value())),
+            (Some(value), ValueType::Date) => NullableValue::Date(Some(value.into_value())),
+            (Some(value), ValueType::DateTime) => NullableValue::DateTime(Some(value.into_value())),
         }
     }
 }
 
-// impl<V> IntoNullableValue for Option<V>
-// where
-//     V: IntoValue,
-// {
-//     fn into_nullable_value(self) -> NullableValue {
-//         NullableValue {
-//             value: self.map(|v| v.into_value()),
-//         }
-//     }
-// }
+impl<V> IntoNullableValue for Option<V>
+where
+    V: IntoValue,
+{
+    fn into_nullable_value(self) -> NullableValue {
+        match self {
+            Some(value) => NullableValue::from(value),
+            None => {
+                let value_type = V::value_type().unwrap_or(ValueType::String);
+                NullableValue::null(value_type)
+            }
+        }
+    }
+}
 
 impl fmt::Display for NullableValue {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

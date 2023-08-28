@@ -103,6 +103,7 @@ impl NullableValue {
         };
         let ret: T = value
             .try_into()
+            // TODO: create error like "unexpected field type"
             .map_err(|_| CoreError::Conversion("conversion error".to_string(), "".to_string()))?;
         Ok(Some(ret))
     }

@@ -34,7 +34,7 @@ pub struct FieldAttribs {
 }
 
 impl FieldAttribs {
-    pub fn new<T: ValueTyped>(name: &str, title: &str) -> Self {
+    pub fn new<T: ValueTyped>(name: impl IntoFieldName, title: &str) -> Self {
         Self {
             name: name.into_field_name(),
             value_type: *T::v_type(),

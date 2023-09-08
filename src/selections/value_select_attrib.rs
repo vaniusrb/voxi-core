@@ -88,6 +88,8 @@ where
     }
 }
 
+// FIXME: ValueSelectAttrib lost its reason to exists, because now FieldAttribs contains a ValueSelect
+
 // `ValueSelectAttrib` contains a `ValueSelect` (expression used in SELECT's columns) with an assigned `FieldAttribs`.
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq)]
 pub struct ValueSelectAttrib {
@@ -122,8 +124,14 @@ impl ValueSelectAttrib {
         into_value_select: impl IntoValueSelect,
         value_type: ValueType,
     ) -> Self {
+        let into_value_select = into_value_select.into_value_select();
         Self {
-            field_attrib: FieldAttribs::new_t(name, title, value_type),
+            field_attrib: FieldAttribs::new_t(
+                name,
+                title,
+                value_type,
+                Some(into_value_select.clone()),
+            ),
             value_select: into_value_select.into_value_select(),
         }
     }
@@ -134,16 +142,22 @@ impl ValueSelectAttrib {
         title: &str,
         into_value_select: impl IntoValueSelect,
     ) -> Self {
+        let into_value_select = into_value_select.into_value_select();
         Self {
-            field_attrib: FieldAttribs::new::<T>(name, title),
+            field_attrib: FieldAttribs::new::<T>(name, title, Some(into_value_select.clone())),
             value_select: into_value_select.into_value_select(),
         }
     }
 
     /// Add field name.
-    pub fn field<T: ValueTyped>(name: &str, title: &str) -> Self {
+    pub fn field<T: ValueTyped>(
+        name: &str,
+        title: &str,
+        into_value_select: impl IntoValueSelect,
+    ) -> Self {
+        let into_value_select = into_value_select.into_value_select();
         Self {
-            field_attrib: FieldAttribs::new::<T>(name, title),
+            field_attrib: FieldAttribs::new::<T>(name, title, Some(into_value_select.clone())),
             value_select: name.into_field_name().into_value_select(),
         }
     }

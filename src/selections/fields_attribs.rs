@@ -33,49 +33,73 @@ impl FieldsAttribsBuilder {
         }
     }
 
-    pub fn add<T: ValueTyped>(&mut self, name: &str, title: &str) {
+    pub fn add<T: ValueTyped>(
+        &mut self,
+        name: &str,
+        title: &str,
+        value_select: Option<impl IntoValueSelect>,
+    ) {
         let value_attrib = FieldAttribs {
             name: name.into_field_name(),
             value_type: *T::v_type(),
             title: title.to_owned(),
             nullable: false,
             alignment: Default::default(),
+            value_select: value_select.map(|vs| vs.into_value_select()),
         };
         self.fields_attribs.push(value_attrib);
     }
 
-    pub fn add_nullable<T: ValueTyped>(&mut self, name: &str, title: &str) {
+    pub fn add_nullable<T: ValueTyped>(
+        &mut self,
+        name: &str,
+        title: &str,
+        value_select: Option<impl IntoValueSelect>,
+    ) {
         let value_attrib = FieldAttribs {
             name: name.into_field_name(),
             value_type: *T::v_type(),
             title: title.to_owned(),
             nullable: true,
             alignment: Default::default(),
+            value_select: value_select.map(|vs| vs.into_value_select()),
         };
         self.fields_attribs.push(value_attrib);
     }
 
     #[must_use]
-    pub fn with_add<T: ValueTyped>(mut self, name: &str, title: &str) -> Self {
+    pub fn with_add<T: ValueTyped>(
+        mut self,
+        name: &str,
+        title: &str,
+        value_select: Option<impl IntoValueSelect>,
+    ) -> Self {
         let value_attrib = FieldAttribs {
             name: name.into_field_name(),
             value_type: *T::v_type(),
             title: title.to_owned(),
             nullable: false,
             alignment: Default::default(),
+            value_select: value_select.map(|vs| vs.into_value_select()),
         };
         self.fields_attribs.push(value_attrib);
         self
     }
 
     #[must_use]
-    pub fn with_add_nullable<T: ValueTyped>(mut self, name: &str, title: &str) -> Self {
+    pub fn with_add_nullable<T: ValueTyped>(
+        mut self,
+        name: &str,
+        title: &str,
+        value_select: Option<impl IntoValueSelect>,
+    ) -> Self {
         let value_attrib = FieldAttribs {
             name: name.into_field_name(),
             value_type: *T::v_type(),
             title: title.to_owned(),
             nullable: true,
             alignment: Default::default(),
+            value_select: value_select.map(|vs| vs.into_value_select()),
         };
         self.fields_attribs.push(value_attrib);
         self

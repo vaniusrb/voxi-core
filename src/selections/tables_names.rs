@@ -20,7 +20,7 @@ impl TablesNames for ArithmeticExprWhere {
             | ArithmeticExprWhere::Add(e1, e2) => e1
                 .tables_names()
                 .into_iter()
-                .chain(e2.tables_names().into_iter())
+                .chain(e2.tables_names())
                 .collect(),
         }
     }
@@ -54,7 +54,7 @@ impl TablesNames for LogicalExprWhere {
                 let e: HashSet<&TableName> = e1
                     .tables_names()
                     .into_iter()
-                    .chain(e2.tables_names().into_iter())
+                    .chain(e2.tables_names())
                     .collect();
                 e
             }

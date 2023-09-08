@@ -484,7 +484,7 @@ impl Select {
                     .columns
                     .tables_names()
                     .into_iter()
-                    .chain(c.tables_names().into_iter())
+                    .chain(c.tables_names())
                     .collect();
                 e
             }

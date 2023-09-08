@@ -23,7 +23,7 @@ impl IntoFieldName for TableField {
 }
 
 impl TableField {
-    /// Create a `TableField`, that can contais a table definition.
+    /// Create a `TableField`, that can contains a table definition.
     /// It is possible to inform table delimited by a dot.
     /// ```
     /// # use voxi_core::selections::ToSQL;

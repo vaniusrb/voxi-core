@@ -23,6 +23,7 @@ pub struct FieldAttribs {
     #[serde(flatten)]
     pub name: FieldName,
     pub title: String,
+    pub value_select: Option<ValueSelect>,
     #[serde(rename = "type")]
     pub value_type: ValueType,
     pub nullable: bool,
@@ -34,23 +35,34 @@ pub struct FieldAttribs {
 }
 
 impl FieldAttribs {
-    pub fn new<T: ValueTyped>(name: impl IntoFieldName, title: &str) -> Self {
+    pub fn new<T: ValueTyped>(
+        name: impl IntoFieldName,
+        title: &str,
+        value_select: Option<impl IntoValueSelect>,
+    ) -> Self {
         Self {
             name: name.into_field_name(),
             value_type: *T::v_type(),
             title: title.to_owned(),
             nullable: true,
             alignment: Default::default(),
+            value_select: value_select.map(|vs| vs.into_value_select()),
         }
     }
 
-    pub fn new_t(name: impl IntoFieldName, title: &str, value_type: ValueType) -> Self {
+    pub fn new_t(
+        name: impl IntoFieldName,
+        title: &str,
+        value_type: ValueType,
+        value_select: Option<impl IntoValueSelect>,
+    ) -> Self {
         Self {
             name: name.into_field_name(),
             value_type,
             title: title.to_owned(),
             nullable: true,
             alignment: Default::default(),
+            value_select: value_select.map(|vs| vs.into_value_select()),
         }
     }
 
@@ -126,7 +138,7 @@ mod tests {
 
     #[test]
     fn test_serialize() {
-        let value = FieldAttribs::new::<String>("name", "Title");
+        let value = FieldAttribs::new::<String>("name", "Title", Option::<String>::None);
         let json = serde_json::to_string_pretty(&value).unwrap();
         println!("{json}");
         let exp = r#"{

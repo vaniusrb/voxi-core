@@ -2,6 +2,7 @@ use crate::values::into_value::try_value_from_string;
 use crate::{CoreError, IntoNullableValue};
 use crate::{IntoValue, NullableValue, Value, ValueType};
 use chrono::{NaiveDate, NaiveDateTime};
+use error_stack::ResultExt;
 use log::error;
 use rust_decimal::Decimal;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
@@ -12,19 +13,35 @@ use uuid::Uuid;
 pub fn json_to_value(
     value_j: serde_json::Value,
     value_type: ValueType,
-) -> Result<NullableValue, CoreError> {
+) -> error_stack::Result<NullableValue, CoreError> {
     if value_j.is_null() {
         return Ok(NullableValue::null(value_type));
     }
     let result = match value_type {
-        ValueType::String => serde_json::from_value::<String>(value_j)?.into_value(),
-        ValueType::Uuid => serde_json::from_value::<Uuid>(value_j)?.into_value(),
-        ValueType::Int32 => serde_json::from_value::<i32>(value_j)?.into_value(),
-        ValueType::Int64 => serde_json::from_value::<i64>(value_j)?.into_value(),
-        ValueType::Decimal => serde_json::from_value::<Decimal>(value_j)?.into_value(),
-        ValueType::Boolean => serde_json::from_value::<bool>(value_j)?.into_value(),
-        ValueType::Date => serde_json::from_value::<NaiveDate>(value_j)?.into_value(),
-        ValueType::DateTime => serde_json::from_value::<NaiveDateTime>(value_j)?.into_value(),
+        ValueType::String => serde_json::from_value::<String>(value_j.clone())
+            .change_context_lazy(|| CoreError::ParseJson(value_j))?
+            .into_value(),
+        ValueType::Uuid => serde_json::from_value::<Uuid>(value_j.clone())
+            .change_context_lazy(|| CoreError::ParseJson(value_j))?
+            .into_value(),
+        ValueType::Int32 => serde_json::from_value::<i32>(value_j.clone())
+            .change_context_lazy(|| CoreError::ParseJson(value_j))?
+            .into_value(),
+        ValueType::Int64 => serde_json::from_value::<i64>(value_j.clone())
+            .change_context_lazy(|| CoreError::ParseJson(value_j))?
+            .into_value(),
+        ValueType::Decimal => serde_json::from_value::<Decimal>(value_j.clone())
+            .change_context_lazy(|| CoreError::ParseJson(value_j))?
+            .into_value(),
+        ValueType::Boolean => serde_json::from_value::<bool>(value_j.clone())
+            .change_context_lazy(|| CoreError::ParseJson(value_j))?
+            .into_value(),
+        ValueType::Date => serde_json::from_value::<NaiveDate>(value_j.clone())
+            .change_context_lazy(|| CoreError::ParseJson(value_j))?
+            .into_value(),
+        ValueType::DateTime => serde_json::from_value::<NaiveDateTime>(value_j.clone())
+            .change_context_lazy(|| CoreError::ParseJson(value_j))?
+            .into_value(),
     };
     Ok(result.into_nullable_value())
 }
@@ -47,10 +64,12 @@ pub fn json_to_str(value_j: serde_json::Value, value_type: ValueType) -> String 
 }
 
 /// Convert a `NullableValue` to a single json value
-pub fn value_to_json(value: &NullableValue) -> Result<serde_json::Value, CoreError> {
+pub fn value_to_json(value: &NullableValue) -> error_stack::Result<serde_json::Value, CoreError> {
     let v = match value.value() {
         Some(v) => v_to_json(v)?,
-        None => serde_json::to_value(Option::<String>::None)?,
+        None => {
+            serde_json::to_value(Option::<String>::None).change_context(CoreError::ConvertToJson)?
+        }
     };
     Ok(v)
 }
@@ -146,8 +165,8 @@ pub fn set_field_from_str<T: Serialize + DeserializeOwned>(
     field_name: &str,
     value_s: Option<String>,
     value_type: ValueType,
-) -> Result<T, CoreError> {
-    let mut object_j = serde_json::to_value(object)?;
+) -> error_stack::Result<T, CoreError> {
+    let mut object_j = serde_json::to_value(object).change_context(CoreError::ConvertToJson)?;
     let map_j = object_j.as_object_mut().ok_or(CoreError::Conversion(
         String::from("field is not object"),
         serde_json::to_value(object).unwrap().to_string(),
@@ -156,7 +175,8 @@ pub fn set_field_from_str<T: Serialize + DeserializeOwned>(
         Some(value_s) => value_s,
         None => {
             map_j.remove(field_name);
-            let new_object: T = serde_json::from_value(object_j)?;
+            let new_object: T =
+                serde_json::from_value(object_j).change_context(CoreError::ConvertToJson)?;
             return Ok(new_object);
         }
     };
@@ -171,7 +191,8 @@ pub fn set_field_from_str<T: Serialize + DeserializeOwned>(
         }
     };
     map_j.insert(field_name.to_string(), value_j);
-    let new_object: T = serde_json::from_value(object_j)?;
+    let new_object: T =
+        serde_json::from_value(object_j).change_context(CoreError::ConvertToJson)?;
     Ok(new_object)
 }
 

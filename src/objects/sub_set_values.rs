@@ -4,6 +4,7 @@ use crate::values::nullable_value::IntoNullableValueType;
 use crate::FieldNameType;
 use crate::TypedOptionValue;
 use crate::{CoreError, ValueType};
+use error_stack::ResultExt;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -38,14 +39,14 @@ impl SubsetValues {
     pub fn from_json(
         object_j: &serde_json::Value,
         fields: Vec<&FieldNameType>,
-    ) -> Result<SubsetValues, CoreError> {
+    ) -> error_stack::Result<SubsetValues, CoreError> {
         object_j_to_subset_values(object_j, fields)
     }
 
     pub fn from_object<T: Serialize + DeserializeOwned>(
         object: &T,
         fields: Vec<&FieldNameType>,
-    ) -> Result<SubsetValues, CoreError> {
+    ) -> error_stack::Result<SubsetValues, CoreError> {
         let object_j = serde_json::to_value(object).unwrap();
         object_j_to_subset_values(&object_j, fields)
     }
@@ -70,7 +71,7 @@ impl SubsetValues {
         field_name: &str,
         v_type: ValueType,
         object: &impl Serialize,
-    ) -> Result<(), CoreError> {
+    ) -> error_stack::Result<(), CoreError> {
         let value = serde_json::to_value(object).unwrap();
         let object_j = value.as_object().unwrap();
         let value_j = match object_j.get(field_name) {
@@ -81,7 +82,7 @@ impl SubsetValues {
                     .map(|(k, _)| k.clone())
                     .collect::<Vec<_>>()
                     .join(",");
-                return Err(CoreError::FieldNameNotFound(field_name.into(), fields));
+                return Err(CoreError::FieldNameNotFound(field_name.into(), fields).into());
             }
         };
         let value = json_to_value(value_j, v_type)?;
@@ -118,8 +119,8 @@ impl Default for SubsetValues {
 pub fn object_to_subset_values<T: Serialize>(
     object: &T,
     fields: Vec<&FieldNameType>,
-) -> Result<SubsetValues, CoreError> {
-    let object_j = serde_json::to_value(object)?;
+) -> error_stack::Result<SubsetValues, CoreError> {
+    let object_j = serde_json::to_value(object).change_context(CoreError::ConvertToJson)?;
     object_j_to_subset_values(&object_j, fields)
 }
 
@@ -134,7 +135,7 @@ pub fn object_to_subset_values<T: Serialize>(
 pub fn object_j_to_subset_values<T: Serialize>(
     object_j: &T,
     fields: Vec<&FieldNameType>,
-) -> Result<SubsetValues, CoreError> {
+) -> error_stack::Result<SubsetValues, CoreError> {
     let mut subset_values = SubsetValues::new();
     let object_j = serde_json::to_value(object_j).unwrap();
     let map_j = object_j.as_object().unwrap();
@@ -166,7 +167,7 @@ pub fn merge_values_to(
 pub fn subset_values_to_object_j(
     subset_values: &SubsetValues,
     mut object_j: serde_json::Value,
-) -> Result<serde_json::Value, CoreError> {
+) -> error_stack::Result<serde_json::Value, CoreError> {
     let map_j = object_j.as_object_mut().unwrap();
     for (name, opt_value) in subset_values.values() {
         match opt_value.opt_value.value() {

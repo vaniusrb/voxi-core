@@ -1,19 +1,19 @@
-use thiserror::Error as ThisError;
+use derive_more::Display;
 
-#[derive(ThisError, Debug)]
+#[derive(Display, Debug)]
 pub enum SQLError {
-    #[error("core error: `{0}`")]
-    CoreError(#[from] crate::CoreError),
-    #[error("conversion error: `{0}`")]
+    #[display(fmt = "core error: `{}`", _0)]
+    CoreError(crate::CoreError),
+    #[display(fmt = "conversion error: `{}`", _0)]
     Conversion(String),
-    #[error("parse json error: `{0}`")]
-    ParseJson(#[from] serde_json::error::Error),
-    #[error("query builder invalid configuration: `{0}`")]
+    #[display(fmt = "parse json error: `{}`", _0)]
+    ParseJson(serde_json::error::Error),
+    #[display(fmt = "query builder invalid configuration: `{}`", _0)]
     InvalidQueryBuilderConfiguration(String),
-    #[error("error to resolve SQL: `{0}`")]
+    #[display(fmt = "error to resolve SQL: `{}`", _0)]
     SQLResolver(String),
-    #[error("field name not found: `{1}` available fields are: `{0}`")]
+    #[display(fmt = "field name not found: `{}` available fields are: `{}`", _0, _1)]
     FieldNameNotFound(String, String),
-    #[error("bind name not found: `{0}`")]
+    #[display(fmt = "bind name not found: `{}`", _0)]
     BindNameNotFound(String),
 }

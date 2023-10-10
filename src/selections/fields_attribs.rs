@@ -179,7 +179,7 @@ impl FieldsAttribs {
     pub fn field_attribs_by_name(
         &self,
         name: impl IntoFieldName,
-    ) -> Result<FieldAttribs, SQLError> {
+    ) -> error_stack::Result<FieldAttribs, SQLError> {
         let name = name.into_field_name();
         self.fields_attribs
             .iter()
@@ -192,7 +192,7 @@ impl FieldsAttribs {
                     .map(|k| k.clone().into_field_name().to_string())
                     .collect::<Vec<_>>()
                     .join(",");
-                SQLError::FieldNameNotFound(name.to_string(), fields)
+                SQLError::FieldNameNotFound(name.to_string(), fields).into()
             })
     }
 

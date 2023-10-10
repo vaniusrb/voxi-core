@@ -1,7 +1,10 @@
 use derive_more::Display;
+use error_stack::Context;
 
 #[derive(Display, Debug)]
 pub enum SQLError {
+    #[display(fmt = "`{}`", _0)]
+    Generic(String),
     #[display(fmt = "core error: `{}`", _0)]
     CoreError(crate::CoreError),
     #[display(fmt = "conversion error: `{}`", _0)]
@@ -17,3 +20,5 @@ pub enum SQLError {
     #[display(fmt = "bind name not found: `{}`", _0)]
     BindNameNotFound(String),
 }
+
+impl Context for SQLError {}

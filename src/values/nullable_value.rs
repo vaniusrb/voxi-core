@@ -92,7 +92,7 @@ impl NullableValue {
         }
     }
 
-    pub fn into_opt_val<T>(self) -> Result<Option<T>, CoreError>
+    pub fn into_opt_val<T>(self) -> error_stack::Result<Option<T>, CoreError>
     where
         T: TryFrom<Value>,
         <T as TryFrom<Value>>::Error: std::fmt::Debug,

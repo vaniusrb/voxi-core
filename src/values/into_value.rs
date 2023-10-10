@@ -69,7 +69,10 @@ impl TryValueFromString for i32 {
     }
 }
 
-pub fn try_value_from_string(value: &str, value_type: ValueType) -> Result<Value, CoreError> {
+pub fn try_value_from_string(
+    value: &str,
+    value_type: ValueType,
+) -> error_stack::Result<Value, CoreError> {
     let value = match value_type {
         ValueType::String => String::try_value_from_string(value)?.into_value(),
         ValueType::Uuid => Uuid::try_value_from_string(value)?.into_value(),

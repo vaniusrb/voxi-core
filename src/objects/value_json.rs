@@ -75,7 +75,7 @@ pub fn value_to_json(value: &NullableValue) -> error_stack::Result<serde_json::V
 }
 
 /// Convert a `Value` to a single json value
-pub fn v_to_json(value: &Value) -> Result<serde_json::Value, CoreError> {
+pub fn v_to_json(value: &Value) -> error_stack::Result<serde_json::Value, CoreError> {
     let v = match value {
         Value::String(v) => serde_json::to_value(v),
         Value::Uuid(v) => serde_json::to_value(v),
@@ -184,7 +184,8 @@ pub fn set_field_from_str<T: Serialize + DeserializeOwned>(
         if value_s.is_empty() {
             json!(Option::<String>::None)
         } else {
-            try_value_from_string(&value_s, value_type).and_then(|value| v_to_json(&value))
+            try_value_from_string(&value_s, value_type)                
+                .and_then(|value| v_to_json(&value))
                 .map_err(|e|
                     CoreError::Conversion(e.to_string(), format!("error extracting value from field name `{field_name}` type `{value_type}`: {e}"))
                     )?

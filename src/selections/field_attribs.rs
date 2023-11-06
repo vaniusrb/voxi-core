@@ -35,6 +35,7 @@ pub struct FieldAttribs {
 }
 
 impl FieldAttribs {
+    /// Create a `FieldAttribs` definition
     pub fn new<T: ValueTyped>(
         name: impl IntoFieldName,
         title: &str,

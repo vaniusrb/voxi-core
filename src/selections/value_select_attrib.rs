@@ -13,6 +13,8 @@ use std::{
     sync::Arc,
 };
 
+// FIXME: ValueSelectAttrib lost its reason to exists, because now FieldAttribs contains a ValueSelect
+
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct ValuesSelectAttribs {
     inner: Arc<Vec<ValueSelectAttrib>>,

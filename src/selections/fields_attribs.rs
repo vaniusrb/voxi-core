@@ -136,6 +136,7 @@ where
 }
 
 impl FieldsAttribs {
+    // FIXME: ValueSelectAttrib lost its reason to exists, because now FieldAttribs contains a ValueSelect
     /// Convert to `ValuesSelectAttribs` defining `TableField` from given table name.
     pub fn into_values_select_attribs_table(self, table: &str) -> ValuesSelectAttribs {
         let fs = self

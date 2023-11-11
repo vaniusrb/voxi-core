@@ -93,10 +93,10 @@ where
 // FIXME: ValueSelectAttrib lost its reason to exists, because now FieldAttribs contains a ValueSelect
 
 // `ValueSelectAttrib` contains a `ValueSelect` (expression used in SELECT's columns) with an assigned `FieldAttribs`.
-#[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq, Hash)]
 pub struct ValueSelectAttrib {
-    pub value_select: ValueSelect,
     pub field_attrib: FieldAttribs,
+    pub value_select: ValueSelect,
 }
 
 pub trait IntoValueSelectAttrib {

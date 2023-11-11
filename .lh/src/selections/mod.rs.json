@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/selections/mod.rs",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1699723408912,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1699723430669,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,12 +1,12 @@\n-pub mod field_attribs;\n-pub mod fields_attribs;\n pub(crate) mod agg_functions;\n pub(crate) mod alias;\n pub(crate) mod arithmetic_expr;\n pub(crate) mod case;\n pub(crate) mod combination;\n pub(crate) mod condition_where;\n+pub mod field_attribs;\n+pub mod fields_attribs;\n pub(crate) mod from;\n pub(crate) mod group_by;\n pub(crate) mod join;\n pub(crate) mod limit_offset;\n@@ -58,9 +58,8 @@\n pub use to_sql::ToSQL;\n pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};\n pub use value_select_attrib::{IntoValuesSelectAttribs, ValuesSelectAttribs};\n pub use value_where::{IntoValueWhere, ValueWhere};\n-pub use values_select::{IntoValuesSelect, ValuesSelect, Va};\n pub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, ValuesWhere};\n \n // TODO: re export other types here\n // TODO: change visibility to pub(crate) -> fix unit test that will break\n"
+                },
+                {
+                    "date": 1699723467166,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -56,9 +56,9 @@\n pub use table_name::{IntoTableName, TableName};\n pub use tables_names::TablesNames;\n pub use to_sql::ToSQL;\n pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};\n-pub use value_select_attrib::{IntoValuesSelectAttribs, ValuesSelectAttribs};\n+pub use value_select_attrib::{IntoValuesSelectAttribs, ValueSelectAttrib, ValuesSelectAttribs};\n pub use value_where::{IntoValueWhere, ValueWhere};\n pub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, ValuesWhere};\n \n // TODO: re export other types here\n"
+                }
+            ],
+            "date": 1699723408912,
+            "name": "Commit-0",
+            "content": "pub mod field_attribs;\npub mod fields_attribs;\npub(crate) mod agg_functions;\npub(crate) mod alias;\npub(crate) mod arithmetic_expr;\npub(crate) mod case;\npub(crate) mod combination;\npub(crate) mod condition_where;\npub(crate) mod from;\npub(crate) mod group_by;\npub(crate) mod join;\npub(crate) mod limit_offset;\npub(crate) mod logical_expr_where;\npub(crate) mod order_by;\npub(crate) mod orders;\npub(crate) mod select;\npub(crate) mod single_select;\npub(crate) mod string_functions;\npub(crate) mod table;\npub(crate) mod table_field;\npub(crate) mod table_name;\npub(crate) mod tables_names;\npub(crate) mod to_sql;\npub(crate) mod value_select;\npub(crate) mod value_select_attrib;\npub(crate) mod value_where;\npub(crate) mod values_select;\npub(crate) mod values_where;\n\npub mod bind_name;\npub(crate) mod macros;\npub mod query;\n// pub(crate) use macros::field;\n\npub use agg_functions::{AggFunction, AggFunctionType};\npub use alias::{Alias, IntoAlias};\npub use arithmetic_expr::arithmetic_expr_where::{ArithmeticExprWhere, IntoArithmeticExprWhere};\npub use case::case_condition::{CaseCondition, CaseConditionBuilder, IntoWhenCondition};\npub use case::case_value::{CaseValue, CaseValueBuilder};\npub use case::when_condition::WhenCondition;\npub use case::when_value::WhenValue;\npub use combination::{Combination, CombinationType};\npub use condition_where::{ConditionWhere, ConditionWhereOperation, IntoConditionWhere};\npub use from::{FromSelect, FromType, IntoFrom, IntoFromSelect, QueryAlias};\npub use group_by::{GroupBy, IntoGroupBy};\npub use join::{IntoJoin, Join, JoinType};\npub use limit_offset::{IntoLimitOffset, LimitOffset};\npub use logical_expr_where::{IntoLogicalExprWhere, LogicalExprWhere, LogicalExprWhereOps};\npub use order_by::{IntoOrderBy, OrderBy, OrderByType};\npub use query::Query;\npub use select::{IntoSelect, QueryBuilder, Select};\npub use single_select::{SingleQuery, SingleSelectBuilder};\npub use string_functions::StringFunction;\npub use table::{IntoTable, Table};\npub use table_field::{IntoTableField, TableField};\npub use table_name::{IntoTableName, TableName};\npub use tables_names::TablesNames;\npub use to_sql::ToSQL;\npub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};\npub use value_select_attrib::{IntoValuesSelectAttribs, ValuesSelectAttribs};\npub use value_where::{IntoValueWhere, ValueWhere};\npub use values_select::{IntoValuesSelect, ValuesSelect, Va};\npub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, ValuesWhere};\n\n// TODO: re export other types here\n// TODO: change visibility to pub(crate) -> fix unit test that will break\n\npub use field_attribs::{FieldAttribs, IntoFieldAttribs};\npub use fields_attribs::FieldsAttribs;\npub use fields_attribs::FieldsAttribsBuilder;\npub use fields_attribs::IntoFieldsAttribs;\n"
+        }
+    ]
+}

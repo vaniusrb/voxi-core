@@ -1,11 +1,11 @@
-pub mod field_attribs;
-pub mod fields_attribs;
 pub(crate) mod agg_functions;
 pub(crate) mod alias;
 pub(crate) mod arithmetic_expr;
 pub(crate) mod case;
 pub(crate) mod combination;
 pub(crate) mod condition_where;
+pub mod field_attribs;
+pub mod fields_attribs;
 pub(crate) mod from;
 pub(crate) mod group_by;
 pub(crate) mod join;
@@ -57,9 +57,8 @@ pub use table_name::{IntoTableName, TableName};
 pub use tables_names::TablesNames;
 pub use to_sql::ToSQL;
 pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};
-pub use value_select_attrib::{IntoValuesSelectAttribs, ValuesSelectAttribs};
+pub use value_select_attrib::{IntoValuesSelectAttribs, ValueSelectAttrib, ValuesSelectAttribs};
 pub use value_where::{IntoValueWhere, ValueWhere};
-pub use values_select::{IntoValuesSelect, ValuesSelect};
 pub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, ValuesWhere};
 
 // TODO: re export other types here

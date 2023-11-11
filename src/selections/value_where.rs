@@ -16,8 +16,8 @@ use serde::{Deserialize, Serialize};
 // TODO: add comment
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum ValueWhere {
-    LiteralValue(NullableValue),
     FieldName(TableField),
+    LiteralValue(NullableValue),
     Expression(ArithmeticExprWhere),
     BindParameter(BindName),
     SingleQuery(Box<SingleQuery>),
@@ -37,8 +37,8 @@ impl ToSQL for ValueWhere {
     // TODO: add comment
     fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         match self {
-            ValueWhere::LiteralValue(v) => v.to_sql(args_resolver),
             ValueWhere::FieldName(f) => f.to_sql(args_resolver),
+            ValueWhere::LiteralValue(v) => v.to_sql(args_resolver),
             ValueWhere::Expression(e) => e.to_sql(args_resolver),
             ValueWhere::CaseCondition(c) => c.to_sql(args_resolver),
             ValueWhere::CaseValue(c) => c.to_sql(args_resolver),

@@ -168,6 +168,10 @@ impl FieldsAttribs {
         self.fields_attribs.clone()
     }
 
+    pub fn vec_ref(&self) -> &Vec<FieldAttribs> {
+        &self.fields_attribs
+    }
+
     pub fn to_vec_rc(&self) -> Vec<Rc<FieldAttribs>> {
         self.clone().into_vec_rc()
     }

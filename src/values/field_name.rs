@@ -12,6 +12,12 @@ pub struct FieldName {
     name: String,
 }
 
+impl From<&str> for FieldName {
+    fn from(value: &str) -> Self {
+        FieldName { name: value.into() }
+    }
+}
+
 impl FieldName {
     // TODO: add comment
     pub fn new(name: impl Into<String>) -> Self {

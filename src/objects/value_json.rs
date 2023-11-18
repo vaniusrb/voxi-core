@@ -42,6 +42,7 @@ pub fn json_to_value(
         ValueType::DateTime => serde_json::from_value::<NaiveDateTime>(value_j.clone())
             .change_context_lazy(|| CoreError::ParseJson(value_j))?
             .into_value(),
+            ValueType::Json => value_j.clone().into_value(),
     };
     Ok(result.into_nullable_value())
 }
@@ -85,6 +86,7 @@ pub fn v_to_json(value: &Value) -> error_stack::Result<serde_json::Value, CoreEr
         Value::Boolean(v) => serde_json::to_value(v),
         Value::Date(v) => serde_json::to_value(v),
         Value::DateTime(v) => serde_json::to_value(v),
+        Value::Json(v) => Ok(v.clone()),
     }
     .map_err(|e| CoreError::Conversion(e.to_string(), value.to_string()))?;
     Ok(v)

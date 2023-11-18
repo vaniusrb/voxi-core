@@ -17,6 +17,7 @@ pub enum ValueType {
     Boolean,
     Date,
     DateTime,
+    Json,
 }
 
 impl fmt::Display for ValueType {

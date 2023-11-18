@@ -16,6 +16,7 @@ pub mod value_naive_date_time;
 pub mod value_string;
 pub mod value_type;
 pub mod value_uuid;
+pub mod value_json;
 
 pub use field_name::{FieldName, IntoFieldName};
 pub use field_name_type::FieldNameType;

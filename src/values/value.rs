@@ -2,11 +2,14 @@ use crate::{IntoValue, IntoValueType, ValueType};
 use chrono::{NaiveDate, NaiveDateTime};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
-use std::fmt::{self, Display};
+use std::{
+    fmt::{self, Display},
+    hash::Hasher,
+};
 use uuid::Uuid;
 
 // TODO: add comment
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub enum Value {
     String(String),
     Uuid(Uuid),
@@ -16,6 +19,23 @@ pub enum Value {
     Boolean(bool),
     Date(NaiveDate),
     DateTime(NaiveDateTime),
+    Json(serde_json::Value),
+}
+
+impl std::hash::Hash for Value {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        match self {
+            Value::String(value) => value.hash(state),
+            Value::Uuid(value) => value.hash(state),
+            Value::Int32(value) => value.hash(state),
+            Value::Int64(value) => value.hash(state),
+            Value::Decimal(value) => value.hash(state),
+            Value::Boolean(value) => value.hash(state),
+            Value::Date(value) => value.hash(state),
+            Value::DateTime(value) => value.hash(state),
+            Value::Json(value) => value.to_string().hash(state),
+        }
+    }
 }
 
 impl fmt::Display for Value {
@@ -29,6 +49,7 @@ impl fmt::Display for Value {
             Value::Boolean(v) => v.fmt(f),
             Value::Date(v) => v.fmt(f),
             Value::DateTime(v) => v.fmt(f),
+            Value::Json(v) => v.fmt(f),
         }
     }
 }
@@ -48,6 +69,7 @@ impl Value {
             Value::Boolean(v) => v.to_sql(),
             Value::Date(v) => v.to_sql(),
             Value::DateTime(v) => v.to_sql(),
+            Value::Json(v) => v.to_sql(),
         }
     }
 }
@@ -63,6 +85,7 @@ impl IntoValueType for Value {
             Value::Boolean(_) => ValueType::Boolean,
             Value::Date(_) => ValueType::Date,
             Value::DateTime(_) => ValueType::DateTime,
+            Value::Json(_) => ValueType::Json,
         }
     }
 }

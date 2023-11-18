@@ -14,6 +14,7 @@ pub enum NullableValue {
     Boolean(Option<Value>),
     Date(Option<Value>),
     DateTime(Option<Value>),
+    Json(Option<Value>),
 }
 
 impl IntoValueType for NullableValue {
@@ -27,6 +28,7 @@ impl IntoValueType for NullableValue {
             NullableValue::Boolean(_) => ValueType::Boolean,
             NullableValue::Date(_) => ValueType::Date,
             NullableValue::DateTime(_) => ValueType::DateTime,
+            NullableValue::Json(_) => ValueType::Json,
         }
     }
 }
@@ -43,6 +45,7 @@ impl NullableValue {
             ValueType::Boolean => Self::Boolean(Some(value)),
             ValueType::Date => Self::Date(Some(value)),
             ValueType::DateTime => Self::DateTime(Some(value)),
+            ValueType::Json => Self::Json(Some(value)),
         }
     }
 
@@ -56,6 +59,7 @@ impl NullableValue {
             ValueType::Boolean => Self::Boolean(None),
             ValueType::Date => Self::Date(None),
             ValueType::DateTime => Self::DateTime(None),
+            ValueType::Json => Self::Json(None),
         }
     }
 
@@ -69,6 +73,7 @@ impl NullableValue {
             NullableValue::Boolean(value) => value.as_ref(),
             NullableValue::Date(value) => value.as_ref(),
             NullableValue::DateTime(value) => value.as_ref(),
+            NullableValue::Json(value) => value.as_ref(),
         }
     }
 
@@ -89,6 +94,7 @@ impl NullableValue {
             NullableValue::Boolean(value) => value,
             NullableValue::Date(value) => value,
             NullableValue::DateTime(value) => value,
+            NullableValue::Json(value) => value,
         }
     }
 
@@ -166,6 +172,7 @@ where
             (None, ValueType::Boolean) => NullableValue::Boolean(None),
             (None, ValueType::Date) => NullableValue::Date(None),
             (None, ValueType::DateTime) => NullableValue::DateTime(None),
+            (None, ValueType::Json) => NullableValue::Json(None),
             (Some(value), ValueType::String) => NullableValue::String(Some(value.into_value())),
             (Some(value), ValueType::Uuid) => NullableValue::Uuid(Some(value.into_value())),
             (Some(value), ValueType::Int32) => NullableValue::Int32(Some(value.into_value())),
@@ -174,6 +181,7 @@ where
             (Some(value), ValueType::Boolean) => NullableValue::Boolean(Some(value.into_value())),
             (Some(value), ValueType::Date) => NullableValue::Date(Some(value.into_value())),
             (Some(value), ValueType::DateTime) => NullableValue::DateTime(Some(value.into_value())),
+            (Some(value), ValueType::Json) => NullableValue::Json(Some(value.into_value())),
         }
     }
 }

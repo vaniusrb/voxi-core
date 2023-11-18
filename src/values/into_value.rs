@@ -57,6 +57,16 @@ impl TryValueFromString for Uuid {
     }
 }
 
+impl TryValueFromString for serde_json::Value {
+    type Return = serde_json::Value;
+
+    fn try_value_from_string(value: &str) -> Result<Self::Return, CoreError> {
+        let v: serde_json::Value = serde_json::Value::from_str(value)
+            .map_err(|e| CoreError::Conversion(e.to_string(), value.to_string()))?;
+        Ok(v)
+    }
+}
+
 impl TryValueFromString for i32 {
     type Return = i32;
 
@@ -82,6 +92,7 @@ pub fn try_value_from_string(
         ValueType::Boolean => bool::try_value_from_string(value)?.into_value(),
         ValueType::Date => NaiveDate::try_value_from_string(value)?.into_value(),
         ValueType::DateTime => NaiveDateTime::try_value_from_string(value)?.into_value(),
+        ValueType::Json => serde_json::Value::try_value_from_string(value)?.into_value(),
     };
     Ok(value)
 }

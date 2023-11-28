@@ -12,7 +12,8 @@ use crate::{
     SQLError,
 };
 use serde::{Deserialize, Serialize};
-use std::{ops::Add, rc::Rc};
+use std::ops::Add;
+use std::sync::Arc;
 
 // TODO: Add comment
 pub struct FieldsAttribsBuilder {
@@ -172,12 +173,12 @@ impl FieldsAttribs {
         &self.fields_attribs
     }
 
-    pub fn to_vec_rc(&self) -> Vec<Rc<FieldAttribs>> {
+    pub fn to_vec_rc(&self) -> Vec<Arc<FieldAttribs>> {
         self.clone().into_vec_rc()
     }
 
-    pub fn into_vec_rc(self) -> Vec<Rc<FieldAttribs>> {
-        self.fields_attribs.into_iter().map(Rc::new).collect()
+    pub fn into_vec_rc(self) -> Vec<Arc<FieldAttribs>> {
+        self.fields_attribs.into_iter().map(Arc::new).collect()
     }
 
     /// Try find field attribs by field name.

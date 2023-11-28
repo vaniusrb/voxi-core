@@ -1,7 +1,7 @@
 use crate::selections::{IntoTableField, IntoValueSelect, TableField, ValueSelect, ValueWhere};
 use crate::{FieldName, FieldNameType, IntoFieldName, IntoFieldNameType, ValueType, ValueTyped};
 use serde::{Deserialize, Serialize};
-use std::rc::Rc;
+use std::sync::Arc;
 
 #[derive(Default, Debug, Serialize, Clone, PartialEq, Eq, Deserialize, Hash)]
 pub enum Alignment {
@@ -94,7 +94,7 @@ impl IntoFieldAttribs for FieldAttribs {
     }
 }
 
-impl IntoFieldAttribs for Rc<FieldAttribs> {
+impl IntoFieldAttribs for Arc<FieldAttribs> {
     fn into_field_attribs(self) -> FieldAttribs {
         (*self).clone()
     }

@@ -2,8 +2,8 @@
 
 ## WIP warning
 
-> **This project isn't finished and shouldn't be used in production yet.
 > The API design can suffers break changes.**
+> **This project isn't finished and shouldn't be used in production yet.
 
 ## Objective
 

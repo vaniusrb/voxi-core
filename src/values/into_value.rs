@@ -221,48 +221,10 @@ impl TryStringIntoValue<Decimal> for String {
     }
 }
 
-// TODO: create try down cast
-// search in old commits
-
-// pub trait CustomValueTyped: CustomValue + ValueTyped {}
-
-// pub trait TryStringIntoValueGen<T: CustomValueTyped> {
-//     fn try_into_value_gen(&self) -> Result<T, String>;
-// }
-
-// impl<T: CustomValueTyped> TryStringIntoValueGen<T> for String {
-//     fn try_into_value_gen(&self) -> Result<T, VoxiTypeError> {
-//         match T::v_type() {
-//             ValueType::String => Box::new(self.clone()) as Box<dyn CustomValue>,
-//             ValueType::Uuid => {
-//                 let uuid = Uuid::from_str(self).map_err(|e| VoxiTypeError::Conversion(e.to_string()))?;
-//                 let t: T = uuid as T;
-//                 return Ok(uuid);
-//                 //Box::new(uuid) as Box<dyn CustomValue>
-//             }
-//             ValueType::Int32 => todo!(),
-//             ValueType::Int64 => todo!(),
-//             ValueType::Decimal => todo!(),
-//             ValueType::Boolean => todo!(),
-//             ValueType::Date => todo!(),
-//             ValueType::DateTime => todo!(),
-//         };
-//         todo!()
-//     }
-// }
-
 #[cfg(test)]
 mod tests {
     use super::*;
     use rust_decimal_macros::dec;
-
-    // pub fn load<T>(value: String) -> Result<T, String>
-    // where
-    //     T: CustomValue,
-    // {
-    //     let r = value.try_into_value_gen().unwrap();
-    //     Ok(r)
-    // }
 
     #[test]
     pub fn test_string() {

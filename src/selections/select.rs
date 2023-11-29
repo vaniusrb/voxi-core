@@ -300,6 +300,20 @@ impl QueryBuilder {
         self
     }
 
+    /// Without sort column.
+    #[must_use]
+    pub fn without_sort(mut self) -> Self {
+        self.orders_by.clear();
+        self
+    }
+
+    /// Without offset.
+    #[must_use]
+    pub fn without_offset(mut self) -> Self {
+        self.limit_offset = None;
+        self
+    }
+
     // TODO: must to use Result because table or column maybe are empty
     /// ```
     /// # use voxi_core::selections::QueryBuilder;

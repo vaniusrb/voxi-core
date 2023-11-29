@@ -196,12 +196,20 @@ impl SingleSelectBuilder {
         self
     }
 
-    /// Add sort column.
+    /// Without sort column.
     #[must_use]
     pub fn without_sort(mut self) -> Self {
         self.orders_by.clear();
         self
     }
+
+    /// Without offset.
+    #[must_use]
+    pub fn without_offset(mut self) -> Self {
+        self.limit_offset = None;
+        self
+    }
+
     /// Add sort column.
     #[must_use]
     pub fn sort(mut self, sort: impl IntoOrderBy) -> Self {

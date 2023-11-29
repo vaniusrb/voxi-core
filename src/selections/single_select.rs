@@ -1,8 +1,3 @@
-use crate::{
-    resolvers::{args_resolver::ArgsResolver, args_resolver_string::ArgsResolverString},
-    SQLError,
-};
-
 use super::{
     agg_functions::AggFunction,
     bind_name::{BindName, IntoBindName},
@@ -11,14 +6,19 @@ use super::{
     group_by::GroupBy,
     join::{IntoJoin, Join},
     logical_expr_where::{IntoLogicalExprWhere, LogicalExprWhere},
-    order_by::{IntoOrderBy, OrderBy},
+    order_by::IntoOrderBy,
+    orders::OrdersBy,
     select::Select,
     table_field::IntoTableField,
     table_name::TableName,
     to_sql::ToSQL,
     value_select::{IntoValueSelect, ValueSelect},
     value_where::IntoValueWhere,
-    LimitOffset, Query,
+    IntoSelect, LimitOffset, Query,
+};
+use crate::{
+    resolvers::{args_resolver::ArgsResolver, args_resolver_string::ArgsResolverString},
+    SQLError,
 };
 use crate::{IntoNullableValue, NullableValue};
 use serde::{Deserialize, Serialize};
@@ -33,13 +33,31 @@ pub struct SingleSelectBuilder {
     having_expr: Option<LogicalExprWhere>,
     joins: Vec<Join>,
     groups: Vec<GroupBy>,
-    order_by: Vec<OrderBy>,
+    orders_by: OrdersBy,
     combination: Option<Box<Combination>>,
     limit_offset: Option<LimitOffset>,
     binds_values: Vec<(BindName, NullableValue)>,
 }
 
 impl SingleSelectBuilder {
+    /// Create the `SubQueryBuilder` from a `Query`.
+    pub fn from_query(query: impl IntoSelect, column: impl IntoValueSelect) -> Self {
+        let query = query.into_select();
+        Self {
+            distinct: query.distinct,
+            column: column.into_value_select(),
+            tables: query.from,
+            joins: query.joins,
+            where_expr: query.where_expr,
+            groups: query.groups,
+            having_expr: query.having_expr,
+            orders_by: query.orders_by,
+            combination: query.combination,
+            limit_offset: query.limit_offset,
+            binds_values: query.binds_values,
+        }
+    }
+
     /// Create `SingleSelectBuilder` specifying the single column.
     /// ```
     /// # use voxi_core::selections::SingleSelectBuilder;
@@ -80,7 +98,7 @@ impl SingleSelectBuilder {
             joins: Vec::new(),
             tables: Vec::new(),
             groups: Vec::new(),
-            order_by: Vec::new(),
+            orders_by: OrdersBy::empty(),
             combination: None,
             limit_offset: None,
             binds_values: Vec::new(),
@@ -180,8 +198,14 @@ impl SingleSelectBuilder {
 
     /// Add sort column.
     #[must_use]
+    pub fn without_sort(mut self) -> Self {
+        self.orders_by.clear();
+        self
+    }
+    /// Add sort column.
+    #[must_use]
     pub fn sort(mut self, sort: impl IntoOrderBy) -> Self {
-        self.order_by.push(sort.into_order_by());
+        self.orders_by.push(sort.into_order_by());
         self
     }
 
@@ -209,7 +233,7 @@ impl SingleSelectBuilder {
             self.where_expr,
             self.groups,
             self.having_expr,
-            self.order_by,
+            self.orders_by,
             self.combination,
             self.limit_offset,
             self.binds_values,

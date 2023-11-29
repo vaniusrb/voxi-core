@@ -344,24 +344,24 @@ impl Default for QueryBuilder {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Select {
-    columns: ValuesSelect,
+    pub columns: ValuesSelect,
     #[serde(rename = "from")]
-    from: Vec<FromSelect>,
+    pub from: Vec<FromSelect>,
     #[serde(rename = "where")]
-    where_expr: Option<LogicalExprWhere>,
+    pub where_expr: Option<LogicalExprWhere>,
     #[serde(rename = "having")]
-    having_expr: Option<LogicalExprWhere>,
+    pub having_expr: Option<LogicalExprWhere>,
     #[serde(rename = "join")]
-    joins: Vec<Join>,
+    pub joins: Vec<Join>,
     #[serde(rename = "group_by")]
-    groups: Vec<GroupBy>,
+    pub groups: Vec<GroupBy>,
     #[serde(rename = "order_by")]
-    orders_by: OrdersBy,
+    pub orders_by: OrdersBy,
     #[serde(flatten)]
-    limit_offset: Option<LimitOffset>,
-    distinct: bool,
-    combination: Option<Box<Combination>>,
-    binds_values: Vec<(BindName, NullableValue)>,
+    pub limit_offset: Option<LimitOffset>,
+    pub distinct: bool,
+    pub combination: Option<Box<Combination>>,
+    pub binds_values: Vec<(BindName, NullableValue)>,
 }
 
 impl Query for Select {}

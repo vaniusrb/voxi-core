@@ -32,6 +32,10 @@ impl OrdersBy {
     pub fn push(&mut self, order_by: impl IntoOrderBy) {
         self.orders_by.push(order_by.into_order_by());
     }
+
+    pub fn clear(&mut self) {
+        self.orders_by.clear();
+    }
 }
 
 impl ToSQL for OrdersBy {

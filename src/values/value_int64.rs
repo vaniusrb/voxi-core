@@ -53,6 +53,7 @@ impl TryFrom<&Value> for i64 {
         }
     }
 }
+
 impl TryFrom<NullableValue> for i64 {
     type Error = String;
 

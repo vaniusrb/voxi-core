@@ -34,7 +34,7 @@ impl TryFrom<Value> for serde_json::Value {
     fn try_from(value: Value) -> Result<Self, Self::Error> {
         match value {
             Value::Json(v) => Ok(v),
-            _ => Err("not uuid value".into()),
+            _ => Err("not json value".into()),
         }
     }
 }
@@ -45,7 +45,7 @@ impl TryFrom<&Value> for serde_json::Value {
     fn try_from(value: &Value) -> Result<Self, Self::Error> {
         match value {
             Value::Json(v) => Ok(v.clone()),
-            _ => Err("not uuid value".into()),
+            _ => Err("not json value".into()),
         }
     }
 }
@@ -56,7 +56,7 @@ impl TryFrom<NullableValue> for serde_json::Value {
     fn try_from(value: NullableValue) -> Result<Self, Self::Error> {
         match value.value() {
             Some(Value::Json(v)) => Ok(v.clone()),
-            Some(v) => Err(format!("not uuid value! type is {:?}", v.value_type())),
+            Some(v) => Err(format!("not json value! type is {:?}", v.value_type())),
             None => Err("value is null".into()),
         }
     }
@@ -68,7 +68,7 @@ impl TryFrom<&NullableValue> for serde_json::Value {
     fn try_from(value: &NullableValue) -> Result<Self, Self::Error> {
         match value.value() {
             Some(Value::Json(v)) => Ok(v.clone()),
-            Some(v) => Err(format!("not uuid value! type is {:?}", v.value_type())),
+            Some(v) => Err(format!("not json value! type is {:?}", v.value_type())),
             None => Err("value is null".into()),
         }
     }

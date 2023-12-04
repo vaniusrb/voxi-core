@@ -1,11 +1,10 @@
-use crate::CoreError;
-
 use super::{
     into_value::IntoValue,
     value::Value,
     value::{ValueToSQL, ValueTyped},
     value_type::ValueType,
 };
+use crate::CoreError;
 
 impl IntoValue for bool {
     fn into_value(self) -> Value {

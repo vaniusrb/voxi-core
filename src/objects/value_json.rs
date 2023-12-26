@@ -56,6 +56,11 @@ pub fn json_to_map<T: Serialize>(object: &T) -> Map<String, serde_json::Value> {
     value_j.as_object().cloned().unwrap()
 }
 
+pub fn json_to_field_names(value_j: &serde_json::Value) -> Vec<String> {
+    let map = value_j.as_object().unwrap();
+    map.iter().map(|(n, _)| n.clone()).collect()
+}
+
 pub fn json_to_str(value_j: serde_json::Value, value_type: ValueType) -> String {
     let nullable = json_to_value(value_j, value_type).unwrap();
     nullable

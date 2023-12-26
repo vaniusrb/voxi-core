@@ -66,6 +66,10 @@ impl SubsetValues {
         &self.values
     }
 
+    pub fn values_mut(&mut self) -> &mut HashMap<String, TypedOptionValue> {
+        &mut self.values
+    }
+
     pub fn add_from_object(
         &mut self,
         field_name: &str,

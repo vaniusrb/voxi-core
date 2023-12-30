@@ -12,7 +12,7 @@ use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 
 /// TODO: this is very similar to Record
-#[derive(Clone, Debug, Serialize, Deserialize, Eq)]
+#[derive(Default, Clone, Debug, Serialize, Deserialize, Eq)]
 pub struct SubsetValues {
     values: HashMap<String, TypedOptionValue>,
 }
@@ -111,12 +111,6 @@ impl SubsetValues {
 
     pub fn merge_to_j(&self, value: serde_json::Value) -> serde_json::Value {
         subset_values_to_object_j(self, value).unwrap()
-    }
-}
-
-impl Default for SubsetValues {
-    fn default() -> Self {
-        Self::new()
     }
 }
 

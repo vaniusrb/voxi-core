@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 /// ```
 #[derive(Serialize, Deserialize, Default, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct FieldName {
-    name: String,
+    pub name: String,
 }
 
 impl From<&str> for FieldName {

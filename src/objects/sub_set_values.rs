@@ -1,7 +1,9 @@
 use crate::json_to_value;
 use crate::v_to_json;
 use crate::values::nullable_value::IntoNullableValueType;
+use crate::FieldName;
 use crate::FieldNameType;
+use crate::IntoFieldName;
 use crate::TypedOptionValue;
 use crate::{CoreError, ValueType};
 use error_stack::ResultExt;
@@ -14,7 +16,7 @@ use std::hash::{Hash, Hasher};
 /// TODO: this is very similar to Record
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq)]
 pub struct SubsetValues {
-    values: HashMap<String, TypedOptionValue>,
+    pub values: HashMap<FieldName, TypedOptionValue>,
 }
 
 impl PartialEq for SubsetValues {
@@ -53,32 +55,34 @@ impl SubsetValues {
 
     pub fn add(
         &mut self,
-        field_name: &str,
+        field_name: impl IntoFieldName,
         v_type: ValueType,
         opt_value: impl IntoNullableValueType,
     ) {
         let opt_value = opt_value.into_nullable_value(v_type);
         let typed_option_value = TypedOptionValue { v_type, opt_value };
-        self.values.insert(field_name.into(), typed_option_value);
+        self.values
+            .insert(field_name.into_field_name(), typed_option_value);
     }
 
-    pub fn values(&self) -> &HashMap<String, TypedOptionValue> {
+    pub fn values(&self) -> &HashMap<FieldName, TypedOptionValue> {
         &self.values
     }
 
-    pub fn values_mut(&mut self) -> &mut HashMap<String, TypedOptionValue> {
+    pub fn values_mut(&mut self) -> &mut HashMap<FieldName, TypedOptionValue> {
         &mut self.values
     }
 
     pub fn add_from_object(
         &mut self,
-        field_name: &str,
+        field_name: impl IntoFieldName,
         v_type: ValueType,
         object: &impl Serialize,
     ) -> error_stack::Result<(), CoreError> {
         let value = serde_json::to_value(object).unwrap();
         let object_j = value.as_object().unwrap();
-        let value_j = match object_j.get(field_name) {
+        let field_name = field_name.into_field_name();
+        let value_j = match object_j.get(&field_name.name) {
             Some(value_j) => value_j.clone(),
             None => {
                 let fields = object_j
@@ -86,7 +90,7 @@ impl SubsetValues {
                     .map(|(k, _)| k.clone())
                     .collect::<Vec<_>>()
                     .join(",");
-                return Err(CoreError::FieldNameNotFound(field_name.into(), fields).into());
+                return Err(CoreError::FieldNameNotFound(field_name.name, fields).into());
             }
         };
         let value = json_to_value(value_j, v_type)?;
@@ -95,8 +99,8 @@ impl SubsetValues {
         Ok(())
     }
 
-    pub fn by_name(&self, name: &str) -> Option<&TypedOptionValue> {
-        self.values.get(name)
+    pub fn by_name(&self, name: impl IntoFieldName) -> Option<&TypedOptionValue> {
+        self.values.get(&name.into_field_name())
     }
 
     pub fn object_j(&self) -> serde_json::Value {
@@ -145,7 +149,11 @@ pub fn object_j_to_subset_values<T: Serialize>(
             .map(|v| json_to_value(v.clone(), v_type).map(|nv| nv.into_opt()))
             .transpose()?
             .flatten();
-        subset_values.add(&field_name, v_type, opt_value.into_nullable_value(v_type));
+        subset_values.add(
+            field.name.clone(),
+            v_type,
+            opt_value.into_nullable_value(v_type),
+        );
     }
     Ok(subset_values)
 }
@@ -171,10 +179,10 @@ pub fn subset_values_to_object_j(
         match opt_value.opt_value.value() {
             Some(value) => {
                 let value_j = v_to_json(value)?;
-                map_j.insert(name.to_string(), value_j);
+                map_j.insert(name.name.clone(), value_j);
             }
             None => {
-                map_j.remove(name);
+                map_j.remove(&name.name);
             }
         }
     }
@@ -196,11 +204,19 @@ mod test {
         subset_values.add("description", ValueType::String, Some("description"));
 
         assert_eq!(
-            subset_values.values().get("code").unwrap().opt_value,
+            subset_values
+                .values()
+                .get(&"code".into_field_name())
+                .unwrap()
+                .opt_value,
             1.into_nullable_value()
         );
         assert_eq!(
-            subset_values.values().get("description").unwrap().opt_value,
+            subset_values
+                .values()
+                .get(&"description".into_field_name())
+                .unwrap()
+                .opt_value,
             "description".into_nullable_value()
         );
     }
@@ -231,11 +247,19 @@ mod test {
             .unwrap();
 
         assert_eq!(
-            subset_values.values().get("code").unwrap().opt_value,
+            subset_values
+                .values()
+                .get(&"code".into_field_name())
+                .unwrap()
+                .opt_value,
             1.into_nullable_value()
         );
         assert_eq!(
-            subset_values.values().get("description").unwrap().opt_value,
+            subset_values
+                .values()
+                .get(&"description".into_field_name())
+                .unwrap()
+                .opt_value,
             "description".into_nullable_value()
         );
     }

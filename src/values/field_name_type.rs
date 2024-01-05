@@ -1,5 +1,8 @@
 use super::value::ValueTyped;
-use crate::{FieldName, IntoFieldName, IntoValueType, ValueType};
+use crate::{
+    selections::{IntoTableField, TableField},
+    FieldName, IntoFieldName, IntoValueType, ValueType,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq, Hash)]
@@ -22,6 +25,12 @@ impl FieldNameType {
 impl IntoValueType for FieldNameType {
     fn value_type(&self) -> ValueType {
         self.v_type
+    }
+}
+
+impl IntoTableField for FieldNameType {
+    fn into_table_field(self) -> TableField {
+        self.name.into_table_field()
     }
 }
 

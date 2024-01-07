@@ -6,7 +6,6 @@ use crate::FieldNameType;
 use crate::IntoFieldName;
 use crate::TypedOptionValue;
 use crate::{CoreError, ValueType};
-use error_stack::Report;
 use error_stack::ResultExt;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};

@@ -18,6 +18,18 @@ impl From<&str> for FieldName {
     }
 }
 
+impl From<FieldName> for String {
+    fn from(value: FieldName) -> Self {
+        value.name
+    }
+}
+
+impl From<&FieldName> for String {
+    fn from(value: &FieldName) -> Self {
+        value.name.clone()
+    }
+}
+
 impl FieldName {
     // TODO: add comment
     pub fn new(name: impl Into<String>) -> Self {

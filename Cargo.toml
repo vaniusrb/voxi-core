@@ -12,11 +12,11 @@ serde_json = "=1.0.106"
 derive_more = "0.99.17"
 serde_json_any_key = "2.0.0"
 
-# voxi sql dependencies
 error-stack = { version = "0.4.1", features = [
     "spantrace",
     "anyhow",
-], optional = true }
+], optional = true, path = "../../hash/libs/error-stack" }
+# voxi sql dependencies
 log = { version = "0.4", optional = true }
 dyn-clonable = { version = "0.9", optional = true }
 

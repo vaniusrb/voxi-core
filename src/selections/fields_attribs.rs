@@ -120,7 +120,7 @@ impl Default for FieldsAttribsBuilder {
 // TODO: Add comment
 #[derive(Default, Clone, Debug, PartialEq, Eq, Serialize, Deserialize, Hash)]
 pub struct FieldsAttribs {
-    fields_attribs: Vec<FieldAttribs>,
+    pub fields_attribs: Vec<FieldAttribs>,
 }
 
 pub trait IntoVecFieldAttribs {

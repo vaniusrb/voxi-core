@@ -1,5 +1,5 @@
 use crate::values::into_value::try_value_from_string;
-use crate::{CoreError, IntoNullableValue};
+use crate::{CoreError, IntoNullableValue, IntoValueType};
 use crate::{IntoValue, NullableValue, Value, ValueType};
 use chrono::{NaiveDate, NaiveDateTime};
 use error_stack::ResultExt;
@@ -12,8 +12,9 @@ use uuid::Uuid;
 /// Try convert a single json value field to `NullableValue`
 pub fn json_to_value(
     value_j: serde_json::Value,
-    value_type: ValueType,
+    value_type: impl IntoValueType,
 ) -> error_stack::Result<NullableValue, CoreError> {
+    let value_type = value_type.value_type();
     if value_j.is_null() {
         return Ok(NullableValue::null(value_type));
     }

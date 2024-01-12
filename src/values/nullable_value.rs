@@ -49,8 +49,8 @@ impl NullableValue {
         }
     }
 
-    pub fn null(value_type: ValueType) -> Self {
-        match value_type {
+    pub fn null(value_type: impl IntoValueType) -> Self {
+        match value_type.value_type() {
             ValueType::String => Self::String(None),
             ValueType::Uuid => Self::Uuid(None),
             ValueType::Int32 => Self::Int32(None),

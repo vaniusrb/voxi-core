@@ -1,5 +1,7 @@
+use super::value_type_scale::IntoValueTypeScale;
+use super::ValueTypeScale;
 use crate::selections::{IntoTableField, IntoValueSelect, TableField, ValueSelect, ValueWhere};
-use crate::{FieldName, FieldNameType, IntoFieldName, IntoFieldNameType, ValueType, ValueTyped};
+use crate::{FieldName, FieldNameType, IntoFieldName, IntoFieldNameType, ValueTyped};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
@@ -25,7 +27,7 @@ pub struct FieldAttribs {
     pub title: String,
     pub value_select: Option<ValueSelect>,
     #[serde(rename = "type")]
-    pub value_type: ValueType,
+    pub value_type: ValueTypeScale,
     pub nullable: bool,
     #[serde(
         skip_serializing_if = "Alignment::is_default",
@@ -39,11 +41,15 @@ impl FieldAttribs {
     pub fn new<T: ValueTyped>(
         name: impl IntoFieldName,
         title: &str,
+        scale: Option<u32>,
         value_select: Option<impl IntoValueSelect>,
     ) -> Self {
         Self {
             name: name.into_field_name(),
-            value_type: *T::v_type(),
+            value_type: ValueTypeScale {
+                type_: *T::v_type(),
+                scale,
+            },
             title: title.to_owned(),
             nullable: true,
             alignment: Default::default(),
@@ -54,12 +60,12 @@ impl FieldAttribs {
     pub fn new_t(
         name: impl IntoFieldName,
         title: &str,
-        value_type: ValueType,
+        value_type: impl IntoValueTypeScale,
         value_select: Option<impl IntoValueSelect>,
     ) -> Self {
         Self {
             name: name.into_field_name(),
-            value_type,
+            value_type: value_type.into_value_type_scale(),
             title: title.to_owned(),
             nullable: true,
             alignment: Default::default(),
@@ -128,8 +134,14 @@ impl IntoFieldNameType for FieldAttribs {
     fn into_field_name_type(self) -> FieldNameType {
         FieldNameType {
             name: self.name,
-            v_type: self.value_type,
+            v_type: self.value_type.type_,
         }
+    }
+}
+
+impl IntoValueTypeScale for FieldAttribs {
+    fn into_value_type_scale(self) -> ValueTypeScale {
+        self.value_type
     }
 }
 
@@ -139,7 +151,7 @@ mod tests {
 
     #[test]
     fn test_serialize() {
-        let value = FieldAttribs::new::<String>("name", "Title", Option::<String>::None);
+        let value = FieldAttribs::new::<String>("name", "Title", None, Option::<String>::None);
         let json = serde_json::to_string_pretty(&value).unwrap();
         println!("{json}");
         let exp = r#"{

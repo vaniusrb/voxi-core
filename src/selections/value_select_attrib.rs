@@ -1,12 +1,13 @@
 use super::{
+    value_type_scale::IntoValueTypeScale,
     values_select::{IntoValuesSelect, ValuesSelect},
     IntoValueSelect, ValueSelect,
 };
+use crate::ValueTyped;
 use crate::{
     selections::{FieldAttribs, FieldsAttribs, IntoFieldsAttribs},
     IntoFieldName,
 };
-use crate::{ValueType, ValueTyped};
 use serde::{Deserialize, Serialize};
 use std::{
     ops::{Add, Sub},
@@ -18,6 +19,22 @@ use std::{
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct ValuesSelectAttribs {
     inner: Arc<Vec<ValueSelectAttrib>>,
+}
+
+impl ValuesSelectAttribs {
+    pub fn new(values: Vec<ValueSelectAttrib>) -> Self {
+        Self {
+            inner: Arc::new(values),
+        }
+    }
+
+    pub fn into_vec(self) -> Vec<ValueSelectAttrib> {
+        (*self.inner).clone()
+    }
+
+    pub fn as_vec(&self) -> Arc<Vec<ValueSelectAttrib>> {
+        self.inner.clone()
+    }
 }
 
 impl Add<ValuesSelectAttribs> for ValuesSelectAttribs {
@@ -39,18 +56,6 @@ impl Sub<ValuesSelectAttribs> for ValuesSelectAttribs {
         let o = rhs.into_vec();
         s.retain(|x| !o.contains(x));
         ValuesSelectAttribs::new(s)
-    }
-}
-
-impl ValuesSelectAttribs {
-    pub fn new(values: Vec<ValueSelectAttrib>) -> Self {
-        Self {
-            inner: Arc::new(values),
-        }
-    }
-
-    pub fn into_vec(self) -> Vec<ValueSelectAttrib> {
-        (*self.inner).clone()
     }
 }
 
@@ -124,7 +129,7 @@ impl ValueSelectAttrib {
         name: &str,
         title: &str,
         into_value_select: impl IntoValueSelect,
-        value_type: ValueType,
+        value_type: impl IntoValueTypeScale,
     ) -> Self {
         let into_value_select = into_value_select.into_value_select();
         Self {
@@ -142,11 +147,17 @@ impl ValueSelectAttrib {
     pub fn new<T: ValueTyped>(
         name: &str,
         title: &str,
+        scale: Option<u32>,
         into_value_select: impl IntoValueSelect,
     ) -> Self {
         let into_value_select = into_value_select.into_value_select();
         Self {
-            field_attrib: FieldAttribs::new::<T>(name, title, Some(into_value_select.clone())),
+            field_attrib: FieldAttribs::new::<T>(
+                name,
+                title,
+                scale,
+                Some(into_value_select.clone()),
+            ),
             value_select: into_value_select.into_value_select(),
         }
     }
@@ -155,11 +166,17 @@ impl ValueSelectAttrib {
     pub fn field<T: ValueTyped>(
         name: &str,
         title: &str,
+        scale: Option<u32>,
         into_value_select: impl IntoValueSelect,
     ) -> Self {
         let into_value_select = into_value_select.into_value_select();
         Self {
-            field_attrib: FieldAttribs::new::<T>(name, title, Some(into_value_select.clone())),
+            field_attrib: FieldAttribs::new::<T>(
+                name,
+                title,
+                scale,
+                Some(into_value_select.clone()),
+            ),
             value_select: name.into_field_name().into_value_select(),
         }
     }

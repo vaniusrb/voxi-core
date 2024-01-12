@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 2,
+            "activePatchIndex": 10,
             "patches": [
                 {
                     "date": 1699723408912,
@@ -16,6 +16,38 @@
                 {
                     "date": 1699723467166,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -56,9 +56,9 @@\n pub use table_name::{IntoTableName, TableName};\n pub use tables_names::TablesNames;\n pub use to_sql::ToSQL;\n pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};\n-pub use value_select_attrib::{IntoValuesSelectAttribs, ValuesSelectAttribs};\n+pub use value_select_attrib::{IntoValuesSelectAttribs, ValueSelectAttrib, ValuesSelectAttribs};\n pub use value_where::{IntoValueWhere, ValueWhere};\n pub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, ValuesWhere};\n \n // TODO: re export other types here\n"
+                },
+                {
+                    "date": 1705083490799,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,10 +3,10 @@\n pub(crate) mod arithmetic_expr;\n pub(crate) mod case;\n pub(crate) mod combination;\n pub(crate) mod condition_where;\n-pub mod field_attribs;\n-pub mod fields_attribs;\n+pub(crate) mod field_attribs;\n+pub(crate) mod fields_attribs;\n pub(crate) mod from;\n pub(crate) mod group_by;\n pub(crate) mod join;\n pub(crate) mod limit_offset;\n"
+                },
+                {
+                    "date": 1705083518882,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -22,8 +22,9 @@\n pub(crate) mod tables_names;\n pub(crate) mod to_sql;\n pub(crate) mod value_select;\n pub(crate) mod value_select_attrib;\n+pub(crate) mod value_type_scale;\n pub(crate) mod value_where;\n pub(crate) mod values_select;\n pub(crate) mod values_where;\n \n"
+                },
+                {
+                    "date": 1705083841381,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -68,4 +68,5 @@\n pub use field_attribs::{FieldAttribs, IntoFieldAttribs};\n pub use fields_attribs::FieldsAttribs;\n pub use fields_attribs::FieldsAttribsBuilder;\n pub use fields_attribs::IntoFieldsAttribs;\n+pub use va::IntoFieldsAttribs;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1705083848390,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -68,5 +68,5 @@\n pub use field_attribs::{FieldAttribs, IntoFieldAttribs};\n pub use fields_attribs::FieldsAttribs;\n pub use fields_attribs::FieldsAttribsBuilder;\n pub use fields_attribs::IntoFieldsAttribs;\n-pub use va::IntoFieldsAttribs;\n\\ No newline at end of file\n+pub use value_type_scale::ValueTypeScale;\n"
+                },
+                {
+                    "date": 1705086753383,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,8 +27,10 @@\n pub(crate) mod value_where;\n pub(crate) mod values_select;\n pub(crate) mod values_where;\n \n+field_attribs::Alignment\n+\n pub mod bind_name;\n pub(crate) mod macros;\n pub mod query;\n // pub(crate) use macros::field;\n"
+                },
+                {
+                    "date": 1705086763438,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,10 +27,8 @@\n pub(crate) mod value_where;\n pub(crate) mod values_select;\n pub(crate) mod values_where;\n \n-field_attribs::Alignment\n-\n pub mod bind_name;\n pub(crate) mod macros;\n pub mod query;\n // pub(crate) use macros::field;\n@@ -71,4 +69,5 @@\n pub use fields_attribs::FieldsAttribs;\n pub use fields_attribs::FieldsAttribsBuilder;\n pub use fields_attribs::IntoFieldsAttribs;\n pub use value_type_scale::ValueTypeScale;\n+pub(crate) mod field_attribs::Alignment\n"
+                },
+                {
+                    "date": 1705086769487,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -64,10 +64,10 @@\n \n // TODO: re export other types here\n // TODO: change visibility to pub(crate) -> fix unit test that will break\n \n+pub use field_attribs::Alignment;\n pub use field_attribs::{FieldAttribs, IntoFieldAttribs};\n pub use fields_attribs::FieldsAttribs;\n pub use fields_attribs::FieldsAttribsBuilder;\n pub use fields_attribs::IntoFieldsAttribs;\n pub use value_type_scale::ValueTypeScale;\n-pub(crate) mod field_attribs::Alignment\n"
+                },
+                {
+                    "date": 1705092283196,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,9 +30,8 @@\n \n pub mod bind_name;\n pub(crate) mod macros;\n pub mod query;\n-// pub(crate) use macros::field;\n \n pub use agg_functions::{AggFunction, AggFunctionType};\n pub use alias::{Alias, IntoAlias};\n pub use arithmetic_expr::arithmetic_expr_where::{ArithmeticExprWhere, IntoArithmeticExprWhere};\n"
                 }
             ],
             "date": 1699723408912,

@@ -1,3 +1,4 @@
+use super::ValueTypeScale;
 use super::{FieldAttribs, IntoFieldAttribs};
 use crate::IntoFieldName;
 use crate::ValueTyped;
@@ -38,11 +39,15 @@ impl FieldsAttribsBuilder {
         &mut self,
         name: &str,
         title: &str,
+        scale: Option<u32>,
         value_select: Option<impl IntoValueSelect>,
     ) {
         let value_attrib = FieldAttribs {
             name: name.into_field_name(),
-            value_type: *T::v_type(),
+            value_type: ValueTypeScale {
+                type_: *T::v_type(),
+                scale,
+            },
             title: title.to_owned(),
             nullable: false,
             alignment: Default::default(),
@@ -55,11 +60,15 @@ impl FieldsAttribsBuilder {
         &mut self,
         name: &str,
         title: &str,
+        scale: Option<u32>,
         value_select: Option<impl IntoValueSelect>,
     ) {
         let value_attrib = FieldAttribs {
             name: name.into_field_name(),
-            value_type: *T::v_type(),
+            value_type: ValueTypeScale {
+                type_: *T::v_type(),
+                scale,
+            },
             title: title.to_owned(),
             nullable: true,
             alignment: Default::default(),
@@ -73,11 +82,15 @@ impl FieldsAttribsBuilder {
         mut self,
         name: &str,
         title: &str,
+        scale: Option<u32>,
         value_select: Option<impl IntoValueSelect>,
     ) -> Self {
         let value_attrib = FieldAttribs {
             name: name.into_field_name(),
-            value_type: *T::v_type(),
+            value_type: ValueTypeScale {
+                type_: *T::v_type(),
+                scale,
+            },
             title: title.to_owned(),
             nullable: false,
             alignment: Default::default(),
@@ -92,11 +105,16 @@ impl FieldsAttribsBuilder {
         mut self,
         name: &str,
         title: &str,
+        scale: Option<u32>,
         value_select: Option<impl IntoValueSelect>,
     ) -> Self {
         let value_attrib = FieldAttribs {
             name: name.into_field_name(),
-            value_type: *T::v_type(),
+            value_type: ValueTypeScale {
+                type_: *T::v_type(),
+                scale,
+            },
+
             title: title.to_owned(),
             nullable: true,
             alignment: Default::default(),

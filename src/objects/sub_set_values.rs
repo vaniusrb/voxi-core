@@ -10,14 +10,15 @@ use error_stack::ResultExt;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use serde_json_any_key::*;
+use serde_with::*;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 
 /// TODO: this is very similar to Record
+#[serde_with::serde_as]
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq)]
 pub struct SubsetValues {
-    #[serde(with = "any_key_map")]
+    #[serde_as(as = "HashMap<serde_with::json::JsonString, _>")]
     pub values: HashMap<FieldName, TypedOptionValue>,
 }
 

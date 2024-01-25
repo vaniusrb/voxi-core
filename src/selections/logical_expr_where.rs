@@ -92,6 +92,14 @@ pub enum LogicalExprWhere {
     Or(Box<LogicalExprWhere>, Box<LogicalExprWhere>),
 }
 
+// https://www.reddit.com/r/rust/comments/vdggo6/sqlx_postgres_result_to_json/
+// #[cfg(feature = "sqlx")]
+// impl sqlx::Type<sqlx::Postgres> for LogicalExprWhere {
+//     fn type_info() -> <sqlx::Postgres as sqlx::Database>::TypeInfo {
+//         PgType::Json
+//     }
+// }
+
 impl LogicalExprWhere {
     pub fn condition(condition: impl IntoConditionWhere) -> LogicalExprWhere {
         LogicalExprWhere::Condition(Box::new(condition.into_condition_where()))

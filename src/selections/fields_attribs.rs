@@ -141,6 +141,16 @@ pub struct FieldsAttribs {
     pub fields_attribs: Vec<FieldAttribs>,
 }
 
+impl FieldsAttribs {
+    pub fn len(&self) -> usize {
+        self.fields_attribs.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.fields_attribs.is_empty()
+    }
+}
+
 pub trait IntoVecFieldAttribs {
     fn into_vec_field_attribs(self) -> Vec<FieldAttribs>;
 }

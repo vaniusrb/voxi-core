@@ -12,6 +12,20 @@ pub struct FieldName {
     pub name: String,
 }
 
+impl From<String> for FieldName {
+    fn from(value: String) -> Self {
+        FieldName { name: value }
+    }
+}
+
+impl From<&String> for FieldName {
+    fn from(value: &String) -> Self {
+        FieldName {
+            name: value.clone(),
+        }
+    }
+}
+
 impl From<&str> for FieldName {
     fn from(value: &str) -> Self {
         FieldName { name: value.into() }

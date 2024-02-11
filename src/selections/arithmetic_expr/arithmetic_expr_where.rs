@@ -181,7 +181,7 @@ impl IntoArithmeticExprWhere for ValueWhere {
     }
 }
 
-trait IntoValueInteger {}
+// trait IntoValueInteger {}
 
 impl IntoArithmeticExprWhere for i64 {
     fn into_arithmetic_expr_where(self) -> ArithmeticExprWhere {

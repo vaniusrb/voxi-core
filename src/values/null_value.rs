@@ -26,6 +26,6 @@ impl IntoNullableValue for NullValue {
 
 impl fmt::Display for NullValue {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "NULL")
+        write!(f, "")
     }
 }

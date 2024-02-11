@@ -205,7 +205,7 @@ impl fmt::Display for NullableValue {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.value() {
             Some(value) => value.fmt(f),
-            None => write!(f, "NULL"),
+            None => write!(f, ""),
         }
     }
 }

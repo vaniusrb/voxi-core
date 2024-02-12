@@ -22,11 +22,11 @@ impl Alignment {
 /// Definition for field with name, title, type and nullable attributes
 #[derive(Debug, Serialize, Clone, PartialEq, Eq, Deserialize, Hash)]
 pub struct FieldAttribs {
-    #[serde(flatten)]
     pub name: FieldName,
     pub title: String,
     pub value_select: Option<ValueSelect>,
     #[serde(rename = "type")]
+    #[serde(flatten)]
     pub value_type: ValueTypeScale,
     pub nullable: bool,
     #[serde(

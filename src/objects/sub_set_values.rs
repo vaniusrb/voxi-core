@@ -85,7 +85,7 @@ impl SubsetValues {
         let value = serde_json::to_value(object).unwrap();
         let object_j = value.as_object().unwrap();
         let field_name = field_name.into_field_name();
-        let value_j = match object_j.get(&field_name.name) {
+        let value_j = match object_j.get(&field_name.0) {
             Some(value_j) => value_j.clone(),
             None => {
                 let fields = object_j
@@ -93,7 +93,7 @@ impl SubsetValues {
                     .map(|(k, _)| k.clone())
                     .collect::<Vec<_>>()
                     .join(",");
-                return Err(CoreError::FieldNameNotFound(field_name.name, fields).into());
+                return Err(CoreError::FieldNameNotFound(field_name.0, fields).into());
             }
         };
         let value = json_to_value(value_j, v_type)?;
@@ -182,10 +182,10 @@ pub fn subset_values_to_object_j(
         match opt_value.opt_value.value() {
             Some(value) => {
                 let value_j = v_to_json(value)?;
-                map_j.insert(name.name.clone(), value_j);
+                map_j.insert(name.0.clone(), value_j);
             }
             None => {
-                map_j.remove(&name.name);
+                map_j.remove(&name.0);
             }
         }
     }

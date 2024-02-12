@@ -5,6 +5,7 @@ use std::fmt;
 
 // TODO: add comment
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, Hash)]
+#[serde(untagged)]
 pub enum NullableValue {
     String(Option<Value>),
     Uuid(Option<Value>),

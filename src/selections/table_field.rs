@@ -12,6 +12,7 @@ use std::fmt;
 pub struct TableField {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(default)]
+    #[serde(flatten)]
     pub table: Option<Table>,
     pub field_name: FieldName,
 }

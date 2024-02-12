@@ -7,15 +7,13 @@ use std::fmt;
 
 /// `TableName` defines the name of a table
 #[derive(Serialize, Deserialize, Default, Clone, Debug, PartialEq, Eq, Hash)]
-pub struct TableName {
-    table_name: String,
-}
+pub struct TableName(pub String);
 
 impl TableName {
     pub fn new(name: impl Into<String>) -> Self {
         let name: String = name.into();
         validate_double_quotes(&name).unwrap();
-        Self { table_name: name }
+        TableName(name)
     }
 
     /// Create a `TableName`.
@@ -35,7 +33,7 @@ impl TableName {
     /// assert_eq!(table_name.name(), "TABLE");
     /// ```
     pub fn name(&self) -> &str {
-        self.table_name.as_ref()
+        self.0.as_ref()
     }
 
     /// Create a TableField from a IntoFieldName.
@@ -46,7 +44,7 @@ impl TableName {
 
 impl fmt::Display for TableName {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.table_name)
+        write!(f, "{}", self.0)
     }
 }
 
@@ -58,13 +56,13 @@ impl ToSQL for TableName {
 
 impl PartialEq<str> for TableName {
     fn eq(&self, other: &str) -> bool {
-        self.table_name == *other
+        self.0 == *other
     }
 }
 
 impl PartialEq<TableName> for str {
     fn eq(&self, other: &TableName) -> bool {
-        *self == other.table_name
+        *self == other.0
     }
 }
 

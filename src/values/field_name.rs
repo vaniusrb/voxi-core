@@ -8,39 +8,35 @@ use serde::{Deserialize, Serialize};
 /// let field_name = FieldName::new("NAME");
 /// ```
 #[derive(Serialize, Deserialize, Default, Debug, Clone, PartialEq, Eq, Hash)]
-pub struct FieldName {
-    pub name: String,
-}
+pub struct FieldName(pub String);
 
 impl From<String> for FieldName {
     fn from(value: String) -> Self {
-        FieldName { name: value }
+        FieldName(value)
     }
 }
 
 impl From<&String> for FieldName {
     fn from(value: &String) -> Self {
-        FieldName {
-            name: value.clone(),
-        }
+        FieldName(value.clone())
     }
 }
 
 impl From<&str> for FieldName {
     fn from(value: &str) -> Self {
-        FieldName { name: value.into() }
+        FieldName(value.into())
     }
 }
 
 impl From<FieldName> for String {
     fn from(value: FieldName) -> Self {
-        value.name
+        value.0
     }
 }
 
 impl From<&FieldName> for String {
     fn from(value: &FieldName) -> Self {
-        value.name.clone()
+        value.0.clone()
     }
 }
 
@@ -49,7 +45,7 @@ impl FieldName {
     pub fn new(name: impl Into<String>) -> Self {
         let name: String = name.into();
         validate_double_quotes(&name).unwrap();
-        Self { name }
+        Self(name)
     }
 
     pub fn from(into_field_name: impl IntoFieldName) -> FieldName {
@@ -58,13 +54,13 @@ impl FieldName {
 
     /// Get a reference to the field name's name.
     pub fn name(&self) -> &str {
-        self.name.as_ref()
+        self.0.as_ref()
     }
 }
 
 impl fmt::Display for FieldName {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.name)
+        write!(f, "{}", self.0)
     }
 }
 
@@ -92,13 +88,13 @@ impl IntoFieldName for FieldName {
 
 impl PartialEq<str> for FieldName {
     fn eq(&self, other: &str) -> bool {
-        self.name == other
+        self.0 == other
     }
 }
 
 impl PartialEq<FieldName> for str {
     fn eq(&self, other: &FieldName) -> bool {
-        self == other.name
+        self == other.0
     }
 }
 

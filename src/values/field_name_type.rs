@@ -7,7 +7,6 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub struct FieldNameType {
-    #[serde(flatten)]
     pub name: FieldName,
     #[serde(rename = "type")]
     pub v_type: ValueType,

@@ -1,7 +1,7 @@
-/target-ra
-/target
-/Cargo.lock
-/.vscode
-/.VSCodeCounter
+target-ra/
+target/
+.vscode/
+.VSCodeCounter/
 .lhignore
-/.lh
+.lh/
+Cargo.lock

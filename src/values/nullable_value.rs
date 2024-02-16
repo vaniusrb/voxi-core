@@ -5,7 +5,7 @@ use std::fmt;
 
 // TODO: add comment
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, Hash)]
-#[serde(untagged)]
+// #[serde(untagged)]
 pub enum NullableValue {
     String(Option<Value>),
     Uuid(Option<Value>),
@@ -108,10 +108,17 @@ impl NullableValue {
             Some(value) => value,
             None => return Ok(None),
         };
-        let ret: T = value
-            .try_into()
+        let result = value.clone().try_into();
+
+        let type_name = std::any::type_name::<T>();
+        let ret: T = result
             // TODO: create error like "unexpected field type"
-            .map_err(|_| CoreError::Conversion("conversion error".to_string(), "".to_string()))?;
+            .map_err(|_| {
+                CoreError::Conversion(
+                    format!("conversion error from type {type_name}"),
+                    value.to_string(),
+                )
+            })?;
         Ok(Some(ret))
     }
 

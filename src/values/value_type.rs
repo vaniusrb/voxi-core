@@ -20,6 +20,12 @@ pub enum ValueType {
     Json,
 }
 
+impl ValueType {
+    pub fn is_string(&self) -> bool {
+        matches!(&self, ValueType::String)
+    }
+}
+
 impl fmt::Display for ValueType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:?}", self)

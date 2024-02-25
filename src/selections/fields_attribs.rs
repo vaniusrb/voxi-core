@@ -1,7 +1,5 @@
-use super::ValueTypeScale;
-use super::{FieldAttribs, IntoFieldAttribs};
-use crate::IntoFieldName;
-use crate::ValueTyped;
+use super::{FieldAttribs, IntoFieldAttribs, IntoFieldAttsLimit};
+use crate::selections::FieldAttsLimit;
 use crate::{
     resolvers::args_resolver::ArgsResolver,
     selections::{
@@ -12,6 +10,7 @@ use crate::{
     },
     SQLError,
 };
+use crate::{IntoFieldName, IntoValueType, ValueType};
 use serde::{Deserialize, Serialize};
 use std::ops::Add;
 use std::sync::Arc;
@@ -35,88 +34,128 @@ impl FieldsAttribsBuilder {
         }
     }
 
-    pub fn add<T: ValueTyped>(
+    pub fn add_str(
         &mut self,
         name: &str,
         title: &str,
-        scale: Option<u32>,
         value_select: Option<impl IntoValueSelect>,
+        nullable: bool,
     ) {
         let value_attrib = FieldAttribs {
             name: name.into_field_name(),
-            value_type: ValueTypeScale {
-                type_: *T::v_type(),
-                scale,
-            },
+            value_type: ValueType::String,
             title: title.to_owned(),
-            nullable: false,
+            nullable,
             alignment: Default::default(),
             value_select: value_select.map(|vs| vs.into_value_select()),
         };
         self.fields_attribs.push(value_attrib);
     }
 
-    pub fn add_nullable<T: ValueTyped>(
+    pub fn add_dec(
         &mut self,
         name: &str,
         title: &str,
-        scale: Option<u32>,
         value_select: Option<impl IntoValueSelect>,
+        nullable: bool,
     ) {
         let value_attrib = FieldAttribs {
             name: name.into_field_name(),
-            value_type: ValueTypeScale {
-                type_: *T::v_type(),
-                scale,
-            },
+            value_type: ValueType::Decimal,
             title: title.to_owned(),
-            nullable: true,
+            nullable,
             alignment: Default::default(),
             value_select: value_select.map(|vs| vs.into_value_select()),
         };
         self.fields_attribs.push(value_attrib);
     }
 
-    #[must_use]
-    pub fn with_add<T: ValueTyped>(
-        mut self,
+    pub fn add_dat(
+        &mut self,
         name: &str,
         title: &str,
-        scale: Option<u32>,
         value_select: Option<impl IntoValueSelect>,
-    ) -> Self {
+        nullable: bool,
+    ) {
         let value_attrib = FieldAttribs {
             name: name.into_field_name(),
-            value_type: ValueTypeScale {
-                type_: *T::v_type(),
-                scale,
-            },
+            value_type: ValueType::Date,
             title: title.to_owned(),
-            nullable: false,
+            nullable,
             alignment: Default::default(),
             value_select: value_select.map(|vs| vs.into_value_select()),
         };
         self.fields_attribs.push(value_attrib);
-        self
     }
 
-    #[must_use]
-    pub fn with_add_nullable<T: ValueTyped>(
-        mut self,
+    pub fn add_tim(
+        &mut self,
         name: &str,
         title: &str,
-        scale: Option<u32>,
         value_select: Option<impl IntoValueSelect>,
+        nullable: bool,
+    ) {
+        let value_attrib = FieldAttribs {
+            name: name.into_field_name(),
+            value_type: ValueType::DateTime,
+            title: title.to_owned(),
+            nullable,
+            alignment: Default::default(),
+            value_select: value_select.map(|vs| vs.into_value_select()),
+        };
+        self.fields_attribs.push(value_attrib);
+    }
+
+    pub fn add_jso(
+        &mut self,
+        name: &str,
+        title: &str,
+        value_select: Option<impl IntoValueSelect>,
+        nullable: bool,
+    ) {
+        let value_attrib = FieldAttribs {
+            name: name.into_field_name(),
+            value_type: ValueType::Json,
+            title: title.to_owned(),
+            nullable,
+            alignment: Default::default(),
+            value_select: value_select.map(|vs| vs.into_value_select()),
+        };
+        self.fields_attribs.push(value_attrib);
+    }
+
+    pub fn add(
+        &mut self,
+        value_type: impl IntoValueType,
+        name: &str,
+        title: &str,
+        value_select: Option<impl IntoValueSelect>,
+        nullable: bool,
+    ) {
+        let value_attrib = FieldAttribs {
+            name: name.into_field_name(),
+            value_type: value_type.value_type(),
+            title: title.to_owned(),
+            nullable,
+            alignment: Default::default(),
+            value_select: value_select.map(|vs| vs.into_value_select()),
+        };
+        self.fields_attribs.push(value_attrib);
+    }
+
+    pub fn with_add(
+        mut self,
+        value_type: impl IntoValueType,
+        name: &str,
+        title: &str,
+        value_select: Option<impl IntoValueSelect>,
+        nullable: bool,
     ) -> Self {
         let value_attrib = FieldAttribs {
             name: name.into_field_name(),
-            value_type: ValueTypeScale {
-                type_: *T::v_type(),
-                scale,
-            },
-
+            value_type: value_type.value_type(),
             title: title.to_owned(),
-            nullable: true,
+            nullable,
             alignment: Default::default(),
             value_select: value_select.map(|vs| vs.into_value_select()),
         };
@@ -132,6 +171,58 @@ impl FieldsAttribsBuilder {
 impl Default for FieldsAttribsBuilder {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+// TODO: Add comment
+#[derive(Default, Clone, Debug, PartialEq, Eq, Serialize, Deserialize, Hash)]
+pub struct FieldsAttsLimit {
+    pub fields_attribs: Vec<FieldAttsLimit>,
+}
+
+pub trait IntoVecFieldAttsLimit {
+    fn into_vec_field_atts_limit(self) -> Vec<FieldAttsLimit>;
+}
+
+impl<T: IntoFieldAttsLimit> IntoVecFieldAttsLimit for Vec<T> {
+    fn into_vec_field_atts_limit(self) -> Vec<FieldAttsLimit> {
+        self.into_iter()
+            .map(|fa| fa.into_field_atts_limit())
+            .collect()
+    }
+}
+
+impl FieldsAttsLimit {
+    pub fn new(fields_attribs: impl IntoVecFieldAttsLimit) -> Self {
+        Self {
+            fields_attribs: fields_attribs.into_vec_field_atts_limit(),
+        }
+    }
+
+    pub fn len(&self) -> usize {
+        self.fields_attribs.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.fields_attribs.is_empty()
+    }
+
+    // FIXME: ValueSelectAttrib lost its reason to exists, because now FieldAttribs contains a ValueSelect
+    /// Convert to `ValuesSelectAttribs` defining `TableField` from given table name.
+    pub fn into_values_select_attribs_table(self, table: &str) -> ValuesSelectAttribs {
+        let fs = self
+            .fields_attribs
+            .into_iter()
+            .map(|a| {
+                ValueSelectAttrib::new(
+                    a.value_type,
+                    &a.name.to_string(),
+                    &a.title,
+                    TableField::from(table, a.name.clone()),
+                )
+            })
+            .collect::<Vec<_>>();
+        ValuesSelectAttribs::new(fs)
     }
 }
 
@@ -165,24 +256,6 @@ where
 }
 
 impl FieldsAttribs {
-    // FIXME: ValueSelectAttrib lost its reason to exists, because now FieldAttribs contains a ValueSelect
-    /// Convert to `ValuesSelectAttribs` defining `TableField` from given table name.
-    pub fn into_values_select_attribs_table(self, table: &str) -> ValuesSelectAttribs {
-        let fs = self
-            .to_vec()
-            .into_iter()
-            .map(|a| {
-                ValueSelectAttrib::new_t(
-                    &a.name.to_string(),
-                    &a.title,
-                    TableField::from(table, a.name.clone()),
-                    a.value_type,
-                )
-            })
-            .collect::<Vec<_>>();
-        ValuesSelectAttribs::new(fs)
-    }
-
     pub fn new(fields_attribs: impl IntoVecFieldAttribs) -> Self {
         Self {
             fields_attribs: fields_attribs.into_vec_field_attribs(),

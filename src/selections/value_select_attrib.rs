@@ -1,11 +1,10 @@
 use super::{
-    value_type_scale::IntoValueTypeScale,
+    fields_attribs::FieldsAttsLimit,
     values_select::{IntoValuesSelect, ValuesSelect},
-    IntoValueSelect, ValueSelect,
+    DbValueType, FieldAttsLimit, IntoDbValueType, IntoValueSelect, ValueSelect,
 };
-use crate::ValueTyped;
 use crate::{
-    selections::{FieldAttribs, FieldsAttribs, IntoFieldsAttribs},
+    selections::{FieldsAttribs, IntoFieldsAttribs},
     IntoFieldName,
 };
 use serde::{Deserialize, Serialize};
@@ -69,10 +68,10 @@ impl IntoValuesSelectAttribs for ValuesSelectAttribs {
     }
 }
 
-impl IntoValuesSelectAttribs for FieldsAttribs {
+impl IntoValuesSelectAttribs for FieldsAttsLimit {
     fn into_values_select_attribs(self) -> ValuesSelectAttribs {
         let values = self
-            .to_vec()
+            .fields_attribs
             .into_iter()
             .map(|a| a.into_value_select_attrib())
             .collect::<Vec<_>>();
@@ -100,7 +99,7 @@ where
 // `ValueSelectAttrib` contains a `ValueSelect` (expression used in SELECT's columns) with an assigned `FieldAttribs`.
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq, Hash)]
 pub struct ValueSelectAttrib {
-    pub field_attrib: FieldAttribs,
+    pub field_attrib: FieldAttsLimit,
     pub value_select: ValueSelect,
 }
 
@@ -114,7 +113,7 @@ impl IntoValueSelectAttrib for ValueSelectAttrib {
     }
 }
 
-impl IntoValueSelectAttrib for FieldAttribs {
+impl IntoValueSelectAttrib for FieldAttsLimit {
     fn into_value_select_attrib(self) -> ValueSelectAttrib {
         ValueSelectAttrib {
             value_select: self.name.clone().into_value_select(),
@@ -125,63 +124,78 @@ impl IntoValueSelectAttrib for FieldAttribs {
 
 impl ValueSelectAttrib {
     /// Add `ValueSelect` that can be an expression.
-    pub fn new_t(
+    pub fn new(
+        value_type: impl IntoDbValueType,
         name: &str,
         title: &str,
         into_value_select: impl IntoValueSelect,
-        value_type: impl IntoValueTypeScale,
     ) -> Self {
         let into_value_select = into_value_select.into_value_select();
         Self {
-            field_attrib: FieldAttribs::new_t(
-                name,
-                title,
+            field_attrib: FieldAttsLimit::new(
                 value_type,
+                name,
+                title,
                 Some(into_value_select.clone()),
             ),
             value_select: into_value_select.into_value_select(),
         }
     }
 
-    /// Add `ValueSelect` that can be an expression.
-    pub fn new<T: ValueTyped>(
+    /// Add string field.
+    pub fn field_str(
         name: &str,
         title: &str,
-        scale: Option<u32>,
+        size: u16,
         into_value_select: impl IntoValueSelect,
     ) -> Self {
         let into_value_select = into_value_select.into_value_select();
         Self {
-            field_attrib: FieldAttribs::new::<T>(
+            field_attrib: FieldAttsLimit::new(
+                DbValueType::String(size),
                 name,
                 title,
-                scale,
-                Some(into_value_select.clone()),
-            ),
-            value_select: into_value_select.into_value_select(),
-        }
-    }
-
-    /// Add field name.
-    pub fn field<T: ValueTyped>(
-        name: &str,
-        title: &str,
-        scale: Option<u32>,
-        into_value_select: impl IntoValueSelect,
-    ) -> Self {
-        let into_value_select = into_value_select.into_value_select();
-        Self {
-            field_attrib: FieldAttribs::new::<T>(
-                name,
-                title,
-                scale,
                 Some(into_value_select.clone()),
             ),
             value_select: name.into_field_name().into_value_select(),
         }
     }
 
-    pub fn field_attrib(&self) -> &FieldAttribs {
+    /// Add decimal field.
+    pub fn field_dec(
+        name: &str,
+        title: &str,
+        precision: u8,
+        scale: u8,
+        into_value_select: impl IntoValueSelect,
+    ) -> Self {
+        let into_value_select = into_value_select.into_value_select();
+        Self {
+            field_attrib: FieldAttsLimit::new(
+                DbValueType::Decimal(precision, scale),
+                name,
+                title,
+                Some(into_value_select.clone()),
+            ),
+            value_select: name.into_field_name().into_value_select(),
+        }
+    }
+
+    /// Add date field.
+    pub fn field_dat(name: &str, title: &str, into_value_select: impl IntoValueSelect) -> Self {
+        let into_value_select = into_value_select.into_value_select();
+        Self {
+            field_attrib: FieldAttsLimit::new(
+                DbValueType::Date,
+                name,
+                title,
+                Some(into_value_select.clone()),
+            ),
+            value_select: name.into_field_name().into_value_select(),
+        }
+    }
+
+    pub fn field_attrib(&self) -> &FieldAttsLimit {
         &self.field_attrib
     }
 }

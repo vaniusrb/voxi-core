@@ -64,8 +64,12 @@ pub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, Va
 // TODO: change visibility to pub(crate) -> fix unit test that will break
 
 pub use field_attribs::Alignment;
+pub use field_attribs::FieldAttsLimit;
+pub use field_attribs::IntoFieldAttsLimit;
 pub use field_attribs::{FieldAttribs, IntoFieldAttribs};
 pub use fields_attribs::FieldsAttribs;
 pub use fields_attribs::FieldsAttribsBuilder;
+pub use fields_attribs::FieldsAttsLimit;
 pub use fields_attribs::IntoFieldsAttribs;
-pub use value_type_scale::ValueTypeScale;
+pub use value_type_scale::DbValueType;
+pub use value_type_scale::IntoDbValueType;

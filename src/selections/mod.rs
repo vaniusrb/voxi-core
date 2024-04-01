@@ -21,6 +21,7 @@ pub(crate) mod single_select;
 pub(crate) mod string_functions;
 pub(crate) mod table;
 pub(crate) mod table_field;
+pub(crate) mod table_field_alias;
 pub(crate) mod table_name;
 pub(crate) mod tables_names;
 pub(crate) mod to_sql;
@@ -58,6 +59,7 @@ pub use to_sql::ToSQL;
 pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};
 pub use value_select_attrib::{IntoValuesSelectAttribs, ValueSelectAttrib, ValuesSelectAttribs};
 pub use value_where::{IntoValueWhere, ValueWhere};
+pub use values_select::{IntoValuesSelect, ValuesSelect};
 pub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, ValuesWhere};
 
 // TODO: re export other types here
@@ -71,5 +73,6 @@ pub use fields_attribs::FieldsAttribs;
 pub use fields_attribs::FieldsAttribsBuilder;
 pub use fields_attribs::FieldsAttsLimit;
 pub use fields_attribs::IntoFieldsAttribs;
+pub use table_field_alias::TableFieldAlias;
 pub use value_type_scale::DbValueType;
 pub use value_type_scale::IntoDbValueType;

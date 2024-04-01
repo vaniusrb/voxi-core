@@ -18,10 +18,10 @@ use std::fmt;
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Table {
-    name: TableName,
+    pub name: TableName,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(default)]
-    alias: Option<Alias>,
+    pub alias: Option<Alias>,
 }
 
 impl fmt::Display for Table {

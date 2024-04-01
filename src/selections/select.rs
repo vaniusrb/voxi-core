@@ -565,11 +565,7 @@ impl IntoSelect for SingleQuery {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{
-        resolvers::args_resolver_string::ArgsResolverString,
-        selections::{agg_functions::AggFunction, ConditionWhereOperation},
-        IntoFieldName,
-    };
+    use crate::{selections::ConditionWhereOperation, IntoFieldName};
 
     #[test]
     fn test_agg_fun() {

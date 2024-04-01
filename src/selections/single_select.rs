@@ -298,14 +298,11 @@ impl SingleQuery {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{
-        resolvers::args_resolver_string::ArgsResolverString,
-        selections::{
-            condition_where::{ConditionWhere, ConditionWhereOperation},
-            from::QueryAlias,
-            logical_expr_where::LogicalExprWhereOps,
-            table::Table,
-        },
+    use crate::selections::{
+        condition_where::{ConditionWhere, ConditionWhereOperation},
+        from::QueryAlias,
+        logical_expr_where::LogicalExprWhereOps,
+        table::Table,
     };
 
     #[test]

@@ -1,7 +1,12 @@
+use std::fmt;
+
 use super::{
     Alias, IntoTableField, IntoValueSelect, Table, TableField, ToSQL, ValueSelect, ValueWhere,
 };
-use crate::{resolvers::args_resolver::ArgsResolver, FieldName, IntoFieldName};
+use crate::{
+    resolvers::{args_resolver::ArgsResolver, args_resolver_string::ArgsResolverString},
+    FieldName, IntoFieldName,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
@@ -46,5 +51,15 @@ impl IntoFieldName for TableFieldAlias {
 impl ToSQL for TableFieldAlias {
     fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, crate::SQLError> {
         self.clone().into_value_select().to_sql(args_resolver)
+    }
+}
+
+impl fmt::Display for TableFieldAlias {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            self.to_sql(&mut ArgsResolverString::new()).unwrap()
+        )
     }
 }

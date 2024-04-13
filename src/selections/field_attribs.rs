@@ -58,6 +58,11 @@ impl FieldAttsLimit {
         self
     }
 
+    pub fn with_alignment_left(mut self) -> Self {
+        self.alignment = Alignment::Left;
+        self
+    }
+
     pub fn with_alignment_right(mut self) -> Self {
         self.alignment = Alignment::Right;
         self

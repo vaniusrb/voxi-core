@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 /// Cannot contains double quotes.
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Alias {
-    alias: String,
+    pub alias: String,
 }
 
 impl Alias {

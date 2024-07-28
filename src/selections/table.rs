@@ -87,6 +87,14 @@ impl Table {
         }
     }
 
+    #[must_use]
+    pub fn without_alias(self) -> Self {
+        Self {
+            alias: None,
+            ..self
+        }
+    }
+
     /// Get a reference to the table's name.
     /// ```
     /// # use voxi_core::selections::Table;

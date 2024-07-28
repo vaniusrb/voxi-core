@@ -1,4 +1,5 @@
 use super::value_type_scale::{DbValueType, IntoDbValueType};
+use super::ValueSelectName;
 use crate::selections::{IntoTableField, IntoValueSelect, TableField, ValueSelect, ValueWhere};
 use crate::{FieldName, FieldNameType, IntoFieldName, IntoFieldNameType, IntoValueType, ValueType};
 use serde::{Deserialize, Serialize};
@@ -21,9 +22,11 @@ impl Alignment {
 /// Definition for field with name, title, type and nullable attributes
 #[derive(Debug, Serialize, Clone, PartialEq, Eq, Deserialize, Hash)]
 pub struct FieldAttsLimit {
-    pub name: FieldName,
+    #[serde(rename = "flatten")]
+    pub value_select_name: ValueSelectName,
     pub title: String,
-    pub value_select: Option<ValueSelect>,
+    // pub name: FieldName,
+    // pub value_select: Option<ValueSelect>,
     #[serde(rename = "type")]
     #[serde(flatten)]
     pub value_type: DbValueType,
@@ -44,12 +47,14 @@ impl FieldAttsLimit {
         value_select: Option<impl IntoValueSelect>,
     ) -> Self {
         Self {
-            name: name.into_field_name(),
+            value_select_name: ValueSelectName {
+                name: name.into_field_name(),
+                value_select: value_select.map(|vs| vs.into_value_select()),
+            },
             value_type: value_type.into_db_value_type(),
             title: title.to_owned(),
             nullable: true,
             alignment: Default::default(),
-            value_select: value_select.map(|vs| vs.into_value_select()),
         }
     }
 
@@ -87,9 +92,11 @@ impl IntoFieldAttsLimit for FieldAttsLimit {
 impl IntoFieldAttribs for FieldAttsLimit {
     fn into_field_attribs(self) -> FieldAttribs {
         FieldAttribs {
-            name: self.name,
+            value_select_name: ValueSelectName {
+                name: self.value_select_name.name,
+                value_select: self.value_select_name.value_select,
+            },
             title: self.title,
-            value_select: self.value_select,
             value_type: self.value_type.value_type(),
             nullable: self.nullable,
             alignment: self.alignment,
@@ -99,16 +106,20 @@ impl IntoFieldAttribs for FieldAttsLimit {
 
 impl IntoValueSelect for FieldAttsLimit {
     fn into_value_select(self) -> ValueSelect {
-        ValueSelect::new(ValueWhere::FieldName(self.name.into_table_field()))
+        ValueSelect::new(ValueWhere::TableField(
+            self.value_select_name.name.into_table_field(),
+        ))
     }
 }
 
 /// Definition for field with name, title, type and nullable attributes
 #[derive(Debug, Serialize, Clone, PartialEq, Eq, Deserialize, Hash)]
 pub struct FieldAttribs {
-    pub name: FieldName,
+    #[serde(rename = "flatten")]
+    pub value_select_name: ValueSelectName,
+    // pub name: FieldName,
+    // pub value_select: Option<ValueSelect>,
     pub title: String,
-    pub value_select: Option<ValueSelect>,
     #[serde(rename = "type")]
     // #[serde(flatten)]
     pub value_type: ValueType,
@@ -129,12 +140,14 @@ impl FieldAttribs {
         value_select: Option<impl IntoValueSelect>,
     ) -> Self {
         Self {
-            name: name.into_field_name(),
+            value_select_name: ValueSelectName {
+                name: name.into_field_name(),
+                value_select: value_select.map(|vs| vs.into_value_select()),
+            },
             value_type: value_type.value_type(),
             title: title.to_owned(),
             nullable: true,
             alignment: Default::default(),
-            value_select: value_select.map(|vs| vs.into_value_select()),
         }
     }
 
@@ -179,26 +192,28 @@ impl IntoFieldAttribs for &FieldAttribs {
 
 impl IntoValueSelect for FieldAttribs {
     fn into_value_select(self) -> ValueSelect {
-        ValueSelect::new(ValueWhere::FieldName(self.name.into_table_field()))
+        ValueSelect::new(ValueWhere::TableField(
+            self.value_select_name.name.into_table_field(),
+        ))
     }
 }
 
 impl IntoFieldName for FieldAttribs {
     fn into_field_name(self) -> FieldName {
-        self.name
+        self.value_select_name.name
     }
 }
 
 impl IntoTableField for FieldAttribs {
     fn into_table_field(self) -> TableField {
-        TableField::new(self.name)
+        self.value_select_name.into_table_field()
     }
 }
 
 impl IntoFieldNameType for FieldAttribs {
     fn into_field_name_type(self) -> FieldNameType {
         FieldNameType {
-            name: self.name,
+            name: self.value_select_name.name,
             v_type: self.value_type.value_type(),
         }
     }

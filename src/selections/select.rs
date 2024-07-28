@@ -378,7 +378,11 @@ pub struct Select {
     pub binds_values: Vec<(BindName, NullableValue)>,
 }
 
-impl Query for Select {}
+impl Query for Select {
+    fn columns(&self) -> &ValuesSelect {
+        &self.columns
+    }
+}
 
 impl ToSQL for Select {
     fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {

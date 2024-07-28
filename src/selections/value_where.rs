@@ -12,11 +12,11 @@ use crate::IntoNullableValue;
 use crate::{resolvers::args_resolver::ArgsResolver, SQLError};
 use crate::{FieldName, NullableValue};
 use serde::{Deserialize, Serialize};
+use std::fmt;
 
-// TODO: add comment
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum ValueWhere {
-    FieldName(TableField),
+    TableField(TableField),
     LiteralValue(NullableValue),
     Expression(ArithmeticExprWhere),
     BindParameter(BindName),
@@ -27,6 +27,22 @@ pub enum ValueWhere {
     StringFunction(Box<StringFunction>),
 }
 
+impl fmt::Display for ValueWhere {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match &self {
+            ValueWhere::TableField(table_field) => table_field.fmt(f),
+            ValueWhere::LiteralValue(value) => value.fmt(f),
+            ValueWhere::Expression(_) => write!(f, "Expression"),
+            ValueWhere::BindParameter(_) => write!(f, "BindParameter"),
+            ValueWhere::SingleQuery(_) => write!(f, "SingleQuery"),
+            ValueWhere::AggFunction(_) => write!(f, "AggFunction"),
+            ValueWhere::CaseCondition(_) => write!(f, "CaseCondition"),
+            ValueWhere::CaseValue(_) => write!(f, "CaseValue"),
+            ValueWhere::StringFunction(_) => write!(f, "StringFunction"),
+        }
+    }
+}
+
 impl ValueWhere {
     pub fn bind(name: impl IntoBindName) -> ValueWhere {
         ValueWhere::BindParameter(name.into_bind_name())
@@ -34,10 +50,9 @@ impl ValueWhere {
 }
 
 impl ToSQL for ValueWhere {
-    // TODO: add comment
     fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         match self {
-            ValueWhere::FieldName(f) => f.to_sql(args_resolver),
+            ValueWhere::TableField(f) => f.to_sql(args_resolver),
             ValueWhere::LiteralValue(v) => v.to_sql(args_resolver),
             ValueWhere::Expression(e) => e.to_sql(args_resolver),
             ValueWhere::CaseCondition(c) => c.to_sql(args_resolver),
@@ -65,19 +80,19 @@ impl IntoValueWhere for ValueWhere {
 
 impl IntoValueWhere for TableField {
     fn into_value_where(self) -> ValueWhere {
-        ValueWhere::FieldName(self)
+        ValueWhere::TableField(self)
     }
 }
 
 impl IntoValueWhere for &TableField {
     fn into_value_where(self) -> ValueWhere {
-        ValueWhere::FieldName(self.clone())
+        ValueWhere::TableField(self.clone())
     }
 }
 
 impl IntoValueWhere for &FieldName {
     fn into_value_where(self) -> ValueWhere {
-        ValueWhere::FieldName(TableField {
+        ValueWhere::TableField(TableField {
             table: None,
             field_name: self.clone(),
         })
@@ -86,7 +101,7 @@ impl IntoValueWhere for &FieldName {
 
 impl IntoValueWhere for FieldName {
     fn into_value_where(self) -> ValueWhere {
-        ValueWhere::FieldName(TableField {
+        ValueWhere::TableField(TableField {
             table: None,
             field_name: self,
         })
@@ -154,7 +169,7 @@ mod tests {
         let value = TableField::new("FIELD".to_string()).into_value_where();
         assert_eq!(
             value,
-            ValueWhere::FieldName(TableField::new("FIELD".to_string()))
+            ValueWhere::TableField(TableField::new("FIELD".to_string()))
         );
     }
 
@@ -163,7 +178,7 @@ mod tests {
         let value = FieldName::new("FIELD".to_string()).into_value_where();
         assert_eq!(
             value,
-            ValueWhere::FieldName(FieldName::new("FIELD".to_string()).into_table_field())
+            ValueWhere::TableField(FieldName::new("FIELD".to_string()).into_table_field())
         );
     }
 

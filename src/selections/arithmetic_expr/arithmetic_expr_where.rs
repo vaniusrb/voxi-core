@@ -15,7 +15,7 @@ use serde::{Deserialize, Serialize};
 /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
 /// # use voxi_core::selections::ArithmeticExprWhere;
 /// let op = ArithmeticExprWhere::add(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
-/// assert_eq!(args_to_str(op).unwrap(), r#""FIELD_A" + "FIELD_B""#)
+/// assert_eq!(args_to_str(&op).unwrap(), r#""FIELD_A" + "FIELD_B""#)
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum ArithmeticExprWhere {
@@ -35,7 +35,7 @@ impl ArithmeticExprWhere {
     /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// # use voxi_core::selections::ArithmeticExprWhere;
     /// let op = ArithmeticExprWhere::add(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
-    /// assert_eq!(args_to_str(op).unwrap(), r#""FIELD_A" + "FIELD_B""#)
+    /// assert_eq!(args_to_str(&op).unwrap(), r#""FIELD_A" + "FIELD_B""#)
     /// ```
     pub fn add(
         a: impl IntoArithmeticExprWhere,
@@ -53,7 +53,7 @@ impl ArithmeticExprWhere {
     /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// # use voxi_core::selections::ArithmeticExprWhere;
     /// let op = ArithmeticExprWhere::subtract(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
-    /// assert_eq!(args_to_str(op).unwrap(), r#""FIELD_A" - "FIELD_B""#)
+    /// assert_eq!(args_to_str(&op).unwrap(), r#""FIELD_A" - "FIELD_B""#)
     /// ```
     pub fn subtract(
         a: impl IntoArithmeticExprWhere,
@@ -71,7 +71,7 @@ impl ArithmeticExprWhere {
     /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// # use voxi_core::selections::ArithmeticExprWhere;
     /// let op = ArithmeticExprWhere::multiply(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
-    /// assert_eq!(args_to_str(op).unwrap(), r#""FIELD_A" * "FIELD_B""#)
+    /// assert_eq!(args_to_str(&op).unwrap(), r#""FIELD_A" * "FIELD_B""#)
     /// ```
     pub fn multiply(
         a: impl IntoArithmeticExprWhere,
@@ -89,7 +89,7 @@ impl ArithmeticExprWhere {
     /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// # use voxi_core::selections::ArithmeticExprWhere;
     /// let op = ArithmeticExprWhere::divide(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
-    /// assert_eq!(args_to_str(op).unwrap(), r#""FIELD_A" / "FIELD_B""#)
+    /// assert_eq!(args_to_str(&op).unwrap(), r#""FIELD_A" / "FIELD_B""#)
     /// ```
     pub fn divide(
         a: impl IntoArithmeticExprWhere,
@@ -108,9 +108,9 @@ impl ArithmeticExprWhere {
     /// # use voxi_core::selections::ArithmeticExprWhere;
     /// let add = ArithmeticExprWhere::add(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
     /// let exp = ArithmeticExprWhere::expression(add);
-    /// assert_eq!(args_to_str(exp.clone()).unwrap(),String::from(r#"("FIELD_A" + "FIELD_B")"#));
+    /// assert_eq!(args_to_str(&exp.clone()).unwrap(),String::from(r#"("FIELD_A" + "FIELD_B")"#));
     /// let div = ArithmeticExprWhere::divide(exp, TableField::new("FIELD_C"));
-    /// assert_eq!(args_to_str(div).unwrap(), String::from(r#"("FIELD_A" + "FIELD_B") / "FIELD_C""#));
+    /// assert_eq!(args_to_str(&div).unwrap(), String::from(r#"("FIELD_A" + "FIELD_B") / "FIELD_C""#));
     /// ```
     pub fn expression(a: impl IntoArithmeticExprWhere) -> ArithmeticExprWhere {
         ArithmeticExprWhere::Expression(a.into_arithmetic_expr_where().boxed())
@@ -192,7 +192,7 @@ impl IntoArithmeticExprWhere for i64 {
 
 impl IntoArithmeticExprWhere for FieldName {
     fn into_arithmetic_expr_where(self) -> ArithmeticExprWhere {
-        let v = ValueWhere::FieldName(TableField {
+        let v = ValueWhere::TableField(TableField {
             table: None,
             field_name: self,
         });
@@ -201,7 +201,7 @@ impl IntoArithmeticExprWhere for FieldName {
 }
 impl IntoArithmeticExprWhere for TableField {
     fn into_arithmetic_expr_where(self) -> ArithmeticExprWhere {
-        let v = ValueWhere::FieldName(self);
+        let v = ValueWhere::TableField(self);
         ArithmeticExprWhere::ValueWhere(Box::new(v))
     }
 }
@@ -230,7 +230,7 @@ mod tests {
             .exp()
             .and(price.equal(1000 + discount));
 
-        let sql = args_to_str(log_expr).unwrap();
+        let sql = args_to_str(&log_expr).unwrap();
         assert_eq!(
             sql,
             r#"("SYMBOL"."id" = 1 OR "SYMBOL"."name" IN ('USD','BRL')) AND "SYMBOL"."price" = 1000 + "SYMBOL"."discount""#
@@ -304,28 +304,28 @@ mod test_sql {
     #[test]
     fn test_arithmetic_add() {
         let op = ArithmeticExprWhere::add(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
-        assert_eq!(args_to_str(op).unwrap(), r#""FIELD_A" + "FIELD_B""#)
+        assert_eq!(args_to_str(&op).unwrap(), r#""FIELD_A" + "FIELD_B""#)
     }
 
     #[test]
     fn test_arithmetic_subtract() {
         let op =
             ArithmeticExprWhere::subtract(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
-        assert_eq!(args_to_str(op).unwrap(), r#""FIELD_A" - "FIELD_B""#)
+        assert_eq!(args_to_str(&op).unwrap(), r#""FIELD_A" - "FIELD_B""#)
     }
 
     #[test]
     fn test_arithmetic_multiply() {
         let op =
             ArithmeticExprWhere::multiply(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
-        assert_eq!(args_to_str(op).unwrap(), r#""FIELD_A" * "FIELD_B""#)
+        assert_eq!(args_to_str(&op).unwrap(), r#""FIELD_A" * "FIELD_B""#)
     }
 
     #[test]
     fn test_arithmetic_divide() {
         let op =
             ArithmeticExprWhere::divide(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
-        assert_eq!(args_to_str(op).unwrap(), r#""FIELD_A" / "FIELD_B""#)
+        assert_eq!(args_to_str(&op).unwrap(), r#""FIELD_A" / "FIELD_B""#)
     }
 
     #[test]
@@ -333,13 +333,13 @@ mod test_sql {
         let add = ArithmeticExprWhere::add(TableField::new("FIELD_A"), TableField::new("FIELD_B"));
         let exp = ArithmeticExprWhere::expression(add);
         assert_eq!(
-            args_to_str(exp.clone()).unwrap(),
+            args_to_str(&exp.clone()).unwrap(),
             r#"("FIELD_A" + "FIELD_B")"#
         );
 
         let div = ArithmeticExprWhere::divide(exp, TableField::new("FIELD_C"));
         assert_eq!(
-            args_to_str(div).unwrap(),
+            args_to_str(&div).unwrap(),
             r#"("FIELD_A" + "FIELD_B") / "FIELD_C""#
         )
     }

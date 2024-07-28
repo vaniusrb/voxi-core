@@ -1,4 +1,4 @@
-use super::{FieldAttribs, IntoFieldAttribs, IntoFieldAttsLimit};
+use super::{FieldAttribs, IntoFieldAttribs, IntoFieldAttsLimit, ValueSelectName};
 use crate::selections::FieldAttsLimit;
 use crate::{
     resolvers::args_resolver::ArgsResolver,
@@ -42,12 +42,14 @@ impl FieldsAttribsBuilder {
         nullable: bool,
     ) {
         let value_attrib = FieldAttribs {
-            name: name.into_field_name(),
+            value_select_name: ValueSelectName {
+                name: name.into_field_name(),
+                value_select: value_select.map(|vs| vs.into_value_select()),
+            },
             value_type: ValueType::String,
             title: title.to_owned(),
             nullable,
             alignment: Default::default(),
-            value_select: value_select.map(|vs| vs.into_value_select()),
         };
         self.fields_attribs.push(value_attrib);
     }
@@ -60,12 +62,14 @@ impl FieldsAttribsBuilder {
         nullable: bool,
     ) {
         let value_attrib = FieldAttribs {
-            name: name.into_field_name(),
+            value_select_name: ValueSelectName {
+                name: name.into_field_name(),
+                value_select: value_select.map(|vs| vs.into_value_select()),
+            },
             value_type: ValueType::Decimal,
             title: title.to_owned(),
             nullable,
             alignment: Default::default(),
-            value_select: value_select.map(|vs| vs.into_value_select()),
         };
         self.fields_attribs.push(value_attrib);
     }
@@ -78,12 +82,14 @@ impl FieldsAttribsBuilder {
         nullable: bool,
     ) {
         let value_attrib = FieldAttribs {
-            name: name.into_field_name(),
+            value_select_name: ValueSelectName {
+                name: name.into_field_name(),
+                value_select: value_select.map(|vs| vs.into_value_select()),
+            },
             value_type: ValueType::Date,
             title: title.to_owned(),
             nullable,
             alignment: Default::default(),
-            value_select: value_select.map(|vs| vs.into_value_select()),
         };
         self.fields_attribs.push(value_attrib);
     }
@@ -96,12 +102,14 @@ impl FieldsAttribsBuilder {
         nullable: bool,
     ) {
         let value_attrib = FieldAttribs {
-            name: name.into_field_name(),
+            value_select_name: ValueSelectName {
+                name: name.into_field_name(),
+                value_select: value_select.map(|vs| vs.into_value_select()),
+            },
             value_type: ValueType::DateTime,
             title: title.to_owned(),
             nullable,
             alignment: Default::default(),
-            value_select: value_select.map(|vs| vs.into_value_select()),
         };
         self.fields_attribs.push(value_attrib);
     }
@@ -114,12 +122,14 @@ impl FieldsAttribsBuilder {
         nullable: bool,
     ) {
         let value_attrib = FieldAttribs {
-            name: name.into_field_name(),
+            value_select_name: ValueSelectName {
+                name: name.into_field_name(),
+                value_select: value_select.map(|vs| vs.into_value_select()),
+            },
             value_type: ValueType::Json,
             title: title.to_owned(),
             nullable,
             alignment: Default::default(),
-            value_select: value_select.map(|vs| vs.into_value_select()),
         };
         self.fields_attribs.push(value_attrib);
     }
@@ -133,12 +143,14 @@ impl FieldsAttribsBuilder {
         nullable: bool,
     ) {
         let value_attrib = FieldAttribs {
-            name: name.into_field_name(),
+            value_select_name: ValueSelectName {
+                name: name.into_field_name(),
+                value_select: value_select.map(|vs| vs.into_value_select()),
+            },
             value_type: value_type.value_type(),
             title: title.to_owned(),
             nullable,
             alignment: Default::default(),
-            value_select: value_select.map(|vs| vs.into_value_select()),
         };
         self.fields_attribs.push(value_attrib);
     }
@@ -152,12 +164,14 @@ impl FieldsAttribsBuilder {
         nullable: bool,
     ) -> Self {
         let value_attrib = FieldAttribs {
-            name: name.into_field_name(),
+            value_select_name: ValueSelectName {
+                name: name.into_field_name(),
+                value_select: value_select.map(|vs| vs.into_value_select()),
+            },
             value_type: value_type.value_type(),
             title: title.to_owned(),
             nullable,
             alignment: Default::default(),
-            value_select: value_select.map(|vs| vs.into_value_select()),
         };
         self.fields_attribs.push(value_attrib);
         self
@@ -216,9 +230,9 @@ impl FieldsAttsLimit {
             .map(|a| {
                 ValueSelectAttrib::new(
                     a.value_type,
-                    &a.name.to_string(),
+                    a.value_select_name.name.as_ref(),
                     &a.title,
-                    TableField::from(table, a.name.clone()),
+                    TableField::from(table, a.value_select_name.name.clone()),
                 )
             })
             .collect::<Vec<_>>();
@@ -233,33 +247,25 @@ pub struct FieldsAttribs {
 }
 
 impl FieldsAttribs {
+    pub fn new(fields_attribs: impl IntoVecFieldAttribs) -> Self {
+        let fields_attribs = fields_attribs.into_vec_field_attribs();
+
+        for fa in &fields_attribs {
+            if let Some(value_select) = &fa.value_select_name.value_select {
+                if let super::ValueWhere::LiteralValue(literal) = &value_select.value_where {
+                    panic!("FieldAttrib with LiteralValue {literal:?}");
+                }
+            }
+        }
+        Self { fields_attribs }
+    }
+
     pub fn len(&self) -> usize {
         self.fields_attribs.len()
     }
 
     pub fn is_empty(&self) -> bool {
         self.fields_attribs.is_empty()
-    }
-}
-
-pub trait IntoVecFieldAttribs {
-    fn into_vec_field_attribs(self) -> Vec<FieldAttribs>;
-}
-
-impl<F> IntoVecFieldAttribs for Vec<F>
-where
-    F: IntoFieldAttribs,
-{
-    fn into_vec_field_attribs(self) -> Vec<FieldAttribs> {
-        self.into_iter().map(|fa| fa.into_field_attribs()).collect()
-    }
-}
-
-impl FieldsAttribs {
-    pub fn new(fields_attribs: impl IntoVecFieldAttribs) -> Self {
-        Self {
-            fields_attribs: fields_attribs.into_vec_field_attribs(),
-        }
     }
 
     pub fn empty() -> Self {
@@ -290,7 +296,7 @@ impl FieldsAttribs {
         let name = name.into_field_name();
         self.fields_attribs
             .iter()
-            .find(|f| f.name == name)
+            .find(|f| f.value_select_name.name == name)
             .cloned()
             .ok_or_else(|| {
                 let fields = self
@@ -315,13 +321,26 @@ impl FieldsAttribs {
     }
 }
 
+pub trait IntoVecFieldAttribs {
+    fn into_vec_field_attribs(self) -> Vec<FieldAttribs>;
+}
+
+impl<F> IntoVecFieldAttribs for Vec<F>
+where
+    F: IntoFieldAttribs,
+{
+    fn into_vec_field_attribs(self) -> Vec<FieldAttribs> {
+        self.into_iter().map(|fa| fa.into_field_attribs()).collect()
+    }
+}
+
 impl ToSQL for FieldsAttribs {
     fn to_sql(&self, _args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
         let sql = self
             .to_vec()
             .iter()
             // FIXME: put between quotes
-            .map(|f| f.name.to_string())
+            .map(|f| f.value_select_name.name.to_string())
             .collect::<Vec<_>>()
             .join(", ");
         Ok(sql)
@@ -373,7 +392,7 @@ impl IntoTablesField for FieldsAttribs {
         self.into_fields_attribs()
             .to_vec()
             .into_iter()
-            .map(|f| f.name.into_table_field())
+            .map(|f| f.value_select_name.name.into_table_field())
             .collect::<Vec<_>>()
     }
 }

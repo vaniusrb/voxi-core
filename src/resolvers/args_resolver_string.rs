@@ -1,9 +1,8 @@
-use crate::NullableValue;
-
 use super::args_resolver::ArgsResolver;
+use crate::NullableValue;
 use crate::{selections::to_sql::ToSQL, SQLError};
 
-// TODO: add comment
+/// SQL arguments (binds) expander to String (simple replace, without using database bindings), useful for debug.
 pub struct ArgsResolverString {}
 
 impl ArgsResolverString {
@@ -37,9 +36,9 @@ impl ArgsResolver for ArgsResolverString {
 /// # use voxi_core::selections::ConditionWhere;
 /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
 /// let c1 = ConditionWhere::eq("TEXT_1", "TEXT_2");
-/// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' = 'TEXT_2'"#);
+/// assert_eq!(args_to_str(&c1).unwrap(), r#"'TEXT_1' = 'TEXT_2'"#);
 /// ```
-pub fn args_to_str(to_sql: impl ToSQL) -> Result<String, SQLError> {
+pub fn args_to_str(to_sql: &impl ToSQL) -> Result<String, SQLError> {
     to_sql.to_sql(&mut ArgsResolverString::new())
 }
 

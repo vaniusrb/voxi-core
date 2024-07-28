@@ -1,6 +1,7 @@
 use crate::validate_double_quotes;
 use core::fmt;
 use serde::{Deserialize, Serialize};
+use std::borrow::Cow;
 
 /// `FieldName` represents a definition for field name
 /// ```
@@ -9,6 +10,52 @@ use serde::{Deserialize, Serialize};
 /// ```
 #[derive(Serialize, Deserialize, Default, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct FieldName(pub String);
+
+pub trait IntoCowFieldName<'a> {
+    fn into_cow_field_name(self) -> Cow<'a, FieldName>;
+}
+
+impl<'a> IntoCowFieldName<'a> for &str {
+    fn into_cow_field_name(self) -> Cow<'a, FieldName> {
+        Cow::Owned(FieldName(self.to_string()))
+    }
+}
+
+impl<'a> IntoCowFieldName<'a> for &String {
+    fn into_cow_field_name(self) -> Cow<'a, FieldName> {
+        Cow::Owned(FieldName(self.to_owned()))
+    }
+}
+
+impl<'a> IntoCowFieldName<'a> for String {
+    fn into_cow_field_name(self) -> Cow<'a, FieldName> {
+        Cow::Owned(FieldName(self))
+    }
+}
+
+impl<'a> IntoCowFieldName<'a> for &'a FieldName {
+    fn into_cow_field_name(self) -> Cow<'a, FieldName> {
+        Cow::Borrowed(self)
+    }
+}
+
+impl<'a> IntoCowFieldName<'a> for FieldName {
+    fn into_cow_field_name(self) -> Cow<'a, FieldName> {
+        Cow::Owned(self)
+    }
+}
+
+impl AsRef<FieldName> for FieldName {
+    fn as_ref(&self) -> &FieldName {
+        self
+    }
+}
+
+impl AsRef<str> for FieldName {
+    fn as_ref(&self) -> &str {
+        &self.0
+    }
+}
 
 impl From<String> for FieldName {
     fn from(value: String) -> Self {
@@ -100,7 +147,22 @@ impl PartialEq<FieldName> for str {
 
 #[cfg(test)]
 mod tests {
+    use std::borrow::Borrow;
+
     use super::*;
+
+    #[test]
+    fn cow_field_test() {
+        fn receives_field_name<'a>(field_name: impl IntoCowFieldName<'a>) {
+            let cow: Cow<'a, FieldName> = field_name.into_cow_field_name();
+            let field_name: &FieldName = cow.borrow();
+            println!("field name: {field_name}");
+        }
+
+        let field_name = FieldName("foo".into());
+        receives_field_name(&field_name);
+        receives_field_name(field_name);
+    }
 
     #[test]
     fn test_field_name_new() {

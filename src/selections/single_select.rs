@@ -14,7 +14,7 @@ use super::{
     to_sql::ToSQL,
     value_select::{IntoValueSelect, ValueSelect},
     value_where::IntoValueWhere,
-    IntoSelect, LimitOffset, Query,
+    IntoSelect, LimitOffset, Query, ValuesSelect,
 };
 use crate::{
     resolvers::{args_resolver::ArgsResolver, args_resolver_string::ArgsResolverString},
@@ -260,7 +260,11 @@ impl ToSQL for SingleQuery {
         self.query.to_sql(args_resolver)
     }
 }
-impl Query for SingleQuery {}
+impl Query for SingleQuery {
+    fn columns(&self) -> &ValuesSelect {
+        self.query.columns()
+    }
+}
 
 impl fmt::Display for SingleQuery {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -422,7 +426,7 @@ mod tests {
         use crate::resolvers::args_resolver_string::args_to_str;
         let query = SingleSelectBuilder::avg("ID").from("TABLE").build();
         assert_eq!(
-            args_to_str(query).unwrap(),
+            args_to_str(&query).unwrap(),
             r#"SELECT AVG("ID") FROM "TABLE""#
         );
     }

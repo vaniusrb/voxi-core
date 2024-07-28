@@ -59,6 +59,16 @@ impl TableField {
         self.table = Some(table.into_table());
         self
     }
+
+    pub fn with_table_opt(mut self, table: Option<impl IntoTable>) -> Self {
+        self.table = table.map(|t| t.into_table());
+        self
+    }
+
+    pub fn with_table_without_alias(mut self) -> Self {
+        self.table = self.table.map(|t| t.without_alias());
+        self
+    }
 }
 
 impl fmt::Display for TableField {

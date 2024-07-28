@@ -1,17 +1,13 @@
 use super::{
-    agg_functions::AggFunction,
     alias::{Alias, IntoAlias},
-    case::{case_condition::CaseCondition, case_value::CaseValue},
-    single_select::SingleQuery,
-    table_field::TableField,
     table_name::TableName,
     tables_names::TablesNames,
     to_sql::ToSQL,
     value_where::ValueWhere,
-    ArithmeticExprWhere, IntoValueWhere,
+    IntoValueWhere,
 };
+use crate::FieldName;
 use crate::{resolvers::args_resolver::ArgsResolver, IntoFieldName, SQLError};
-use crate::{FieldName, NullableValue};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
@@ -36,7 +32,7 @@ impl ValueSelect {
                 ValueWhere::LiteralValue(field_name) => {
                     Some(field_name.to_string().into_field_name())
                 }
-                ValueWhere::FieldName(field_name) => Some(field_name.clone().into_field_name()),
+                ValueWhere::TableField(field_name) => Some(field_name.clone().into_field_name()),
                 _ => None,
             },
         }
@@ -67,16 +63,16 @@ impl ValueSelect {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
-pub enum ValueSelectType {
-    LiteralValue(NullableValue),
-    FieldName(TableField),
-    Expression(ArithmeticExprWhere),
-    SingleQuery(SingleQuery),
-    AggFunction(AggFunction),
-    CaseCondition(Box<CaseCondition>),
-    CaseValue(Box<CaseValue>),
-}
+// #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+// pub enum ValueSelectType {
+//     TableField(TableField),
+//     LiteralValue(NullableValue),
+//     Expression(ArithmeticExprWhere),
+//     SingleQuery(SingleQuery),
+//     AggFunction(AggFunction),
+//     CaseCondition(Box<CaseCondition>),
+//     CaseValue(Box<CaseValue>),
+// }
 
 pub trait IntoValueSelect {
     fn into_value_select(self) -> ValueSelect;

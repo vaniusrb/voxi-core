@@ -18,6 +18,7 @@ pub mod value_naive_date_time;
 pub mod value_string;
 pub mod value_type;
 pub mod value_uuid;
+mod table_field_type;
 
 pub use field_name::{FieldName, IntoFieldName};
 pub use field_name_type::FieldNameType;

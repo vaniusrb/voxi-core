@@ -194,7 +194,7 @@ mod tests {
         let cond_a = field_a.equal(field_b);
         let log_expr = LogicalExprWhere::condition(cond_a);
 
-        assert_eq!(args_to_str(log_expr).unwrap(), r#""FIELD_A" = "FIELD_B""#);
+        assert_eq!(args_to_str(&log_expr).unwrap(), r#""FIELD_A" = "FIELD_B""#);
     }
 
     #[test]
@@ -205,7 +205,7 @@ mod tests {
         let log_expr = cond_a.not();
 
         assert_eq!(
-            args_to_str(log_expr).unwrap(),
+            args_to_str(&log_expr).unwrap(),
             r#"NOT "FIELD_A" = "FIELD_B""#
         );
     }
@@ -217,7 +217,10 @@ mod tests {
         let cond_a = field_a.equal(field_b);
         let log_expr = cond_a.exp();
 
-        assert_eq!(args_to_str(log_expr).unwrap(), r#"("FIELD_A" = "FIELD_B")"#);
+        assert_eq!(
+            args_to_str(&log_expr).unwrap(),
+            r#"("FIELD_A" = "FIELD_B")"#
+        );
     }
 
     #[test]
@@ -230,7 +233,7 @@ mod tests {
         let log_expr = cond_a.and(cond_b);
 
         assert_eq!(
-            args_to_str(log_expr).unwrap(),
+            args_to_str(&log_expr).unwrap(),
             r#""FIELD_A" = "FIELD_B" AND "FIELD_B" = "FIELD_C""#
         );
     }
@@ -245,7 +248,7 @@ mod tests {
         let log_expr = cond_a.or(cond_b);
 
         assert_eq!(
-            args_to_str(log_expr).unwrap(),
+            args_to_str(&log_expr).unwrap(),
             r#""FIELD_A" = "FIELD_B" OR "FIELD_B" = "FIELD_C""#
         );
     }

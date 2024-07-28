@@ -176,7 +176,7 @@ impl ConditionWhere {
     /// # use voxi_core::selections::ConditionWhere;
     /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::eq("TEXT_1", "TEXT_2");
-    /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' = 'TEXT_2'"#);
+    /// assert_eq!(args_to_str(&c1).unwrap(), r#"'TEXT_1' = 'TEXT_2'"#);
     /// ```
     pub fn eq(
         value_where_a: impl IntoValueWhere,
@@ -194,7 +194,7 @@ impl ConditionWhere {
     /// # use voxi_core::selections::ConditionWhere;
     /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::df("TEXT_1", "TEXT_2");
-    /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' <> 'TEXT_2'"#);
+    /// assert_eq!(args_to_str(&c1).unwrap(), r#"'TEXT_1' <> 'TEXT_2'"#);
     /// ```
     pub fn df(
         value_where_a: impl IntoValueWhere,
@@ -212,7 +212,7 @@ impl ConditionWhere {
     /// # use voxi_core::selections::ConditionWhere;
     /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::gt("TEXT_1", "TEXT_2");
-    /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' > 'TEXT_2'"#);
+    /// assert_eq!(args_to_str(&c1).unwrap(), r#"'TEXT_1' > 'TEXT_2'"#);
     /// ```
     pub fn gt(
         value_where_a: impl IntoValueWhere,
@@ -230,7 +230,7 @@ impl ConditionWhere {
     /// # use voxi_core::selections::ConditionWhere;
     /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::ge("TEXT_1", "TEXT_2");
-    /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' >= 'TEXT_2'"#);
+    /// assert_eq!(args_to_str(&c1).unwrap(), r#"'TEXT_1' >= 'TEXT_2'"#);
     /// ```
     pub fn ge(
         value_where_a: impl IntoValueWhere,
@@ -249,7 +249,7 @@ impl ConditionWhere {
     /// # use voxi_core::selections::ConditionWhere;
     /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::ge("TEXT_1", "TEXT_2");
-    /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' >= 'TEXT_2'"#);
+    /// assert_eq!(args_to_str(&c1).unwrap(), r#"'TEXT_1' >= 'TEXT_2'"#);
     /// ```
     pub fn ls(
         value_where_a: impl IntoValueWhere,
@@ -267,7 +267,7 @@ impl ConditionWhere {
     /// # use voxi_core::selections::ConditionWhere;
     /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::le("TEXT_1", "TEXT_2");
-    /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' <= 'TEXT_2'"#);
+    /// assert_eq!(args_to_str(&c1).unwrap(), r#"'TEXT_1' <= 'TEXT_2'"#);
     /// ```
     pub fn le(
         value_where_a: impl IntoValueWhere,
@@ -285,7 +285,7 @@ impl ConditionWhere {
     /// # use voxi_core::selections::ConditionWhere;
     /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::inc("TEXT_1", vec!["TEXT_2", "TEXT_3"]);
-    /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' IN ('TEXT_2','TEXT_3')"#);
+    /// assert_eq!(args_to_str(&c1).unwrap(), r#"'TEXT_1' IN ('TEXT_2','TEXT_3')"#);
     /// ```
     pub fn inc(
         value_where_a: impl IntoValueWhere,
@@ -301,7 +301,7 @@ impl ConditionWhere {
     /// # use voxi_core::selections::ConditionWhere;
     /// # use voxi_core::resolvers::args_resolver_string::args_to_str;
     /// let c1 = ConditionWhere::like("TEXT_1", "TEXT%");
-    /// assert_eq!(args_to_str(c1).unwrap(), r#"'TEXT_1' LIKE 'TEXT%'"#);
+    /// assert_eq!(args_to_str(&c1).unwrap(), r#"'TEXT_1' LIKE 'TEXT%'"#);
     /// ```
     pub fn like(
         value_where_a: impl IntoValueWhere,
@@ -518,7 +518,7 @@ mod tests {
             cond,
             ConditionWhere::ConditionEq(id.into_value_where(), 1.into_value_where())
         );
-        assert_eq!(args_to_str(cond).unwrap(), r#""SYMBOL"."id" = 1"#);
+        assert_eq!(args_to_str(&cond).unwrap(), r#""SYMBOL"."id" = 1"#);
     }
 
     #[test]
@@ -529,7 +529,7 @@ mod tests {
             cond,
             ConditionWhere::ConditionDf(id.into_value_where(), 1.into_value_where())
         );
-        assert_eq!(args_to_str(cond).unwrap(), r#""SYMBOL"."id" <> 1"#);
+        assert_eq!(args_to_str(&cond).unwrap(), r#""SYMBOL"."id" <> 1"#);
     }
 
     #[test]
@@ -540,7 +540,7 @@ mod tests {
             cond,
             ConditionWhere::ConditionGt(id.into_value_where(), 1.into_value_where())
         );
-        assert_eq!(args_to_str(cond).unwrap(), r#""SYMBOL"."id" > 1"#);
+        assert_eq!(args_to_str(&cond).unwrap(), r#""SYMBOL"."id" > 1"#);
     }
 
     #[test]
@@ -551,7 +551,7 @@ mod tests {
             cond,
             ConditionWhere::ConditionLs(id.into_value_where(), 1.into_value_where())
         );
-        assert_eq!(args_to_str(cond).unwrap(), r#""SYMBOL"."id" < 1"#);
+        assert_eq!(args_to_str(&cond).unwrap(), r#""SYMBOL"."id" < 1"#);
     }
 
     #[test]
@@ -562,7 +562,7 @@ mod tests {
             cond,
             ConditionWhere::ConditionGe(id.into_value_where(), 1.into_value_where())
         );
-        assert_eq!(args_to_str(cond).unwrap(), r#""SYMBOL"."id" >= 1"#);
+        assert_eq!(args_to_str(&cond).unwrap(), r#""SYMBOL"."id" >= 1"#);
     }
 
     #[test]
@@ -573,7 +573,7 @@ mod tests {
             cond,
             ConditionWhere::ConditionLe(id.into_value_where(), 1.into_value_where())
         );
-        assert_eq!(args_to_str(cond).unwrap(), r#""SYMBOL"."id" <= 1"#);
+        assert_eq!(args_to_str(&cond).unwrap(), r#""SYMBOL"."id" <= 1"#);
     }
 
     #[test]
@@ -592,6 +592,6 @@ mod tests {
                 .into_values()
             )
         );
-        assert_eq!(args_to_str(cond).unwrap(), r#""SYMBOL"."id" IN (1,2,3)"#);
+        assert_eq!(args_to_str(&cond).unwrap(), r#""SYMBOL"."id" IN (1,2,3)"#);
     }
 }

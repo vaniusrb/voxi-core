@@ -68,7 +68,7 @@ impl TablesNames for ValueWhere {
     fn tables_names(&self) -> HashSet<&TableName> {
         match self {
             ValueWhere::LiteralValue(_) => HashSet::default(),
-            ValueWhere::FieldName(t) => t.table.iter().map(|f| f.name()).collect(),
+            ValueWhere::TableField(t) => t.table.iter().map(|f| f.name()).collect(),
             // TODO: implement!
             ValueWhere::Expression(_) => HashSet::default(),
             ValueWhere::BindParameter(_) => HashSet::default(),

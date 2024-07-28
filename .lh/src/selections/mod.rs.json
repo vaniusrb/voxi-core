@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 18,
+            "activePatchIndex": 40,
             "patches": [
                 {
                     "date": 1699723408912,
@@ -80,6 +80,94 @@
                 {
                     "date": 1708815187664,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -68,8 +68,8 @@\n pub use field_attribs::IntoFieldAttsLimit;\n pub use field_attribs::{FieldAttribs, IntoFieldAttribs};\n pub use fields_attribs::FieldsAttribs;\n pub use fields_attribs::FieldsAttribsBuilder;\n+pub use fields_attribs::FieldsAttsLimit;\n pub use fields_attribs::IntoFieldsAttribs;\n pub use value_type_scale::DbValueType;\n pub use value_type_scale::IntoDbValueType;\n\\ No newline at end of file\n-FieldsAttsLimit\n"
+                },
+                {
+                    "date": 1711743296594,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -29,8 +29,9 @@\n pub(crate) mod value_type_scale;\n pub(crate) mod value_where;\n pub(crate) mod values_select;\n pub(crate) mod values_where;\n+pub mod table_field_alias;\n \n pub use agg_functions::{AggFunction, AggFunctionType};\n pub use alias::{Alias, IntoAlias};\n pub use arithmetic_expr::arithmetic_expr_where::{ArithmeticExprWhere, IntoArithmeticExprWhere};\n@@ -71,5 +72,5 @@\n pub use fields_attribs::FieldsAttribsBuilder;\n pub use fields_attribs::FieldsAttsLimit;\n pub use fields_attribs::IntoFieldsAttribs;\n pub use value_type_scale::DbValueType;\n-pub use value_type_scale::IntoDbValueType;\n\\ No newline at end of file\n+pub use value_type_scale::IntoDbValueType;\n"
+                },
+                {
+                    "date": 1711743613909,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,8 +20,9 @@\n pub(crate) mod single_select;\n pub(crate) mod string_functions;\n pub(crate) mod table;\n pub(crate) mod table_field;\n+pub mod table_field_alias;\n pub(crate) mod table_name;\n pub(crate) mod tables_names;\n pub(crate) mod to_sql;\n pub(crate) mod value_select;\n@@ -29,9 +30,8 @@\n pub(crate) mod value_type_scale;\n pub(crate) mod value_where;\n pub(crate) mod values_select;\n pub(crate) mod values_where;\n-pub mod table_field_alias;\n \n pub use agg_functions::{AggFunction, AggFunctionType};\n pub use alias::{Alias, IntoAlias};\n pub use arithmetic_expr::arithmetic_expr_where::{ArithmeticExprWhere, IntoArithmeticExprWhere};\n@@ -71,6 +71,7 @@\n pub use fields_attribs::FieldsAttribs;\n pub use fields_attribs::FieldsAttribsBuilder;\n pub use fields_attribs::FieldsAttsLimit;\n pub use fields_attribs::IntoFieldsAttribs;\n+pub use table_field_alias::TableFieldAlias;\n pub use value_type_scale::DbValueType;\n pub use value_type_scale::IntoDbValueType;\n"
+                },
+                {
+                    "date": 1711810334195,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -55,9 +55,9 @@\n pub use table_field::{IntoTableField, TableField};\n pub use table_name::{IntoTableName, TableName};\n pub use tables_names::TablesNames;\n pub use to_sql::ToSQL;\n-pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};\n+pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType, ValuesSelect};\n pub use value_select_attrib::{IntoValuesSelectAttribs, ValueSelectAttrib, ValuesSelectAttribs};\n pub use value_where::{IntoValueWhere, ValueWhere};\n pub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, ValuesWhere};\n \n"
+                },
+                {
+                    "date": 1711810345246,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -55,9 +55,9 @@\n pub use table_field::{IntoTableField, TableField};\n pub use table_name::{IntoTableName, TableName};\n pub use tables_names::TablesNames;\n pub use to_sql::ToSQL;\n-pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType, ValuesSelect};\n+pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};\n pub use value_select_attrib::{IntoValuesSelectAttribs, ValueSelectAttrib, ValuesSelectAttribs};\n pub use value_where::{IntoValueWhere, ValueWhere};\n pub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, ValuesWhere};\n \n"
+                },
+                {
+                    "date": 1711810419380,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -57,8 +57,9 @@\n pub use tables_names::TablesNames;\n pub use to_sql::ToSQL;\n pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};\n pub use value_select_attrib::{IntoValuesSelectAttribs, ValueSelectAttrib, ValuesSelectAttribs};\n+\n pub use value_where::{IntoValueWhere, ValueWhere};\n pub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, ValuesWhere};\n \n // TODO: re export other types here\n"
+                },
+                {
+                    "date": 1711810432282,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -57,8 +57,9 @@\n pub use tables_names::TablesNames;\n pub use to_sql::ToSQL;\n pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};\n pub use value_select_attrib::{IntoValuesSelectAttribs, ValueSelectAttrib, ValuesSelectAttribs};\n+pub use va\n \n pub use value_where::{IntoValueWhere, ValueWhere};\n pub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, ValuesWhere};\n \n"
+                },
+                {
+                    "date": 1711810437990,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -57,9 +57,9 @@\n pub use tables_names::TablesNames;\n pub use to_sql::ToSQL;\n pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};\n pub use value_select_attrib::{IntoValuesSelectAttribs, ValueSelectAttrib, ValuesSelectAttribs};\n-pub use va\n+pub use value_select::{}\n \n pub use value_where::{IntoValueWhere, ValueWhere};\n pub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, ValuesWhere};\n \n"
+                },
+                {
+                    "date": 1711810453921,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -55,11 +55,11 @@\n pub use table_field::{IntoTableField, TableField};\n pub use table_name::{IntoTableName, TableName};\n pub use tables_names::TablesNames;\n pub use to_sql::ToSQL;\n+pub use value_select::val ValuesSelect;\n pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};\n pub use value_select_attrib::{IntoValuesSelectAttribs, ValueSelectAttrib, ValuesSelectAttribs};\n-pub use value_select::{}\n \n pub use value_where::{IntoValueWhere, ValueWhere};\n pub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, ValuesWhere};\n \n"
+                },
+                {
+                    "date": 1711810463165,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -55,9 +55,9 @@\n pub use table_field::{IntoTableField, TableField};\n pub use table_name::{IntoTableName, TableName};\n pub use tables_names::TablesNames;\n pub use to_sql::ToSQL;\n-pub use value_select::val ValuesSelect;\n+pub use value_select::values_select::ValuesSelect;\n pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};\n pub use value_select_attrib::{IntoValuesSelectAttribs, ValueSelectAttrib, ValuesSelectAttribs};\n \n pub use value_where::{IntoValueWhere, ValueWhere};\n"
+                },
+                {
+                    "date": 1711810472142,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -55,9 +55,9 @@\n pub use table_field::{IntoTableField, TableField};\n pub use table_name::{IntoTableName, TableName};\n pub use tables_names::TablesNames;\n pub use to_sql::ToSQL;\n-pub use value_select::values_select::ValuesSelect;\n+pub use value_select::ValuesSelect;\n pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};\n pub use value_select_attrib::{IntoValuesSelectAttribs, ValueSelectAttrib, ValuesSelectAttribs};\n \n pub use value_where::{IntoValueWhere, ValueWhere};\n"
+                },
+                {
+                    "date": 1711810495345,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -55,11 +55,11 @@\n pub use table_field::{IntoTableField, TableField};\n pub use table_name::{IntoTableName, TableName};\n pub use tables_names::TablesNames;\n pub use to_sql::ToSQL;\n-pub use value_select::ValuesSelect;\n pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};\n pub use value_select_attrib::{IntoValuesSelectAttribs, ValueSelectAttrib, ValuesSelectAttribs};\n+pub use values_select::ValuesSelect;\n \n pub use value_where::{IntoValueWhere, ValueWhere};\n pub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, ValuesWhere};\n \n"
+                },
+                {
+                    "date": 1711810506889,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -57,9 +57,9 @@\n pub use tables_names::TablesNames;\n pub use to_sql::ToSQL;\n pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};\n pub use value_select_attrib::{IntoValuesSelectAttribs, ValueSelectAttrib, ValuesSelectAttribs};\n-pub use values_select::ValuesSelect;\n+pub use values_select::{IntoValuesSelect, ValuesSelect};\n \n pub use value_where::{IntoValueWhere, ValueWhere};\n pub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, ValuesWhere};\n \n"
+                },
+                {
+                    "date": 1712015679575,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,9 +20,9 @@\n pub(crate) mod single_select;\n pub(crate) mod string_functions;\n pub(crate) mod table;\n pub(crate) mod table_field;\n-pub mod table_field_alias;\n+pub(crate) mod table_field_alias;\n pub(crate) mod table_name;\n pub(crate) mod tables_names;\n pub(crate) mod to_sql;\n pub(crate) mod value_select;\n@@ -57,11 +57,10 @@\n pub use tables_names::TablesNames;\n pub use to_sql::ToSQL;\n pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};\n pub use value_select_attrib::{IntoValuesSelectAttribs, ValueSelectAttrib, ValuesSelectAttribs};\n+pub use value_where::{IntoValueWhere, ValueWhere};\n pub use values_select::{IntoValuesSelect, ValuesSelect};\n-\n-pub use value_where::{IntoValueWhere, ValueWhere};\n pub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, ValuesWhere};\n \n // TODO: re export other types here\n // TODO: change visibility to pub(crate) -> fix unit test that will break\n"
+                },
+                {
+                    "date": 1713828428902,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,8 +30,9 @@\n pub(crate) mod value_type_scale;\n pub(crate) mod value_where;\n pub(crate) mod values_select;\n pub(crate) mod values_where;\n+pub mod value_where_typer;\n \n pub use agg_functions::{AggFunction, AggFunctionType};\n pub use alias::{Alias, IntoAlias};\n pub use arithmetic_expr::arithmetic_expr_where::{ArithmeticExprWhere, IntoArithmeticExprWhere};\n"
+                },
+                {
+                    "date": 1713828442254,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,10 +30,12 @@\n pub(crate) mod value_type_scale;\n pub(crate) mod value_where;\n pub(crate) mod values_select;\n pub(crate) mod values_where;\n-pub mod value_where_typer;\n+pub(crate) mod value_where_typer;\n \n+ValueWhereType\n+\n pub use agg_functions::{AggFunction, AggFunctionType};\n pub use alias::{Alias, IntoAlias};\n pub use arithmetic_expr::arithmetic_expr_where::{ArithmeticExprWhere, IntoArithmeticExprWhere};\n pub use case::case_condition::{CaseCondition, CaseConditionBuilder, IntoWhenCondition};\n"
+                },
+                {
+                    "date": 1713828460683,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -32,10 +32,11 @@\n pub(crate) mod values_select;\n pub(crate) mod values_where;\n pub(crate) mod value_where_typer;\n \n-ValueWhereType\n+pub use value_where_typer::{ValueWhereType, IntoValueWhereType};\n \n+\n pub use agg_functions::{AggFunction, AggFunctionType};\n pub use alias::{Alias, IntoAlias};\n pub use arithmetic_expr::arithmetic_expr_where::{ArithmeticExprWhere, IntoArithmeticExprWhere};\n pub use case::case_condition::{CaseCondition, CaseConditionBuilder, IntoWhenCondition};\n"
+                },
+                {
+                    "date": 1713828479098,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,15 +28,14 @@\n pub(crate) mod value_select;\n pub(crate) mod value_select_attrib;\n pub(crate) mod value_type_scale;\n pub(crate) mod value_where;\n+pub(crate) mod value_where_type;\n pub(crate) mod values_select;\n pub(crate) mod values_where;\n-pub(crate) mod value_where_typer;\n \n-pub use value_where_typer::{ValueWhereType, IntoValueWhereType};\n+pub use value_where_type::{IntoValueWhereType, ValueWhereType};\n \n-\n pub use agg_functions::{AggFunction, AggFunctionType};\n pub use alias::{Alias, IntoAlias};\n pub use arithmetic_expr::arithmetic_expr_where::{ArithmeticExprWhere, IntoArithmeticExprWhere};\n pub use case::case_condition::{CaseCondition, CaseConditionBuilder, IntoWhenCondition};\n"
+                },
+                {
+                    "date": 1716671739768,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -32,10 +32,8 @@\n pub(crate) mod value_where_type;\n pub(crate) mod values_select;\n pub(crate) mod values_where;\n \n-pub use value_where_type::{IntoValueWhereType, ValueWhereType};\n-\n pub use agg_functions::{AggFunction, AggFunctionType};\n pub use alias::{Alias, IntoAlias};\n pub use arithmetic_expr::arithmetic_expr_where::{ArithmeticExprWhere, IntoArithmeticExprWhere};\n pub use case::case_condition::{CaseCondition, CaseConditionBuilder, IntoWhenCondition};\n@@ -58,11 +56,12 @@\n pub use table_field::{IntoTableField, TableField};\n pub use table_name::{IntoTableName, TableName};\n pub use tables_names::TablesNames;\n pub use to_sql::ToSQL;\n-pub use value_select::{IntoValueSelect, ValueSelect, ValueSelectType};\n+pub use value_select::{IntoValueSelect, ValueSelect};\n pub use value_select_attrib::{IntoValuesSelectAttribs, ValueSelectAttrib, ValuesSelectAttribs};\n pub use value_where::{IntoValueWhere, ValueWhere};\n+pub use value_where_type::{IntoValueWhereType, ValueWhereType};\n pub use values_select::{IntoValuesSelect, ValuesSelect};\n pub use values_where::{IntoValuesListWhere, IntoValuesWhere, ValuesListWhere, ValuesWhere};\n \n // TODO: re export other types here\n"
+                },
+                {
+                    "date": 1716673565280,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -68,8 +68,9 @@\n // TODO: change visibility to pub(crate) -> fix unit test that will break\n \n pub use field_attribs::Alignment;\n pub use field_attribs::FieldAttsLimit;\n+pub use field_attribs::FieldAttsLimit;\n pub use field_attribs::IntoFieldAttsLimit;\n pub use field_attribs::{FieldAttribs, IntoFieldAttribs};\n pub use fields_attribs::FieldsAttribs;\n pub use fields_attribs::FieldsAttribsBuilder;\n"
+                },
+                {
+                    "date": 1716673580032,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -68,14 +68,14 @@\n // TODO: change visibility to pub(crate) -> fix unit test that will break\n \n pub use field_attribs::Alignment;\n pub use field_attribs::FieldAttsLimit;\n-pub use field_attribs::FieldAttsLimit;\n pub use field_attribs::IntoFieldAttsLimit;\n pub use field_attribs::{FieldAttribs, IntoFieldAttribs};\n pub use fields_attribs::FieldsAttribs;\n pub use fields_attribs::FieldsAttribsBuilder;\n pub use fields_attribs::FieldsAttsLimit;\n pub use fields_attribs::IntoFieldsAttribs;\n pub use table_field_alias::TableFieldAlias;\n+pub use value_select_name::ValueSelectName;\n pub use value_type_scale::DbValueType;\n pub use value_type_scale::IntoDbValueType;\n"
+                },
+                {
+                    "date": 1716673591094,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,8 +31,9 @@\n pub(crate) mod value_where;\n pub(crate) mod value_where_type;\n pub(crate) mod values_select;\n pub(crate) mod values_where;\n+pub mod value_select_name;\n \n pub use agg_functions::{AggFunction, AggFunctionType};\n pub use alias::{Alias, IntoAlias};\n pub use arithmetic_expr::arithmetic_expr_where::{ArithmeticExprWhere, IntoArithmeticExprWhere};\n"
+                },
+                {
+                    "date": 1716758192665,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,14 +26,14 @@\n pub(crate) mod tables_names;\n pub(crate) mod to_sql;\n pub(crate) mod value_select;\n pub(crate) mod value_select_attrib;\n+pub mod value_select_name;\n pub(crate) mod value_type_scale;\n pub(crate) mod value_where;\n pub(crate) mod value_where_type;\n pub(crate) mod values_select;\n pub(crate) mod values_where;\n-pub mod value_select_name;\n \n pub use agg_functions::{AggFunction, AggFunctionType};\n pub use alias::{Alias, IntoAlias};\n pub use arithmetic_expr::arithmetic_expr_where::{ArithmeticExprWhere, IntoArithmeticExprWhere};\n@@ -75,8 +75,9 @@\n pub use fields_attribs::FieldsAttribs;\n pub use fields_attribs::FieldsAttribsBuilder;\n pub use fields_attribs::FieldsAttsLimit;\n pub use fields_attribs::IntoFieldsAttribs;\n+pub use table_field_alias::IntoTableFieldAlias;\n pub use table_field_alias::TableFieldAlias;\n pub use value_select_name::ValueSelectName;\n pub use value_type_scale::DbValueType;\n pub use value_type_scale::IntoDbValueType;\n"
                 }
             ],
             "date": 1699723408912,

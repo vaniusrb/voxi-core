@@ -116,7 +116,7 @@ impl IntoValueSelectAttrib for ValueSelectAttrib {
 impl IntoValueSelectAttrib for FieldAttsLimit {
     fn into_value_select_attrib(self) -> ValueSelectAttrib {
         ValueSelectAttrib {
-            value_select: self.name.clone().into_value_select(),
+            value_select: self.value_select_name.name.clone().into_value_select(),
             field_attrib: self,
         }
     }

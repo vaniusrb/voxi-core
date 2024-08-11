@@ -250,14 +250,18 @@ impl FieldsAttribs {
     pub fn new(fields_attribs: impl IntoVecFieldAttribs) -> Self {
         let fields_attribs = fields_attribs.into_vec_field_attribs();
 
-        for fa in &fields_attribs {
-            if let Some(value_select) = &fa.value_select_name.value_select {
-                if let super::ValueWhere::LiteralValue(literal) = &value_select.value_where {
-                    panic!("FieldAttrib with LiteralValue {literal:?}");
-                }
-            }
-        }
+        // for fa in &fields_attribs {
+        //     if let Some(value_select) = &fa.value_select_name.value_select {
+        //         if let super::ValueWhere::LiteralValue(literal) = &value_select.value_where {
+        //             panic!("FieldAttrib with LiteralValue {literal:?}");
+        //         }
+        //     }
+        // }
         Self { fields_attribs }
+    }
+
+    pub fn push(&mut self, field_attribs: impl IntoFieldAttribs) {
+        self.fields_attribs.push(field_attribs.into_field_attribs());
     }
 
     pub fn len(&self) -> usize {

@@ -26,6 +26,18 @@ pub trait IntoTableFieldAlias {
     fn into_table_field_alias(self) -> TableFieldAlias;
 }
 
+impl IntoTableFieldAlias for &str {
+    fn into_table_field_alias(self) -> TableFieldAlias {
+        self.into_field_name().into_table_field_alias()
+    }
+}
+
+impl IntoTableFieldAlias for String {
+    fn into_table_field_alias(self) -> TableFieldAlias {
+        self.into_field_name().into_table_field_alias()
+    }
+}
+
 impl IntoTableFieldAlias for FieldNameType {
     fn into_table_field_alias(self) -> TableFieldAlias {
         self.name.into_table_field_alias()
@@ -61,17 +73,18 @@ impl IntoTableFieldAlias for FieldName {
 
 impl IntoTableFieldAlias for FieldAttribs {
     fn into_table_field_alias(self) -> TableFieldAlias {
-        let alias_opt = self
-            .value_select_name
-            .value_select
-            .as_ref()
-            .map(|value_select| &value_select.alias)
-            .cloned()
-            .flatten();
+        // let alias_opt = self
+        //     .value_select_name
+        //     .value_select
+        //     .as_ref()
+        //     .map(|value_select| &value_select.alias)
+        //     .cloned()
+        //     .flatten();
+        let alias = Some(Alias::new(self.value_select_name.name.0.clone()));
         let tf = self.value_select_name.into_table_field();
         TableFieldAlias {
             table_field: tf,
-            alias: alias_opt,
+            alias,
         }
     }
 }

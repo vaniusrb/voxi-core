@@ -4,11 +4,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Clone, PartialEq, Eq, Deserialize, Hash)]
 pub struct ValueSelectName {
-    pub name: FieldName, // TODO: <== NAME IS THE ALIAS OF FIELD ATTRIBS!!!
+    pub name: FieldName,
     pub value_select: Option<ValueSelect>,
 }
-
-// TODO: Instead use ValueSelectName should use ValueSelect directly instead
 
 impl IntoTableField for ValueSelectName {
     fn into_table_field(self) -> super::TableField {

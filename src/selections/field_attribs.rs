@@ -30,6 +30,7 @@ pub struct FieldAttsLimit {
     #[serde(rename = "type")]
     #[serde(flatten)]
     pub value_type: DbValueType,
+    pub calculated: bool,
     pub nullable: bool,
     #[serde(
         skip_serializing_if = "Alignment::is_default",
@@ -55,6 +56,7 @@ impl FieldAttsLimit {
             title: title.to_owned(),
             nullable: true,
             alignment: Default::default(),
+            calculated: false,
         }
     }
 
@@ -75,6 +77,11 @@ impl FieldAttsLimit {
 
     pub fn with_nullable(mut self, nullable: bool) -> Self {
         self.nullable = nullable;
+        self
+    }
+
+    pub fn with_calculated(mut self, calculated: bool) -> Self {
+        self.calculated = calculated;
         self
     }
 }
@@ -100,6 +107,7 @@ impl IntoFieldAttribs for FieldAttsLimit {
             value_type: self.value_type.value_type(),
             nullable: self.nullable,
             alignment: self.alignment,
+            calculated: self.calculated,
         }
     }
 }
@@ -123,6 +131,7 @@ pub struct FieldAttribs {
     #[serde(rename = "type")]
     // #[serde(flatten)]
     pub value_type: ValueType,
+    pub calculated: bool,
     pub nullable: bool,
     #[serde(
         skip_serializing_if = "Alignment::is_default",
@@ -146,6 +155,7 @@ impl FieldAttribs {
             },
             value_type: value_type.value_type(),
             title: title.to_owned(),
+            calculated: false,
             nullable: true,
             alignment: Default::default(),
         }
@@ -163,6 +173,11 @@ impl FieldAttribs {
 
     pub fn with_nullable(mut self, nullable: bool) -> Self {
         self.nullable = nullable;
+        self
+    }
+
+    pub fn with_calculated(mut self, calculated: bool) -> Self {
+        self.calculated = calculated;
         self
     }
 }

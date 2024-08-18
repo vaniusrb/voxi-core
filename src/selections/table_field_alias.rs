@@ -80,6 +80,7 @@ impl IntoTableFieldAlias for FieldAttribs {
         //     .map(|value_select| &value_select.alias)
         //     .cloned()
         //     .flatten();
+        // let alias = Some(Alias::new(self.value_select_name.name.0.clone()));
         let alias = Some(Alias::new(self.value_select_name.name.0.clone()));
         let tf = self.value_select_name.into_table_field();
         TableFieldAlias {

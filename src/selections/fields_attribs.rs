@@ -49,6 +49,7 @@ impl FieldsAttribsBuilder {
             value_type: ValueType::String,
             title: title.to_owned(),
             nullable,
+            calculated: false,
             alignment: Default::default(),
         };
         self.fields_attribs.push(value_attrib);
@@ -69,6 +70,7 @@ impl FieldsAttribsBuilder {
             value_type: ValueType::Decimal,
             title: title.to_owned(),
             nullable,
+            calculated: false,
             alignment: Default::default(),
         };
         self.fields_attribs.push(value_attrib);
@@ -89,6 +91,7 @@ impl FieldsAttribsBuilder {
             value_type: ValueType::Date,
             title: title.to_owned(),
             nullable,
+            calculated: false,
             alignment: Default::default(),
         };
         self.fields_attribs.push(value_attrib);
@@ -109,6 +112,7 @@ impl FieldsAttribsBuilder {
             value_type: ValueType::DateTime,
             title: title.to_owned(),
             nullable,
+            calculated: false,
             alignment: Default::default(),
         };
         self.fields_attribs.push(value_attrib);
@@ -129,6 +133,7 @@ impl FieldsAttribsBuilder {
             value_type: ValueType::Json,
             title: title.to_owned(),
             nullable,
+            calculated: false,
             alignment: Default::default(),
         };
         self.fields_attribs.push(value_attrib);
@@ -150,6 +155,7 @@ impl FieldsAttribsBuilder {
             value_type: value_type.value_type(),
             title: title.to_owned(),
             nullable,
+            calculated: false,
             alignment: Default::default(),
         };
         self.fields_attribs.push(value_attrib);
@@ -171,6 +177,7 @@ impl FieldsAttribsBuilder {
             value_type: value_type.value_type(),
             title: title.to_owned(),
             nullable,
+            calculated: false,
             alignment: Default::default(),
         };
         self.fields_attribs.push(value_attrib);

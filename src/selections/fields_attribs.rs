@@ -1,4 +1,6 @@
-use super::{FieldAttribs, IntoFieldAttribs, IntoFieldAttsLimit, ValueSelectName};
+use super::{
+    FieldAttribs, IntoFieldAttribs, IntoFieldAttsLimit, IntoTableFieldAlias, ValueSelectName,
+};
 use crate::selections::FieldAttsLimit;
 use crate::{
     resolvers::args_resolver::ArgsResolver,
@@ -251,6 +253,19 @@ impl FieldsAttsLimit {
 #[derive(Default, Clone, Debug, PartialEq, Eq, Serialize, Deserialize, Hash)]
 pub struct FieldsAttribs {
     pub fields_attribs: Vec<FieldAttribs>,
+}
+
+impl std::fmt::Display for FieldsAttribs {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = self
+            .fields_attribs
+            .iter()
+            .enumerate()
+            .map(|(i, f)| format!("{i}:{}", f.clone().into_table_field_alias()))
+            .collect::<Vec<_>>()
+            .join(", ");
+        f.write_str(&s)
+    }
 }
 
 impl FieldsAttribs {

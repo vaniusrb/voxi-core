@@ -1,3 +1,4 @@
+use super::{FieldNameType, IntoFieldNameType};
 use crate::{
     selections::{IntoTableField, TableField},
     IntoValueType, ValueType,
@@ -9,6 +10,13 @@ pub struct TableFieldType {
     pub name: TableField,
     #[serde(rename = "type")]
     pub v_type: ValueType,
+}
+
+impl std::fmt::Display for TableFieldType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = format!("{} ({})", self.name, self.v_type);
+        f.write_str(&s)
+    }
 }
 
 impl TableFieldType {
@@ -33,12 +41,21 @@ impl IntoTableField for TableFieldType {
 }
 
 pub trait IntoTableFieldType {
-    fn into_field_name_type(self) -> TableFieldType;
+    fn into_table_field_type(self) -> TableFieldType;
 }
 
 impl IntoTableFieldType for TableFieldType {
-    fn into_field_name_type(self) -> TableFieldType {
+    fn into_table_field_type(self) -> TableFieldType {
         self
+    }
+}
+
+impl IntoFieldNameType for TableFieldType {
+    fn into_field_name_type(self) -> FieldNameType {
+        FieldNameType {
+            name: self.name.field_name,
+            v_type: self.v_type,
+        }
     }
 }
 
@@ -47,7 +64,7 @@ where
     T: IntoValueType,
     F: IntoTableField,
 {
-    fn into_field_name_type(self) -> TableFieldType {
+    fn into_table_field_type(self) -> TableFieldType {
         TableFieldType {
             v_type: self.0.value_type(),
             name: self.1.into_table_field(),

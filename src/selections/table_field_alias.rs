@@ -4,6 +4,7 @@ use super::{
 };
 use crate::{
     resolvers::{args_resolver::ArgsResolver, args_resolver_string::ArgsResolverString},
+    values::table_field_type::TableFieldType,
     FieldName, FieldNameType, IntoFieldName,
 };
 use serde::{Deserialize, Serialize};
@@ -39,6 +40,12 @@ impl IntoTableFieldAlias for String {
 }
 
 impl IntoTableFieldAlias for FieldNameType {
+    fn into_table_field_alias(self) -> TableFieldAlias {
+        self.name.into_table_field_alias()
+    }
+}
+
+impl IntoTableFieldAlias for TableFieldType {
     fn into_table_field_alias(self) -> TableFieldAlias {
         self.name.into_table_field_alias()
     }
@@ -131,12 +138,8 @@ impl fmt::Display for TableFieldAlias {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "{} ({})",
-            self.to_sql(&mut ArgsResolverString::new()).unwrap(),
-            self.alias
-                .as_ref()
-                .map(|a| a.to_string())
-                .unwrap_or_default()
+            "{}", 
+            self.to_sql(&mut ArgsResolverString::new()).unwrap()
         )
     }
 }

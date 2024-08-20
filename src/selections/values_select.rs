@@ -6,7 +6,7 @@ use std::collections::HashSet;
 // TODO: add comment
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ValuesSelect {
-    values_select: Vec<ValueSelect>,
+    pub values_select: Vec<ValueSelect>,
 }
 
 impl ValuesSelect {

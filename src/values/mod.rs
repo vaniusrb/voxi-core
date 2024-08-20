@@ -5,6 +5,7 @@ pub mod into_value;
 pub mod local_foreign_field;
 pub mod null_value;
 pub mod nullable_value;
+pub mod table_field_type;
 pub mod typed_option_value;
 pub mod util;
 pub mod value;
@@ -18,7 +19,6 @@ pub mod value_naive_date_time;
 pub mod value_string;
 pub mod value_type;
 pub mod value_uuid;
-mod table_field_type;
 
 pub use field_name::{FieldName, IntoFieldName};
 pub use field_name_type::FieldNameType;

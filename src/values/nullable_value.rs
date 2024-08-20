@@ -7,6 +7,7 @@ use std::fmt;
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, Hash)]
 // #[serde(untagged)]
 pub enum NullableValue {
+    // FIXME: try use String(Option<String>) instead
     String(Option<Value>),
     Uuid(Option<Value>),
     Int32(Option<Value>),

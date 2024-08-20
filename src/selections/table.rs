@@ -18,9 +18,11 @@ use std::fmt;
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Table {
+    #[serde(rename = "n")]
     pub name: TableName,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(default)]
+    #[serde(rename = "a")]
     pub alias: Option<Alias>,
 }
 

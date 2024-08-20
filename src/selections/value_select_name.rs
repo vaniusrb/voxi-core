@@ -4,7 +4,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Clone, PartialEq, Eq, Deserialize, Hash)]
 pub struct ValueSelectName {
+    #[serde(rename = "n")]
     pub name: FieldName,
+    #[serde(rename = "vs")]
     pub value_select: Option<ValueSelect>,
 }
 

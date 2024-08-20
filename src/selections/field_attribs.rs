@@ -22,20 +22,24 @@ impl Alignment {
 /// Definition for field with name, title, type and nullable attributes
 #[derive(Debug, Serialize, Clone, PartialEq, Eq, Deserialize, Hash)]
 pub struct FieldAttsLimit {
-    #[serde(rename = "flatten")]
+    #[serde(rename = "vs")]
     pub value_select_name: ValueSelectName,
+    #[serde(rename = "t")]
     pub title: String,
     // pub name: FieldName,
     // pub value_select: Option<ValueSelect>,
-    #[serde(rename = "type")]
+    #[serde(rename = "y")]
     #[serde(flatten)]
     pub value_type: DbValueType,
+    #[serde(rename = "c")]
     pub calculated: bool,
+    #[serde(rename = "n")]
     pub nullable: bool,
     #[serde(
         skip_serializing_if = "Alignment::is_default",
         default = "Alignment::default"
     )]
+    #[serde(rename = "a")]
     pub alignment: Alignment,
 }
 
@@ -123,20 +127,24 @@ impl IntoValueSelect for FieldAttsLimit {
 /// Definition for field with name, title, type and nullable attributes
 #[derive(Debug, Serialize, Clone, PartialEq, Eq, Deserialize, Hash)]
 pub struct FieldAttribs {
-    #[serde(rename = "flatten")]
+    #[serde(rename = "vs")]
     pub value_select_name: ValueSelectName,
     // pub name: FieldName,
     // pub value_select: Option<ValueSelect>,
+    #[serde(rename = "t")]
     pub title: String,
-    #[serde(rename = "type")]
+    #[serde(rename = "y")]
     // #[serde(flatten)]
     pub value_type: ValueType,
+    #[serde(rename = "c")]
     pub calculated: bool,
+    #[serde(rename = "n")]
     pub nullable: bool,
     #[serde(
         skip_serializing_if = "Alignment::is_default",
         default = "Alignment::default"
     )]
+    #[serde(rename = "a")]
     pub alignment: Alignment,
 }
 

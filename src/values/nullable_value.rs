@@ -8,14 +8,23 @@ use std::fmt;
 // #[serde(untagged)]
 pub enum NullableValue {
     // FIXME: try use String(Option<String>) instead
+    #[serde(rename = "s")]
     String(Option<Value>),
+    #[serde(rename = "u")]
     Uuid(Option<Value>),
+    #[serde(rename = "i4")]
     Int32(Option<Value>),
+    #[serde(rename = "i8")]
     Int64(Option<Value>),
+    #[serde(rename = "f")]
     Decimal(Option<Value>),
+    #[serde(rename = "b")]
     Boolean(Option<Value>),
+    #[serde(rename = "d")]
     Date(Option<Value>),
+    #[serde(rename = "t")]
     DateTime(Option<Value>),
+    #[serde(rename = "j")]
     Json(Option<Value>),
 }
 

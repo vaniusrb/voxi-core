@@ -16,14 +16,23 @@ use std::fmt;
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum ValueWhere {
+    #[serde(rename = "tf")]
     TableField(TableField),
+    #[serde(rename = "lv")]
     LiteralValue(NullableValue),
+    #[serde(rename = "e")]
     Expression(ArithmeticExprWhere),
+    #[serde(rename = "bp")]
     BindParameter(BindName),
+    #[serde(rename = "sq")]
     SingleQuery(Box<SingleQuery>),
+    #[serde(rename = "af")]
     AggFunction(AggFunction),
+    #[serde(rename = "cc")]
     CaseCondition(Box<CaseCondition>),
+    #[serde(rename = "cv")]
     CaseValue(Box<CaseValue>),
+    #[serde(rename = "sf")]
     StringFunction(Box<StringFunction>),
 }
 

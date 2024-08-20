@@ -14,9 +14,11 @@ use std::collections::HashSet;
 /// Definition for column in SELECT. Could be a literal value or single query, per example.
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ValueSelect {
+    #[serde(rename = "vw")]
     pub value_where: ValueWhere,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(default)]
+    #[serde(rename = "a")]
     pub alias: Option<Alias>,
 }
 

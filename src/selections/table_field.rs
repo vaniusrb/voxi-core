@@ -14,6 +14,7 @@ pub struct TableField {
     #[serde(default)]
     #[serde(flatten)]
     pub table: Option<Table>,
+    #[serde(rename = "fn")]
     pub field_name: FieldName,
 }
 

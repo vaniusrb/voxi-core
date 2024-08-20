@@ -11,14 +11,23 @@ use uuid::Uuid;
 // TODO: add comment
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub enum Value {
+    #[serde(rename = "s")]
     String(String),
+    #[serde(rename = "u")]
     Uuid(Uuid),
+    #[serde(rename = "i4")]
     Int32(i32),
+    #[serde(rename = "i8")]
     Int64(i64),
+    #[serde(rename = "f")]
     Decimal(Decimal),
+    #[serde(rename = "b")]
     Boolean(bool),
+    #[serde(rename = "d")]
     Date(NaiveDate),
+    #[serde(rename = "t")]
     DateTime(NaiveDateTime),
+    #[serde(rename = "j")]
     Json(serde_json::Value),
 }
 

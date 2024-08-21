@@ -73,7 +73,7 @@ pub fn json_to_str(value_j: serde_json::Value, value_type: ValueType) -> String 
 /// Convert a `NullableValue` to a single json value
 pub fn value_to_json(value: &NullableValue) -> error_stack::Result<serde_json::Value, CoreError> {
     let v = match value.value() {
-        Some(v) => v_to_json(v)?,
+        Some(v) => v_to_json(&v)?,
         None => {
             serde_json::to_value(Option::<String>::None).change_context(CoreError::ConvertToJson)?
         }

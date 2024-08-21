@@ -36,7 +36,7 @@ impl TryFrom<Value> for NaiveDateTime {
     fn try_from(value: Value) -> Result<Self, Self::Error> {
         match value {
             Value::DateTime(v) => Ok(v),
-            _ => Err("not date time value".into()),
+            _ => Err(format!("not date time value: `{value}`")),
         }
     }
 }
@@ -47,7 +47,7 @@ impl TryFrom<&Value> for NaiveDateTime {
     fn try_from(value: &Value) -> Result<Self, Self::Error> {
         match value {
             Value::DateTime(v) => Ok(*v),
-            _ => Err("not date time value".into()),
+            _ => Err(format!("not date time value: `{value}`")),
         }
     }
 }
@@ -57,7 +57,7 @@ impl TryFrom<NullableValue> for NaiveDateTime {
 
     fn try_from(value: NullableValue) -> Result<Self, Self::Error> {
         match value.value() {
-            Some(Value::DateTime(v)) => Ok(*v),
+            Some(Value::DateTime(v)) => Ok(v),
             Some(v) => Err(format!("not datetime value! type is {:?}", v.value_type())),
             None => Err("value is null".into()),
         }
@@ -69,7 +69,7 @@ impl TryFrom<&NullableValue> for NaiveDateTime {
 
     fn try_from(value: &NullableValue) -> Result<Self, Self::Error> {
         match value.value() {
-            Some(Value::DateTime(v)) => Ok(*v),
+            Some(Value::DateTime(v)) => Ok(v),
             Some(v) => Err(format!("not datetime value! type is {:?}", v.value_type())),
             None => Err("value is null".into()),
         }

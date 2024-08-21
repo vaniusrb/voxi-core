@@ -181,7 +181,7 @@ pub fn subset_values_to_object_j(
     for (name, opt_value) in subset_values.values() {
         match opt_value.opt_value.value() {
             Some(value) => {
-                let value_j = v_to_json(value)?;
+                let value_j = v_to_json(&value)?;
                 map_j.insert(name.0.clone(), value_j);
             }
             None => {

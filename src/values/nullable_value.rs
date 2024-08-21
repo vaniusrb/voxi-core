@@ -1,31 +1,48 @@
 use super::{IntoValue, Value};
 use crate::{CoreError, IntoValueType, ValueType};
+use chrono::{NaiveDate, NaiveDateTime};
+use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
-use std::fmt;
+use std::{fmt, hash::Hasher};
+use uuid::Uuid;
 
 // TODO: add comment
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, Hash)]
-// #[serde(untagged)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub enum NullableValue {
-    // FIXME: try use String(Option<String>) instead
     #[serde(rename = "s")]
-    String(Option<Value>),
+    String(Option<String>),
     #[serde(rename = "u")]
-    Uuid(Option<Value>),
+    Uuid(Option<Uuid>),
     #[serde(rename = "i4")]
-    Int32(Option<Value>),
+    Int32(Option<i32>),
     #[serde(rename = "i8")]
-    Int64(Option<Value>),
+    Int64(Option<i64>),
     #[serde(rename = "f")]
-    Decimal(Option<Value>),
+    Decimal(Option<Decimal>),
     #[serde(rename = "b")]
-    Boolean(Option<Value>),
-    #[serde(rename = "d")]
-    Date(Option<Value>),
+    Boolean(Option<bool>),
     #[serde(rename = "t")]
-    DateTime(Option<Value>),
+    Date(Option<NaiveDate>),
+    #[serde(rename = "d")]
+    DateTime(Option<NaiveDateTime>),
     #[serde(rename = "j")]
-    Json(Option<Value>),
+    Json(Option<serde_json::Value>),
+}
+
+impl std::hash::Hash for NullableValue {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        match self {
+            NullableValue::String(value) => value.hash(state),
+            NullableValue::Uuid(value) => value.hash(state),
+            NullableValue::Int32(value) => value.hash(state),
+            NullableValue::Int64(value) => value.hash(state),
+            NullableValue::Decimal(value) => value.hash(state),
+            NullableValue::Boolean(value) => value.hash(state),
+            NullableValue::Date(value) => value.hash(state),
+            NullableValue::DateTime(value) => value.hash(state),
+            NullableValue::Json(value) => value.as_ref().map(|v| v.to_string()).hash(state),
+        }
+    }
 }
 
 impl IntoValueType for NullableValue {
@@ -48,15 +65,15 @@ impl NullableValue {
     pub fn from(value: impl IntoValue) -> Self {
         let value = value.into_value();
         match value.value_type() {
-            ValueType::String => Self::String(Some(value)),
-            ValueType::Uuid => Self::Uuid(Some(value)),
-            ValueType::Int32 => Self::Int32(Some(value)),
-            ValueType::Int64 => Self::Int64(Some(value)),
-            ValueType::Decimal => Self::Decimal(Some(value)),
-            ValueType::Boolean => Self::Boolean(Some(value)),
-            ValueType::Date => Self::Date(Some(value)),
-            ValueType::DateTime => Self::DateTime(Some(value)),
-            ValueType::Json => Self::Json(Some(value)),
+            ValueType::String => Self::String(Some(value.try_into().unwrap())),
+            ValueType::Uuid => Self::Uuid(Some(value.try_into().unwrap())),
+            ValueType::Int32 => Self::Int32(Some(value.try_into().unwrap())),
+            ValueType::Int64 => Self::Int64(Some(value.try_into().unwrap())),
+            ValueType::Decimal => Self::Decimal(Some(value.try_into().unwrap())),
+            ValueType::Boolean => Self::Boolean(Some(value.try_into().unwrap())),
+            ValueType::Date => Self::Date(Some(value.try_into().unwrap())),
+            ValueType::DateTime => Self::DateTime(Some(value.try_into().unwrap())),
+            ValueType::Json => Self::Json(Some(value.try_into().unwrap())),
         }
     }
 
@@ -74,17 +91,17 @@ impl NullableValue {
         }
     }
 
-    pub fn value(&self) -> Option<&Value> {
+    pub fn value(&self) -> Option<Value> {
         match self {
-            NullableValue::String(value) => value.as_ref(),
-            NullableValue::Uuid(value) => value.as_ref(),
-            NullableValue::Int32(value) => value.as_ref(),
-            NullableValue::Int64(value) => value.as_ref(),
-            NullableValue::Decimal(value) => value.as_ref(),
-            NullableValue::Boolean(value) => value.as_ref(),
-            NullableValue::Date(value) => value.as_ref(),
-            NullableValue::DateTime(value) => value.as_ref(),
-            NullableValue::Json(value) => value.as_ref(),
+            NullableValue::String(value) => value.as_ref().map(|v| v.clone().into_value()),
+            NullableValue::Uuid(value) => value.as_ref().map(|v| v.into_value()),
+            NullableValue::Int32(value) => value.as_ref().map(|v| v.into_value()),
+            NullableValue::Int64(value) => value.as_ref().map(|v| v.into_value()),
+            NullableValue::Decimal(value) => value.as_ref().map(|v| v.into_value()),
+            NullableValue::Boolean(value) => value.as_ref().map(|v| v.into_value()),
+            NullableValue::Date(value) => value.as_ref().map(|v| v.into_value()),
+            NullableValue::DateTime(value) => value.as_ref().map(|v| v.into_value()),
+            NullableValue::Json(value) => value.as_ref().map(|v| v.clone().into_value()),
         }
     }
 
@@ -97,15 +114,15 @@ impl NullableValue {
 
     pub fn into_opt(self) -> Option<Value> {
         match self {
-            NullableValue::String(value) => value,
-            NullableValue::Uuid(value) => value,
-            NullableValue::Int32(value) => value,
-            NullableValue::Int64(value) => value,
-            NullableValue::Decimal(value) => value,
-            NullableValue::Boolean(value) => value,
-            NullableValue::Date(value) => value,
-            NullableValue::DateTime(value) => value,
-            NullableValue::Json(value) => value,
+            NullableValue::String(value) => value.as_ref().map(|v| v.clone().into_value()),
+            NullableValue::Uuid(value) => value.as_ref().map(|v| v.into_value()),
+            NullableValue::Int32(value) => value.as_ref().map(|v| v.into_value()),
+            NullableValue::Int64(value) => value.as_ref().map(|v| v.into_value()),
+            NullableValue::Decimal(value) => value.as_ref().map(|v| v.into_value()),
+            NullableValue::Boolean(value) => value.as_ref().map(|v| v.into_value()),
+            NullableValue::Date(value) => value.as_ref().map(|v| v.into_value()),
+            NullableValue::DateTime(value) => value.as_ref().map(|v| v.into_value()),
+            NullableValue::Json(value) => value.as_ref().map(|v| v.clone().into_value()),
         }
     }
 
@@ -191,15 +208,33 @@ where
             (None, ValueType::Date) => NullableValue::Date(None),
             (None, ValueType::DateTime) => NullableValue::DateTime(None),
             (None, ValueType::Json) => NullableValue::Json(None),
-            (Some(value), ValueType::String) => NullableValue::String(Some(value.into_value())),
-            (Some(value), ValueType::Uuid) => NullableValue::Uuid(Some(value.into_value())),
-            (Some(value), ValueType::Int32) => NullableValue::Int32(Some(value.into_value())),
-            (Some(value), ValueType::Int64) => NullableValue::Int64(Some(value.into_value())),
-            (Some(value), ValueType::Decimal) => NullableValue::Decimal(Some(value.into_value())),
-            (Some(value), ValueType::Boolean) => NullableValue::Boolean(Some(value.into_value())),
-            (Some(value), ValueType::Date) => NullableValue::Date(Some(value.into_value())),
-            (Some(value), ValueType::DateTime) => NullableValue::DateTime(Some(value.into_value())),
-            (Some(value), ValueType::Json) => NullableValue::Json(Some(value.into_value())),
+            (Some(value), ValueType::String) => {
+                NullableValue::String(Some(value.into_value().try_into().unwrap()))
+            }
+            (Some(value), ValueType::Uuid) => {
+                NullableValue::Uuid(Some(value.into_value().try_into().unwrap()))
+            }
+            (Some(value), ValueType::Int32) => {
+                NullableValue::Int32(Some(value.into_value().try_into().unwrap()))
+            }
+            (Some(value), ValueType::Int64) => {
+                NullableValue::Int64(Some(value.into_value().try_into().unwrap()))
+            }
+            (Some(value), ValueType::Decimal) => {
+                NullableValue::Decimal(Some(value.into_value().try_into().unwrap()))
+            }
+            (Some(value), ValueType::Boolean) => {
+                NullableValue::Boolean(Some(value.into_value().try_into().unwrap()))
+            }
+            (Some(value), ValueType::Date) => {
+                NullableValue::Date(Some(value.into_value().try_into().unwrap()))
+            }
+            (Some(value), ValueType::DateTime) => {
+                NullableValue::DateTime(Some(value.into_value().try_into().unwrap()))
+            }
+            (Some(value), ValueType::Json) => {
+                NullableValue::Json(Some(value.into_value().try_into().unwrap()))
+            }
         }
     }
 }

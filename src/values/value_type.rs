@@ -9,14 +9,23 @@ use uuid::Uuid;
 /// It isn't paired with json value, it is more close to sqlx types.
 #[derive(Copy, Debug, Deserialize, Serialize, Clone, PartialEq, Eq, Hash)]
 pub enum ValueType {
+    #[serde(rename = "s")]
     String,
+    #[serde(rename = "u")]
     Uuid,
+    #[serde(rename = "i4")]
     Int32,
+    #[serde(rename = "i8")]
     Int64,
+    #[serde(rename = "f")]
     Decimal,
+    #[serde(rename = "b")]
     Boolean,
+    #[serde(rename = "d")]
     Date,
+    #[serde(rename = "t")]
     DateTime,
+    #[serde(rename = "j")]
     Json,
 }
 

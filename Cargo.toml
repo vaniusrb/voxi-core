@@ -11,7 +11,7 @@ serde = { version = "1.0.188", features = ["derive", "rc"] }
 serde_json = { version = "1.0.111", features = ["raw_value"] }
 derive_more = "0.99.17"
 serde_with = { version = "3.5.1", features = ["json"] }
-error-stack = { version = "0.4.1", features = [
+error-stack = { version = "0.5.0", features = [
     "spantrace",
     "anyhow",
 ], optional = true, path = "../../hash/libs/error-stack" }

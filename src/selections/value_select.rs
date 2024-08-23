@@ -117,7 +117,10 @@ where
 }
 
 impl ToSQL for ValueSelect {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         let column = self.value_select_type().to_sql(args_resolver)?;
         let sql = match &self.alias {
             Some(alias) => format!(r#"{column} AS "{alias}""#),

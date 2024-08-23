@@ -82,7 +82,10 @@ impl fmt::Display for TableField {
 }
 
 impl ToSQL for TableField {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         let sql = if let Some(table) = self.table.as_ref() {
             if let Some(alias) = table.alias() {
                 format!(

@@ -185,7 +185,10 @@ impl CaseValue {
 }
 
 impl ToSQL for CaseValue {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         let mut sql = format!("CASE {} ", self.input.to_sql(args_resolver)?);
         let whens = self
             .whens

@@ -113,7 +113,10 @@ pub enum AggFunctionType {
 }
 
 impl ToSQL for AggFunction {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         let op = match &self.agg_type {
             AggFunctionType::Min => "MIN",
             AggFunctionType::Max => "MAX",

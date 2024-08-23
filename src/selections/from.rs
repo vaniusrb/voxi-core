@@ -196,7 +196,10 @@ impl IntoFrom for QueryAlias {
 }
 
 impl ToSQL for FromSelect {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         let table = match &self.from_type {
             FromType::Table(t) => t.to_sql(args_resolver)?,
             FromType::Query(q) => format!("({})", q.to_sql(args_resolver)?),

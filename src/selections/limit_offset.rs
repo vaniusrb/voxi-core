@@ -35,7 +35,10 @@ impl LimitOffset {
 }
 
 impl ToSQL for LimitOffset {
-    fn to_sql(&self, _args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        _args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         Ok(format!("LIMIT {} OFFSET {}", self.limit, self.offset))
     }
 }

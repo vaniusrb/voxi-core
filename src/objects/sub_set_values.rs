@@ -196,7 +196,6 @@ pub fn subset_values_to_object_j(
 mod test {
 
     use crate::IntoNullableValue;
-
     use super::*;
 
     #[test]

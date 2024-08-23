@@ -385,7 +385,10 @@ impl Query for Select {
 }
 
 impl ToSQL for Select {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         let mut hash = HashMap::new();
         for (bind_name, value) in self.binds_values.iter() {
             hash.insert(bind_name.clone(), value.clone());

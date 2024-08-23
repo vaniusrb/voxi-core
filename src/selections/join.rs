@@ -191,7 +191,10 @@ pub enum JoinType {
 }
 
 impl ToSQL for Join {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         let join = match self.join_type {
             JoinType::Full => "FULL JOIN",
             JoinType::Inner => "INNER JOIN",

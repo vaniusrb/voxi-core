@@ -78,7 +78,10 @@ pub enum OrderByType {
 }
 
 impl ToSQL for OrderBy {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         let sort_t = match self.order_by_type {
             OrderByType::Asc => "ASC",
             OrderByType::Desc => "DESC",

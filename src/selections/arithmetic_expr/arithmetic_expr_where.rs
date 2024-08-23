@@ -133,7 +133,10 @@ pub trait IntoArithmeticExprWhere {
 }
 
 impl ToSQL for ArithmeticExprWhere {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         let sql = match self {
             ArithmeticExprWhere::ValueWhere(c) => c.to_sql(args_resolver)?,
             ArithmeticExprWhere::Expression(e) => format!("({})", e.to_sql(args_resolver)?),

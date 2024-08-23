@@ -76,7 +76,10 @@ where
 }
 
 impl ToSQL for Vec<ValueSelect> {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         let sql = self
             .iter()
             .map(|v| v.to_sql(args_resolver))
@@ -101,7 +104,10 @@ impl TablesNames for ValuesSelect {
 }
 
 impl ToSQL for ValuesSelect {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         self.values_select.to_sql(args_resolver)
     }
 }

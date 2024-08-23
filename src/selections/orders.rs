@@ -39,7 +39,10 @@ impl OrdersBy {
 }
 
 impl ToSQL for OrdersBy {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         let sql = self
             .orders_by
             .iter()

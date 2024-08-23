@@ -55,7 +55,10 @@ impl IntoGroupBy for &str {
 }
 
 impl ToSQL for GroupBy {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         self.table_field().to_sql(args_resolver)
     }
 }

@@ -38,7 +38,7 @@ impl ArgsResolver for ArgsResolverString {
 /// let c1 = ConditionWhere::eq("TEXT_1", "TEXT_2");
 /// assert_eq!(args_to_str(&c1).unwrap(), r#"'TEXT_1' = 'TEXT_2'"#);
 /// ```
-pub fn args_to_str(to_sql: &impl ToSQL) -> Result<String, SQLError> {
+pub fn args_to_str(to_sql: &impl ToSQL) -> error_stack::Result<String, SQLError> {
     to_sql.to_sql(&mut ArgsResolverString::new())
 }
 

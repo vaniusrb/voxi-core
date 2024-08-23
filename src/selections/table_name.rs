@@ -49,7 +49,10 @@ impl fmt::Display for TableName {
 }
 
 impl ToSQL for TableName {
-    fn to_sql(&self, _args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        _args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         Ok(format!(r#""{self}""#))
     }
 }

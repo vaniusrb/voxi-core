@@ -11,7 +11,10 @@ use serde::{Deserialize, Serialize};
 pub struct ValuesWhere(Vec<ValueWhere>);
 
 impl ToSQL for ValuesWhere {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         let sql: String = self
             .0
             .iter()
@@ -49,7 +52,10 @@ pub enum ValuesListWhere {
 }
 
 impl ToSQL for ValuesListWhere {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         match self {
             ValuesListWhere::List(values) => values.to_sql(args_resolver),
             ValuesListWhere::SingleSelect(single_select) => single_select.to_sql(args_resolver),

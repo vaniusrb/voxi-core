@@ -361,7 +361,10 @@ where
 }
 
 impl ToSQL for FieldsAttribs {
-    fn to_sql(&self, _args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        _args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         let sql = self
             .to_vec()
             .iter()

@@ -90,7 +90,10 @@ pub enum ConditionWhere {
 }
 
 impl ToSQL for ConditionWhere {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         let sql = match self {
             ConditionWhere::Expression(f) => format!("{} IS NULL", f.to_sql(args_resolver)?),
             ConditionWhere::ConditionNull(f) => format!("{} IS NULL", f.to_sql(args_resolver)?),

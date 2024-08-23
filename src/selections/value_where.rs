@@ -59,7 +59,10 @@ impl ValueWhere {
 }
 
 impl ToSQL for ValueWhere {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         match self {
             ValueWhere::TableField(f) => f.to_sql(args_resolver),
             ValueWhere::LiteralValue(v) => v.to_sql(args_resolver),

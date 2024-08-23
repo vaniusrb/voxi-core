@@ -77,7 +77,10 @@ impl StringFunction {
 }
 
 impl ToSQL for StringFunction {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         let sql = match &self {
             StringFunction::Upper(value_where) => {
                 format!("UPPER({})", value_where.to_sql(args_resolver)?)
@@ -111,7 +114,8 @@ impl ToSQL for StringFunction {
 mod tests {
     use super::*;
     use crate::{
-        resolvers::args_resolver_string::ArgsResolverString, selections::table_field::IntoTableField,
+        resolvers::args_resolver_string::ArgsResolverString,
+        selections::table_field::IntoTableField,
     };
 
     #[test]

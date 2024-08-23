@@ -122,7 +122,10 @@ impl IntoFieldName for TableFieldAlias {
 }
 
 impl ToSQL for TableFieldAlias {
-    fn to_sql(&self, args_resolver: &mut dyn ArgsResolver) -> Result<String, crate::SQLError> {
+    fn to_sql(
+        &self,
+        args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, crate::SQLError> {
         self.clone().into_value_select().to_sql(args_resolver)
     }
 }
@@ -138,7 +141,7 @@ impl fmt::Display for TableFieldAlias {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "{}", 
+            "{}",
             self.to_sql(&mut ArgsResolverString::new()).unwrap()
         )
     }

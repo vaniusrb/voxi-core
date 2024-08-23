@@ -48,7 +48,10 @@ impl fmt::Display for Alias {
 }
 
 impl ToSQL for Alias {
-    fn to_sql(&self, _args_resolver: &mut dyn ArgsResolver) -> Result<String, SQLError> {
+    fn to_sql(
+        &self,
+        _args_resolver: &mut dyn ArgsResolver,
+    ) -> error_stack::Result<String, SQLError> {
         Ok(format!(r#""{}""#, self.alias))
     }
 }

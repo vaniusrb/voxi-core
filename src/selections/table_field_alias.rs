@@ -1,6 +1,6 @@
 use super::{
-    Alias, FieldAttribs, IntoTableField, IntoValueSelect, TableField, ToSQL, ValueSelect,
-    ValueWhere,
+    Alias, FieldAttribs, IntoTable, IntoTableField, IntoValueSelect, TableField, ToSQL,
+    ValueSelect, ValueWhere,
 };
 use crate::{
     resolvers::{args_resolver::ArgsResolver, args_resolver_string::ArgsResolverString},
@@ -133,6 +133,16 @@ impl ToSQL for TableFieldAlias {
 impl TableFieldAlias {
     pub fn with_out_alias(mut self) -> Self {
         self.alias = None;
+        self
+    }
+
+    pub fn with_table(mut self, table: impl IntoTable) -> Self {
+        self.table_field = self.table_field.with_table(table);
+        self
+    }
+
+    pub fn with_out_table(mut self) -> Self {
+        self.table_field = self.table_field.with_out_table();
         self
     }
 }

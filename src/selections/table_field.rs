@@ -61,6 +61,11 @@ impl TableField {
         self
     }
 
+    pub fn with_out_table(mut self) -> Self {
+        self.table = None;
+        self
+    }
+
     pub fn with_table_opt(mut self, table: Option<impl IntoTable>) -> Self {
         self.table = table.map(|t| t.into_table());
         self

@@ -11,6 +11,30 @@ use std::borrow::Cow;
 #[derive(Serialize, Deserialize, Default, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct FieldName(pub String);
 
+impl PartialEq<&str> for FieldName {
+    fn eq(&self, other: &&str) -> bool {
+        self.0 == *other
+    }
+}
+
+impl PartialEq<str> for FieldName {
+    fn eq(&self, other: &str) -> bool {
+        self.0 == other
+    }
+}
+
+impl PartialEq<FieldName> for &str {
+    fn eq(&self, other: &FieldName) -> bool {
+        self == &other.0
+    }
+}
+
+impl PartialEq<FieldName> for str {
+    fn eq(&self, other: &FieldName) -> bool {
+        self == other.0
+    }
+}
+
 pub trait IntoCowFieldName<'a> {
     fn into_cow_field_name(self) -> Cow<'a, FieldName>;
 }
@@ -130,18 +154,6 @@ impl IntoFieldName for String {
 impl IntoFieldName for FieldName {
     fn into_field_name(self) -> FieldName {
         self
-    }
-}
-
-impl PartialEq<str> for FieldName {
-    fn eq(&self, other: &str) -> bool {
-        self.0 == other
-    }
-}
-
-impl PartialEq<FieldName> for str {
-    fn eq(&self, other: &FieldName) -> bool {
-        self == other.0
     }
 }
 

@@ -14,6 +14,8 @@ use serde_with::*;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 
+use super::field_type_descriptor::FieldTypeDescriptor;
+
 /// TODO: this is very similar to Record
 #[serde_with::serde_as]
 #[derive(Default, Clone, Debug, Serialize, Deserialize, Eq)]
@@ -54,6 +56,15 @@ impl SubsetValues {
     ) -> error_stack::Result<SubsetValues, CoreError> {
         let object_j = serde_json::to_value(object).unwrap();
         object_j_to_subset_values(&object_j, fields)
+    }
+
+    pub fn from_obj_typed<T: Serialize + DeserializeOwned + FieldTypeDescriptor>(
+        object: &T,
+    ) -> error_stack::Result<SubsetValues, CoreError> {
+        let object_j = serde_json::to_value(object).unwrap();
+        let fields_type = object.fields_type();
+        let fields_type_ref = fields_type.iter().collect();
+        object_j_to_subset_values(&object_j, fields_type_ref)
     }
 
     pub fn add(
@@ -195,8 +206,8 @@ pub fn subset_values_to_object_j(
 #[cfg(test)]
 mod test {
 
-    use crate::IntoNullableValue;
     use super::*;
+    use crate::IntoNullableValue;
 
     #[test]
     fn add_test() {

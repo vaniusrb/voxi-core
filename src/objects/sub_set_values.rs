@@ -64,7 +64,14 @@ impl SubsetValues {
         object: &T,
     ) -> error_stack::Result<SubsetValues, CoreError> {
         let object_j = serde_json::to_value(object).unwrap();
-        let fields_type = object.fields_type();
+        let fields_type = object
+            .fields_type()
+            .iter()
+            .map(|(k, v)| FieldNameType {
+                name: k.clone(),
+                v_type: *v,
+            })
+            .collect::<Vec<_>>();
         let fields_type_ref = fields_type.iter().collect();
         object_j_to_subset_values(&object_j, fields_type_ref)
     }

@@ -1,6 +1,8 @@
+use super::field_type_descriptor::FieldTypeDescriptor;
 use crate::json_to_value;
 use crate::v_to_json;
 use crate::values::nullable_value::IntoNullableValueType;
+use crate::values::typed_option_value::IntoTypedOptionValue;
 use crate::FieldName;
 use crate::FieldNameType;
 use crate::IntoFieldName;
@@ -13,8 +15,6 @@ use serde_json::json;
 use serde_with::*;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
-
-use super::field_type_descriptor::FieldTypeDescriptor;
 
 /// TODO: this is very similar to Record
 #[serde_with::serde_as]
@@ -113,6 +113,11 @@ impl SubsetValues {
         Ok(())
     }
 
+    pub fn set_value(&mut self, name: impl IntoFieldName, value: impl IntoTypedOptionValue) {
+        self.values
+            .insert(name.into_field_name(), value.typed_option_value());
+    }
+
     pub fn by_name(&self, name: impl IntoFieldName) -> Option<&TypedOptionValue> {
         self.values.get(&name.into_field_name())
     }
@@ -129,6 +134,20 @@ impl SubsetValues {
 
     pub fn merge_to_j(&self, value: serde_json::Value) -> serde_json::Value {
         subset_values_to_object_j(self, value).unwrap()
+    }
+
+    pub fn fields_name(&self) -> Vec<&FieldName> {
+        self.values.keys().collect()
+    }
+
+    pub fn fields_name_type(&self) -> Vec<FieldNameType> {
+        self.values
+            .iter()
+            .map(|(name, typed_option_value)| FieldNameType {
+                name: name.clone(),
+                v_type: typed_option_value.v_type,
+            })
+            .collect()
     }
 }
 

@@ -1,11 +1,13 @@
 use super::field_type_descriptor::FieldTypeDescriptor;
 use crate::json_to_value;
 use crate::v_to_json;
+use crate::values::into_value::try_value_from_string;
 use crate::values::nullable_value::IntoNullableValueType;
 use crate::values::typed_option_value::IntoTypedOptionValue;
 use crate::FieldName;
 use crate::FieldNameType;
 use crate::IntoFieldName;
+use crate::IntoNullableValue;
 use crate::TypedOptionValue;
 use crate::{CoreError, ValueType};
 use error_stack::ResultExt;
@@ -118,6 +120,57 @@ impl SubsetValues {
             .insert(name.into_field_name(), value.typed_option_value());
     }
 
+    pub fn set_value_from_str(
+        &mut self,
+        field_name: impl IntoFieldName,
+        value: &str,
+    ) -> error_stack::Result<(), CoreError> {
+        let field_name = field_name.into_field_name();
+        let v_type =
+            self.values
+                .get(&field_name)
+                .map(|v| v.v_type)
+                .ok_or(CoreError::FieldNameNotFound(
+                    field_name.to_string(),
+                    self.fields_name()
+                        .into_iter()
+                        .map(|f| f.to_string())
+                        .collect::<Vec<_>>()
+                        .join(","),
+                ))?;
+
+        let value = try_value_from_string(value, v_type)?;
+
+        let typed_option_value = TypedOptionValue {
+            v_type,
+            opt_value: value.into_nullable_value(),
+        };
+
+        self.values.insert(field_name, typed_option_value);
+        Ok(())
+    }
+
+    pub fn get_value_str(
+        &self,
+        field_name: &str,
+    ) -> error_stack::Result<Option<String>, CoreError> {
+        let field_name = field_name.into_field_name();
+        let value = self
+            .values
+            .get(&field_name)
+            .map(|v| v.opt_value.value())
+            .ok_or(CoreError::FieldNameNotFound(
+                field_name.to_string(),
+                self.fields_name()
+                    .into_iter()
+                    .map(|f| f.to_string())
+                    .collect::<Vec<_>>()
+                    .join(","),
+            ))?
+            .map(|v| v.to_string());
+        Ok(value)
+    }
+
     pub fn by_name(&self, name: impl IntoFieldName) -> Option<&TypedOptionValue> {
         self.values.get(&name.into_field_name())
     }
@@ -182,11 +235,7 @@ pub fn object_j_to_subset_values<T: Serialize>(
             .map(|v| json_to_value(v.clone(), v_type).map(|nv| nv.into_opt()))
             .transpose()?
             .flatten();
-        subset_values.add(
-            field.name.clone(),
-            v_type,
-            opt_value.into_nullable_value(v_type),
-        );
+        subset_values.add(field.name.clone(), v_type, opt_value);
     }
     Ok(subset_values)
 }

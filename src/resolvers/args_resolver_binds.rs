@@ -21,7 +21,7 @@ impl<'a> ArgsResolverBindsDecorator<'a> {
     }
 }
 
-impl<'a> ArgsResolver for ArgsResolverBindsDecorator<'a> {
+impl ArgsResolver for ArgsResolverBindsDecorator<'_> {
     fn add_arg(&mut self, value: NullableValue) -> String {
         self.super_args_resolver.add_arg(value)
     }

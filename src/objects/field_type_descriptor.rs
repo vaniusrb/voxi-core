@@ -1,6 +1,5 @@
-use std::collections::HashMap;
-
-use crate::{FieldName, FieldNameType, ValueType};
+use crate::{FieldName, ValueType};
+use indexmap::IndexMap;
 
 pub trait FieldTypeDescriptor {
     // fn fields_type(&self) -> Vec<FieldNameType>;

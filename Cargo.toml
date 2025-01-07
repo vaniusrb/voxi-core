@@ -7,10 +7,14 @@ edition = "2021"
 chrono = { version = "0.4", features = ["serde"] }
 rust_decimal = { version = "1.34.3", features = ["serde", "maths"] }
 uuid = { version = "1.1", features = ["v4", "serde"] }
-serde = { version = "1.0.188", features = ["derive", "rc"] }
-serde_json = { version = "1.0.111", features = ["raw_value"] }
+serde = { version = "1.0.217", features = ["derive", "rc"] }
+serde_json = { version = "1.0.134", features = ["raw_value", "preserve_order"] }
 derive_more = "0.99.17"
-serde_with = { version = "3.5.1", features = ["json"] }
+serde_with = { version = "3.5.1", features = [
+    "indexmap",
+    "indexmap_2",
+    "json",
+] }
 error-stack = { version = "0.5.0", features = [
     "spantrace",
     "anyhow",
@@ -20,7 +24,7 @@ error-stack = { version = "0.5.0", features = [
 # voxi sql dependencies
 log = { version = "0.4", optional = true }
 dyn-clonable = { version = "0.9", optional = true }
-indexmap = "2.7.0"
+indexmap = { version = "2.7.0", features = ["serde"] }
 
 [dev-dependencies]
 rust_decimal_macros = "1.25"

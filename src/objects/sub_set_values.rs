@@ -122,9 +122,34 @@ impl SubsetValues {
         Ok(())
     }
 
-    pub fn set_value(&mut self, name: impl IntoFieldName, value: impl IntoTypedOptionValue) {
+    pub fn set_value(&mut self, field_name: impl IntoFieldName, value: impl IntoTypedOptionValue) {
         self.values
-            .insert(name.into_field_name(), value.typed_option_value());
+            .insert(field_name.into_field_name(), value.typed_option_value());
+    }
+
+    pub fn update_value(
+        &mut self,
+        field_name: impl IntoFieldName,
+        value: impl IntoNullableValue,
+    ) -> error_stack::Result<(), CoreError> {
+        let field_name = field_name.into_field_name();
+        let v_type =
+            self.values
+                .get(&field_name)
+                .map(|v| v.v_type)
+                .ok_or(CoreError::FieldNameNotFound(
+                    field_name.to_string(),
+                    self.fields_name()
+                        .into_iter()
+                        .map(|f| f.to_string())
+                        .collect::<Vec<_>>()
+                        .join(","),
+                ))?;
+        self.values.insert(
+            field_name,
+            TypedOptionValue::new(v_type, value.into_nullable_value()),
+        );
+        Ok(())
     }
 
     pub fn set_value_from_str(

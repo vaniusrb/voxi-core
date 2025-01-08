@@ -9,6 +9,14 @@ pub struct TypedOptionValue {
     pub v_type: ValueType,
     pub opt_value: NullableValue,
 }
+impl TypedOptionValue {
+    pub(crate) fn new(v_type: impl IntoValueType, nullable_value: impl IntoNullableValue) -> Self {
+        Self {
+            v_type: v_type.value_type(),
+            opt_value: nullable_value.into_nullable_value(),
+        }
+    }
+}
 
 pub trait IntoTypedOptionValue {
     fn typed_option_value(self) -> TypedOptionValue;

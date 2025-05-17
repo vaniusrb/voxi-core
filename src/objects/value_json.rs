@@ -221,8 +221,7 @@ pub fn get_field_to_str<T: Serialize + DeserializeOwned>(
         Ok(value) => value,
         Err(e) => {
             error!(
-                "error to get json value of {value_j:?} field {field_name}: {}",
-                e.to_string()
+                "error to get json value of {value_j:?} field {field_name}: {e}",                
             );
             return None;
         }

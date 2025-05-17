@@ -49,7 +49,7 @@ impl IntoFromSelect for Select {
     fn into_from_select(self) -> FromSelect {
         FromSelect {
             alias: None,
-            from_type: FromType::Query(self),
+            from_type: FromType::Query(self.into_boxed()),
         }
     }
 }
@@ -142,7 +142,7 @@ impl FromSelect {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum FromType {
     Table(TableName),
-    Query(Select),
+    Query(Box<Select>),
 }
 
 pub trait IntoFrom {
@@ -170,7 +170,7 @@ impl IntoFrom for &str {
 
 impl IntoFrom for Select {
     fn into_from(self) -> FromSelect {
-        FromSelect::new(FromType::Query(self), None)
+        FromSelect::new(FromType::Query(self.into_boxed()), None)
     }
 }
 
@@ -191,7 +191,7 @@ impl QueryAlias {
 impl IntoFrom for QueryAlias {
     fn into_from(self) -> FromSelect {
         let QueryAlias { alias, query } = self;
-        FromSelect::new(FromType::Query(query), Some(alias))
+        FromSelect::new(FromType::Query(query.into_boxed()), Some(alias))
     }
 }
 
@@ -262,7 +262,14 @@ mod tests {
         let from = FromSelect::from_query(query);
         assert_eq!(
             from.from_type(),
-            &FromType::Query(QueryBuilder::new().all().from("TABLE").build().unwrap())
+            &FromType::Query(
+                QueryBuilder::new()
+                    .all()
+                    .from("TABLE")
+                    .build()
+                    .unwrap()
+                    .into_boxed()
+            )
         );
     }
 
@@ -270,7 +277,7 @@ mod tests {
     fn test_from_query_new() {
         let query = QueryBuilder::new().all().from("TABLE").build().unwrap();
         let from = FromSelect::from(query.clone());
-        assert_eq!(from.from_type(), &FromType::Query(query));
+        assert_eq!(from.from_type(), &FromType::Query(query.into_boxed()));
     }
 
     #[test]

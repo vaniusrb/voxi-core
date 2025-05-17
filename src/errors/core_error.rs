@@ -3,13 +3,13 @@ use error_stack::Context;
 
 #[derive(Display, Debug)]
 pub enum CoreError {
-    #[display(fmt = "conversion error: `{}`, provided string: `{}`", _0, _1)]
+    #[display(fmt = "conversion error: `{_0}`, provided string: `{_1}`")]
     Conversion(String, String),
-    #[display(fmt = "parse json error: `{:?}`", _0)]
+    #[display(fmt = "parse json error: `{_0:?}`")]
     ParseJson(serde_json::Value), // serde_json::error::Error
     #[display(fmt = "convert to json error")]
     ConvertToJson, // serde_json::error::Error
-    #[display(fmt = "field name not found: `{}` available fields are: `{}`", _0, _1)]
+    #[display(fmt = "field name not found: `{_0}` available fields are: `{_1}`")]
     FieldNameNotFound(String, String),
 }
 

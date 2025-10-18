@@ -46,4 +46,7 @@ pretty_assertions = "1.3"
 # sqlx = ["dep:sqlx"]
 sql = ["dep:error-stack", "dep:log", "dep:dyn-clonable"]
 objects = ["dep:log"]
+# Default features for non-WASM targets
 default = ["sql", "objects"]
+# Minimal features for WASM builds
+wasm = []

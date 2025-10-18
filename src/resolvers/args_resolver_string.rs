@@ -31,6 +31,7 @@ impl ArgsResolver for ArgsResolverString {
 }
 
 /// Expand value arguments (binds) in a plain String
+/// Think it as sql_to_str() function.
 /// # Example
 /// ```
 /// # use voxi_core::selections::ConditionWhere;

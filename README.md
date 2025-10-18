@@ -7,6 +7,7 @@
 
 ## Objective
 
+A type-safe, serializable SQL query builder with rich value types, designed for database-agnostic applications with client-server communication.
 An Abstract Syntax Tree (AST) for building dynamic SQL queries.
 
 Sintaxes available:
